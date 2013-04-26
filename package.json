@@ -1,0 +1,32 @@
+{
+  "name": "range",
+  "title": "Range",
+  "description": "A powerful slider for selecting value ranges",
+  "version": "0.1.0",
+  "homepage": "https://github.com/amazingSurge/jquery-range",
+  "author": {
+    "name": "joeylin",
+    "email": "331547274@qq.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amazingSurge/jquery-range.git"
+  },
+  "bugs": "https://github.com/amazingSurge/jquery-range/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/amazingSurge/jquery-range/blob/master/LICENSE-MIT"
+    }
+  ],
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-concat": "~0.1.2",
+    "grunt-contrib-uglify": "~0.1.1",
+    "grunt-contrib-watch": "~0.2.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt": "~0.4.0",
+    "grunt-jsbeautifier": "~0.1.5",
+    "grunt-recess": "~0.3.1"
+  }
+}
