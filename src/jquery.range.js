@@ -8,60 +8,6 @@
 
 (function($) {
 
-    var Pointer = function(instance,tip) {
-        var $element = instance.$element;
-        this.parent = instance;
-        this.$handle = $('<span class="range-handle"><a href="#" class="handle-tip" ></a></span>').appendTo($element);
-        this.$tip = this.$handle.find('a');
-
-
-        if (this.parent.options.tip === false) {
-            this.$tip.css({display: 'none'});
-        }
-
-        this.value = '';
-        this.timer = null;
-
-        var self = this;
-
-        this.$handle.on('mousedown',function(e) {
-            var startX = e.pageX; 
-            var left = parseInt(self.$handle.position().left);
-            var distance;   
-
-            this.mousemove = function(e) {
-                distance = e.pageX - startX;
-                self.set( distance + left );
-                return false;
-            };
-            this.mouseup = function() {
-                $(document).off({
-                    mousemove: this.mousemove,
-                    mouseup: this.mouseup
-                });
-                return false;
-            };
-
-            $(document).on({
-                mousemove: this.mousemove,
-                mouseup: this.mouseup
-            });
-
-            return false;
-        });
-
-    };
-
-    Pointer.prototype.set = function(value) {
-        this.value = value;
-        this.$handle.css({'left': value});
-        this.parent.$element.trigger('slide',this.parent);
-
-        if (this.parent.options.tip === true) {
-            this.$handle.find('a').text(this.value);
-        }
-    }
-
     var Range = $.range = function(element, options) {
 
         this.element = element;
@@ -110,8 +56,6 @@
         start: 50,
         step: 1,
 
-        handle:1,
-
         tip: true,
         scale: true,
 
@@ -119,7 +63,6 @@
 
         //callback
         slide: function() {},
-
     };
     
 
@@ -142,6 +85,6 @@
                 }
             });
         }
-    }
+    };
 
 }(jQuery));
