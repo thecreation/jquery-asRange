@@ -15,6 +15,11 @@
 
         this.options = $.extend({}, Range.defaults, options);
         this.namespace = this.options.namespace;
+        this.components = $.extend(true,{},this.components);
+
+        this.pointerValue = this.options.start;
+        this.$pointer = $('<span class="' + this.namespace + '-p"></span>');
+        this.$pointer.appendTo(this.$element);
 
         this.$element.addClass(this.namespace).addClass(this.namespace + '-' + this.options.skin);
 
@@ -23,24 +28,69 @@
 
     Range.prototype = {
         constructor: Range,
+        components: {},
+        pid: 1,
 
         init: function() {
-            
-            if(this.options.handle === 1) {
-                this.handle = new Picker(this);
-            }
+             
+            this.$pointer.on('mousedown',function(e){
+                var me = this,
+                    rightclick = (e.which) ? (e.which == 3) : (e.button == 2);
 
-            if (this.options.handle === 2) {
-                this.handle = new Picker(this);
-                this.handleTwo = new Picker(this);
-            }
-        },
-        get: function(value) {
-            
-            return this[value].value;
+                if (rightclick) {
+                    return false;
+                }  
+
+                $.proxy(self.mousedown,self)(e);
+            });
         },
 
-        set: function(name,value) {
+        mousedown: function(e) {
+
+            var offset = this.$hue.offset();
+
+            this.data.startY = e.pageY;
+            this.data.top = e.pageY - offset.top;
+
+            this.move(this.data.top);
+
+            this.mousemove = function(e) {
+
+                var position = this.data.top + (e.pageY || this.data.startY) - this.data.startY;
+
+                this.move(position);
+                return false;
+            };
+
+            this.mouseup = function(e) {
+
+                $(document).off({
+                    mousemove: this.mousemove,
+                    mouseup: this.mouseup
+                });
+                return false;
+            };
+
+            $(document).on({
+                mousemove: $.proxy(this.mousemove, this),
+                mouseup: $.proxy(this.mouseup, this)
+            });
+
+            return false;
+        },
+
+        move: function(position) {
+            
+        },
+
+        calculate: function(value,range) {
+
+        },
+
+        get: function() {
+            return this.value;        },
+
+        set: function(value) {
 
         },
 
@@ -56,13 +106,27 @@
         start: 50,
         step: 1,
 
-        tip: true,
-        scale: true,
+        // components
+        components: {
+            tip: false,
+            scale: false,
+            arrow: false
+        },
 
         orientation: 'vertical',
 
-        //callback
-        slide: function() {},
+        // on pointer move
+        slide: function(value) {
+
+
+            return value;
+        },
+
+        // on state change
+        onChange: function() {},
+
+        // on mouse up 
+        callback: function() {}
     };
     
 
