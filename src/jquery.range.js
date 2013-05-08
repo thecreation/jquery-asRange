@@ -17,9 +17,13 @@
         this.namespace = this.options.namespace;
         this.components = $.extend(true,{},this.components);
 
-        this.pointerValue = this.options.start;
-        this.$pointer = $('<span class="' + this.namespace + '-p"></span>');
-        this.$pointer.appendTo(this.$element);
+        // public properties
+        this.value = this.options.value;
+        this.start = this.options.range[0];
+        this.end = this.options.range[1];
+        this.interval = this.start - this.end;
+        this.width = this.$element.outerWidth();
+        this.height = this.$element.outerHeight();
 
         this.$element.addClass(this.namespace).addClass(this.namespace + '-' + this.options.skin);
 
@@ -29,40 +33,130 @@
     Range.prototype = {
         constructor: Range,
         components: {},
-        pid: 1,
 
         init: function() {
-             
-            this.$pointer.on('mousedown',function(e){
-                var me = this,
-                    rightclick = (e.which) ? (e.which == 3) : (e.button == 2);
+            var self = this;
 
-                if (rightclick) {
-                    return false;
-                }  
+            this.pointer = [];
 
-                $.proxy(self.mousedown,self)(e);
+            for (var i = 1; i <= this.options.pointer; i++) {
+                var $pointer = $('<span class="' + this.namespace +'-pointer"></span>').appendTo(this.$element);
+                var p = new Pointer($pointer, i, this);
+
+                this.pointer.push(p);
+            }
+
+            $.each(function(i, p) {
+                p.set(self.value[i]);
             });
+
+            this.$element.on('click', function(event) {
+                // todo
+            });
+            
         },
 
-        mousedown: function(e) {
+        calculate: function(value, range) {
+            return value / range * this.interval + this.start;
+        },
 
-            var offset = this.$hue.offset();
+        getValue: function() {
+            return this.value;  
+        },
 
-            this.data.startY = e.pageY;
-            this.data.top = e.pageY - offset.top;
+        setValue: function(value) {
 
-            this.move(this.data.top);
+        },
 
-            this.mousemove = function(e) {
+        setInterval: function(start,end) {
+            this.start = start;
+            this.end = end;
+            this.interval = end - start;
+        },
 
-                var position = this.data.top + (e.pageY || this.data.startY) - this.data.startY;
+        enable: function() {},
+        disable: function() {}
+    };
 
-                this.move(position);
+    Range.defaults = {
+        namespace: 'range',
+        skin: 'simple',
+
+        range: [0,100],
+        value: [10],
+        step: 1,
+
+        pointer: 1,
+
+        // components
+        components: {
+            tip: false,
+            scale: false,
+            arrow: false
+        },
+
+        orientation: 'vertical',
+
+
+
+        // on pointer move
+        slide: function(value) {
+
+
+            return value;
+        },
+
+        // on state change
+        onChange: function() {},
+
+        // on mouse up 
+        callback: function() {}
+    };
+
+    // Pointer constuctor
+    
+    function Pointer($element, id, parent) {
+        this.$element = $element;
+        this.uid = id;
+        this.parent = parent;
+        this.options = this.parent.options;
+        this.value = '';
+        this.direction = '';
+
+        this.init();
+    }
+    Pointer.prototype = {
+        constructor: Pointer,
+        init: function() {
+
+            if (this.options.vertical === 'v') {
+                this.direction = 'top';
+                this.mouse = 'pageY';
+                this.max = this.parent.height;
+            } else {
+                this.direction = 'left';
+                this.mouse = 'pageX';
+                this.max = this.parent.width;
+            }
+
+            this.$element.on('mousedown', $.proxy(this.mousedown, this));
+
+        },
+        mousedown: function(event) {
+            var offset = this.$pointer.offset();    
+
+            this.data.start = event[this.mouse];
+            this.data[this.direction] = event[this.mouse] - offset[this.direction];
+
+            this._set(this.data[this.direction]);
+
+            this.mousemove = function(event) {
+                var value = this.data[this.direction] + ( event[this.mouse] || this.data.start ) - this.data.start;
+                this._set(value);
                 return false;
             };
 
-            this.mouseup = function(e) {
+            this.mouseup = function(event) {
 
                 $(document).off({
                     mousemove: this.mousemove,
@@ -78,57 +172,37 @@
 
             return false;
         },
+        
+        _set: function(value) {
 
-        move: function(position) {
-            
+            var position = {};
+
+            if (value < 0 ) {
+                value = 0;
+            }
+
+            if (value > this.max) {
+                value = this.max;
+            }
+
+            position[this.direction] = value;
+            this.$element.css(position);
+            this.value = value;
         },
 
-        calculate: function(value,range) {
+        calculate: function(value) {
+            return value / this.parent.interval * this.max;
+        },
 
+        set: function(value) {
+            var value = this.calculate(value);
+            this._set(value);
         },
 
         get: function() {
-            return this.value;        },
-
-        set: function(value) {
-
-        },
-
-        enable: function() {},
-        disable: function() {}
+            return this.parent.calculate(this.value, this.max);
+        }
     };
-
-    Range.defaults = {
-        namespace: 'range',
-        skin: 'simple',
-
-        range: [0,100],
-        start: 50,
-        step: 1,
-
-        // components
-        components: {
-            tip: false,
-            scale: false,
-            arrow: false
-        },
-
-        orientation: 'vertical',
-
-        // on pointer move
-        slide: function(value) {
-
-
-            return value;
-        },
-
-        // on state change
-        onChange: function() {},
-
-        // on mouse up 
-        callback: function() {}
-    };
-    
 
     $.fn.range = function(options) {
         if (typeof options === 'string') {
@@ -145,7 +219,7 @@
 
             return this.each(function() {
                 if (!$.data(this, 'range')) {
-                    $.data(this, 'range', new Range(this, opts));
+                    $.data(this, 'range', new Range(this, options));
                 }
             });
         }

@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>ColorInput</title>
+        <title>Range</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -32,14 +32,12 @@
     <section>
         <h2>Modes</h2>
         <section>
-            <h3>type=color</h3>
+            <h3>range</h3>
             <pre class="has-example"><code class="language-javascript">
 $(".range-single").range(); 
             </code></pre>
             <div class="example">
-                <div class="range-single">
-                    <input type="text" value="" />
-                </div>
+                <div class="range-single"></div>
                 <script>    
                     $(document).ready(function() {
                         $(".range-single").range();                           
@@ -48,23 +46,7 @@ $(".range-single").range();
                 
             </div>
         </section>
-        <section>
-            <h3>Custom</h3>
-            <pre class="has-example"><code class="language-javascript">
-$(".range-double").range(); 
-            </code></pre>
-            <div class="example">
-                <div class="range-double">
-                    <input type="text" value="" />
-                    <input type="text" value="" />
-                </div>
-                <script>    
-                    $(document).ready(function() {
-                        $(".range-double").range();                           
-                    });
-                </script>
-            </div>
-        </section>
+
 
     </section>    
 
