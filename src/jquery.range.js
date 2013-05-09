@@ -21,9 +21,7 @@
         this.value = this.options.value;
         this.start = this.options.range[0];
         this.end = this.options.range[1];
-        this.interval = this.start - this.end;
-        this.width = this.$element.outerWidth();
-        this.height = this.$element.outerHeight();
+        this.interval = this.end - this.start;
 
         this.$element.addClass(this.namespace).addClass(this.namespace + '-' + this.options.skin);
 
@@ -38,6 +36,8 @@
             var self = this;
 
             this.pointer = [];
+            this.width = this.$element.width();
+            this.height = this.$element.height();
 
             for (var i = 1; i <= this.options.pointer; i++) {
                 var $pointer = $('<span class="' + this.namespace +'-pointer"></span>').appendTo(this.$element);
@@ -46,26 +46,29 @@
                 this.pointer.push(p);
             }
 
-            $.each(function(i, p) {
-                p.set(self.value[i]);
-            });
+            // alias of every pointer
+            this.p1 = this.pointer[0];
+            this.p2 = this.pointer[1];
+
+            // initial pointer value
+            this.setValue(this.value);
 
             this.$element.on('click', function(event) {
                 // todo
-            });
-            
-        },
-
-        calculate: function(value, range) {
-            return value / range * this.interval + this.start;
+            });            
         },
 
         getValue: function() {
             return this.value;  
         },
 
+        // @value Aarry  the actual value
         setValue: function(value) {
+            $.each(this.pointer, function(i, p) {
+                p.set(value[i]);
+            });
 
+            this.value = value;
         },
 
         setInterval: function(start,end) {
@@ -84,7 +87,7 @@
 
         range: [0,100],
         value: [10],
-        step: 1,
+        step: 7,
 
         pointer: 1,
 
@@ -97,12 +100,10 @@
 
         orientation: 'vertical',
 
-
-
         // on pointer move
         slide: function(value) {
 
-
+            // to do
             return value;
         },
 
@@ -140,15 +141,14 @@
             }
 
             this.$element.on('mousedown', $.proxy(this.mousedown, this));
-
         },
-        mousedown: function(event) {
-            var offset = this.$pointer.offset();    
 
+        mousedown: function(event) {
+            var offset = this.parent.$element.offset();    
+
+            this.data = {};
             this.data.start = event[this.mouse];
             this.data[this.direction] = event[this.mouse] - offset[this.direction];
-
-            this._set(this.data[this.direction]);
 
             this.mousemove = function(event) {
                 var value = this.data[this.direction] + ( event[this.mouse] || this.data.start ) - this.data.start;
@@ -172,10 +172,13 @@
 
             return false;
         },
-        
+
+        // @value number the position value
         _set: function(value) {
 
-            var position = {};
+            var actualValue,
+                posValue,
+                position = {};
 
             if (value < 0 ) {
                 value = 0;
@@ -185,22 +188,62 @@
                 value = this.max;
             }
 
-            position[this.direction] = value;
-            this.$element.css(position);
-            this.value = value;
+            actualValue = this.getActualValue(value);
+
+            posValue = this.step(actualValue);
+
+            if (posValue != true) {
+
+                position[this.direction] = posValue;
+                this.$element.css(position);
+                this.value = posValue;
+            }
         },
 
-        calculate: function(value) {
+        // get postion value
+        // @value number the actual value
+        getPosValue: function(value) {
             return value / this.parent.interval * this.max;
         },
 
+        // get actual value
+        // @value number the position value
+        getActualValue: function(value) {
+            return value / this.max * this.parent.interval + this.parent.start;
+        },
+
+        // @value number the position value
+        // return position value
+        step: function(value) {
+            var value,
+                step = parseInt(this.options.step);
+
+            if (step > 0) {
+
+                value =  Math.round( value / step ) * step; 
+
+                if (value % step === 0) {
+                    return this.getPosValue(value);
+                } else {
+                    return false;
+                }
+
+            } else {
+                return false;
+            }   
+        }, 
+
+        // public method     
+        
+        // @value number the actual value
         set: function(value) {
-            var value = this.calculate(value);
+            value = this.getPosValue(value);
             this._set(value);
         },
 
+        // reutrn actual value
         get: function() {
-            return this.parent.calculate(this.value, this.max);
+            return this.getActualValue(this.value);
         }
     };
 
