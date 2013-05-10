@@ -254,8 +254,15 @@
                 value = this.max;
             }
 
-            actualValue = this.getActualValue(value);
-            posValue = this.step(actualValue);
+            if (this.parent.options.step > 0) {
+                actualValue = this.getActualValue(value);
+                posValue = this.step(actualValue);
+            } else {
+                console.log(value)
+                posValue = value;
+            }
+
+            
 
             // make sure to redraw only when value changed 
             if (posValue !== this.value) {
@@ -300,8 +307,10 @@
 
             if (step > 0) { 
                 value =  Math.round( value / step ) * step;
-                return this.getPosValue(value);
-            }  
+            } 
+
+            return this.getPosValue(value);
+            
         }, 
 
         // limit pointer move range
@@ -324,24 +333,20 @@
                 left: left,
                 right: right
             }
-
-
         },
 
         // public method     
         
         // @value number the actual value
         set: function(value) {
-            console.log(value)
             value = this.getPosValue(value);
-            console.log(value)
             this._set(value);
         },
 
         // reutrn actual value
         get: function() {
             var value = this.getActualValue(this.value);
-            return this.parent.options.format(value);
+            return this.options.format(value);
         }
     };      
 
