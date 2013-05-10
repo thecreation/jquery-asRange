@@ -13,3 +13,16 @@
   margin-left: -5px;
   background-color: red;
 }
+
+.range.range-simple .range-pointer .range-tip {
+  position: absolute;
+  top: -22px;
+  left: 0;
+  width: 30px;
+  height: 20px;
+  margin-left: -11px;
+  color: #fff;
+  text-align: center;
+  background-color: blue;
+  border: 1px solid #000;
+}

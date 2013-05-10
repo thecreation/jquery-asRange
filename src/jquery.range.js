@@ -98,10 +98,6 @@
             this.interval = end - start;
         },
 
-        limit: function() {
-             
-        },
-
         enable: function() {},
         disable: function() {}
     };
@@ -194,7 +190,8 @@
         },
 
         mousedown: function(event) {
-            var offset = this.parent.$element.offset();    
+            var limit = {},
+                offset = this.parent.$element.offset();    
 
             this.data = {};
             this.data.start = event[this.mouse];
@@ -202,6 +199,20 @@
 
             this.mousemove = function(event) {
                 var value = this.data[this.direction] + ( event[this.mouse] || this.data.start ) - this.data.start;
+
+                if (this.parent.options.limit === true) {
+
+                    limit = this.limit();
+
+                    if (value < limit.left) {
+                        value = limit.left;
+                    }
+                    if (value > limit.right) {
+                        value = limit.right;
+                    }
+
+                } 
+
                 this._set(value);
                 return false;
             };
@@ -233,7 +244,6 @@
 
             var actualValue,
                 posValue,
-                limit = {},
                 position = {};
 
             if (value < 0 ) {
@@ -243,18 +253,6 @@
             if (value > this.max) {
                 value = this.max;
             }
-
-            if (this.parent.options.limit === true) {
-                limit = this.limit();
-
-                if (value < limit.left) {
-                    value = limit.left;
-                }
-                if (value > limit.right) {
-                    value = limit.right;
-                }
-
-            } 
 
             actualValue = this.getActualValue(value);
             posValue = this.step(actualValue);
@@ -313,7 +311,7 @@
             if (this.uid === 1) {
                 lfet = 0;
             } else {
-                left = this.parent.pointer[this.uid -1].getPosValue();
+                left = this.parent.pointer[this.uid - 2].getPosValue();
             }
 
             if (this.parent.pointer[this.uid]) {
