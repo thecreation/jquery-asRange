@@ -21,6 +21,31 @@
         <script src="js/vendor/jquery.toc.js"></script>
         <script src="js/vendor/prism.js"></script>
         <script src="../src/jquery.range.js"></script>
+
+        <style type="text/css">
+             #infobar {
+                width: 500px;
+                height: 200px;
+                border: 1px solid #333;
+                overflow-y: scroll;
+            }
+            .content {
+                width: 100%;
+            }
+            .content div {
+                color: blue;
+                opacity: 0.5;
+            }
+            .content div span {
+                color: #666;
+            }
+            .info {
+                margin-top: 10px;
+            }
+            .example {
+                background-color: #F8F8F8;
+            }
+        </style>
     </head>
 <body>
 <!--[if lt IE 7]>
@@ -40,10 +65,23 @@ $(".range-single").range();
                 <div class="range-single"></div>
                 <script>    
                     $(document).ready(function() {
-                        $(".range-single").range();                           
+                        $(".range-single").range({
+                            onChange: function(instance) {
+                                var pid = instance.uid,
+                                    val = instance.get();
+
+                                $('<div> <span>pointer id: </span>'+ pid + ', ' + '<span>value: </span>' + val + '</div>').prependTo($('.content'));
+                            }
+                        });                           
                     });
                 </script>
                 
+            </div>
+
+            <div class="example info">
+                <div id="infobar">
+                    <div class="content"></div>
+                </div>
             </div>
         </section>
 

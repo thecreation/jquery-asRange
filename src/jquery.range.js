@@ -11,11 +11,10 @@
     var Range = $.range = function(element, options) {
 
         this.element = element;
-        this.$element = $(element);
+        this.$element = $(element).css({postion: 'relative'});
 
         this.options = $.extend({}, Range.defaults, options);
         this.namespace = this.options.namespace;
-        this.components = $.extend(true,{},this.components);
 
         // public properties
         this.value = this.options.value;
@@ -39,6 +38,8 @@
             this.width = this.$element.width();
             this.height = this.$element.height();
 
+            this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
+
             for (var i = 1; i <= this.options.pointer; i++) {
                 var $pointer = $('<span class="' + this.namespace +'-pointer"></span>').appendTo(this.$element);
                 var p = new Pointer($pointer, i, this);
@@ -46,35 +47,59 @@
                 this.pointer.push(p);
             }
 
+            this.$bar.css({
+                postion: 'absolute'
+            });
+
             // alias of every pointer
             this.p1 = this.pointer[0];
             this.p2 = this.pointer[1];
 
+            // initial components
+
+            if (this.options.tip === true) {
+                this.components.tip.init(this);
+            }
+            if (this.options.arrow === true) {
+                this.components.arrow.init(this);
+            }
+            if (this.options.scale === true) {
+                this.components.scale.init(this);
+            }
+
             // initial pointer value
             this.setValue(this.value);
-
             this.$element.on('click', function(event) {
                 // todo
-            });            
+            }); 
         },
 
         getValue: function() {
-            return this.value;  
+            var value;
+
+            // 
+
+            return value;  
         },
 
         // @value Aarry  the actual value
         setValue: function(value) {
             $.each(this.pointer, function(i, p) {
+                console.log(value[i]);
                 p.set(value[i]);
             });
 
             this.value = value;
         },
 
-        setInterval: function(start,end) {
+        setInterval: function(start, end) {
             this.start = start;
             this.end = end;
             this.interval = end - start;
+        },
+
+        limit: function() {
+             
         },
 
         enable: function() {},
@@ -86,24 +111,25 @@
         skin: 'simple',
 
         range: [0,100],
-        value: [10],
-        step: 7,
+        value: [0,20],
+        step: 10,
 
-        pointer: 1,
+        pointer: 2,
+        limit: true,
+        orientation: 'v', // 'v' or 'h'
 
         // components
-        components: {
-            tip: false,
-            scale: false,
-            arrow: false
-        },
+        tip: true,
+        scale: false,
+        arrow: false,
 
-        orientation: 'vertical',
-
-        // on pointer move
-        slide: function(value) {
+        // custom value format
+        // @value number  origin value
+        // return a formatted value
+        format: function(value) {
 
             // to do
+
             return value;
         },
 
@@ -114,14 +140,38 @@
         callback: function() {}
     };
 
+    Range.registerComponent = function (component, methods) {
+        Range.prototype.components[component] = methods;
+    };
+
+    $.fn.range = function(options) {
+        if (typeof options === 'string') {
+            var method = options;
+            var method_arguments = arguments.length > 1 ? Array.prototype.slice.call(arguments, 1) : undefined;
+
+            return this.each(function() {
+                var api = $.data(this, 'range');
+                if (typeof api[method] === 'function') {
+                    api[method].apply(api, method_arguments);
+                }
+            });
+        } else {
+
+            return this.each(function() {
+                if (!$.data(this, 'range')) {
+                    $.data(this, 'range', new Range(this, options));
+                }
+            });
+        }
+    };
+
     // Pointer constuctor
-    
     function Pointer($element, id, parent) {
         this.$element = $element;
         this.uid = id;
         this.parent = parent;
         this.options = this.parent.options;
-        this.value = '';
+        this.value = null;
         this.direction = '';
 
         this.init();
@@ -162,6 +212,11 @@
                     mousemove: this.mousemove,
                     mouseup: this.mouseup
                 });
+
+                if (typeof this.parent.options.callback === 'function') {
+                    this.parent.options.callback(this);
+                }
+
                 return false;
             };
 
@@ -178,6 +233,7 @@
 
             var actualValue,
                 posValue,
+                limit = {},
                 position = {};
 
             if (value < 0 ) {
@@ -188,22 +244,47 @@
                 value = this.max;
             }
 
-            actualValue = this.getActualValue(value);
+            if (this.parent.options.limit === true) {
+                limit = this.limit();
 
+                if (value < limit.left) {
+                    value = limit.left;
+                }
+                if (value > limit.right) {
+                    value = limit.right;
+                }
+
+            } 
+
+            actualValue = this.getActualValue(value);
             posValue = this.step(actualValue);
 
-            if (posValue != true) {
+            // make sure to redraw only when value changed 
+            if (posValue !== this.value) {
 
                 position[this.direction] = posValue;
                 this.$element.css(position);
                 this.value = posValue;
+
+                if (typeof this.parent.options.onChange === 'function') {
+                    this.parent.options.onChange(this);
+                }
+
+                this.$element.trigger('change', this);
             }
         },
 
         // get postion value
-        // @value number the actual value
+        // @param value number the actual value
         getPosValue: function(value) {
-            return value / this.parent.interval * this.max;
+
+            // here value = 0  change to false
+            if (value !== undefined) {
+                return value / this.parent.interval * this.max;
+            } else {
+                return this.value;
+            }
+            
         },
 
         // get actual value
@@ -212,60 +293,102 @@
             return value / this.max * this.parent.interval + this.parent.start;
         },
 
+        // step control
         // @value number the position value
         // return position value
         step: function(value) {
             var value,
                 step = parseInt(this.options.step);
 
-            if (step > 0) {
-
-                value =  Math.round( value / step ) * step; 
-
-                if (value % step === 0) {
-                    return this.getPosValue(value);
-                } else {
-                    return false;
-                }
-
-            } else {
-                return false;
-            }   
+            if (step > 0) { 
+                value =  Math.round( value / step ) * step;
+                return this.getPosValue(value);
+            }  
         }, 
+
+        // limit pointer move range
+        limit: function() {
+            var left,right;
+
+            if (this.uid === 1) {
+                lfet = 0;
+            } else {
+                left = this.parent.pointer[this.uid -1].getPosValue();
+            }
+
+            if (this.parent.pointer[this.uid]) {
+                right = this.parent.pointer[this.uid].getPosValue();
+            } else {
+                right = this.max;
+            }
+
+            return {
+                left: left,
+                right: right
+            }
+
+
+        },
 
         // public method     
         
         // @value number the actual value
         set: function(value) {
+            console.log(value)
             value = this.getPosValue(value);
+            console.log(value)
             this._set(value);
         },
 
         // reutrn actual value
         get: function() {
-            return this.getActualValue(this.value);
+            var value = this.getActualValue(this.value);
+            return this.parent.options.format(value);
         }
-    };
+    };      
 
-    $.fn.range = function(options) {
-        if (typeof options === 'string') {
-            var method = options;
-            var method_arguments = arguments.length > 1 ? Array.prototype.slice.call(arguments, 1) : undefined;
+    Range.registerComponent('tip', {
+        defaults: {
+            active: 'hover',
+        },
+        init: function(instance) {
+            var self = this,
+                opts = $.extend({},this.defaults,instance.options.tip);
 
-            return this.each(function() {
-                var api = $.data(this, 'range');
-                if (typeof api[method] === 'function') {
-                    api[method].apply(api, method_arguments);
-                }
+            this.opt = opts;
+
+            this.tip = [];
+            $.each(instance.pointer, function(i,p) {
+                var $tip = $('<span class="range-tip"></span>').appendTo(instance.pointer[i].$element);
+                
+                instance.pointer[i].$element.on('change', function(e, pointer) {
+                    $tip.text(pointer.get());
+                });
+
+                self.tip.push($tip);
             });
-        } else {
 
-            return this.each(function() {
-                if (!$.data(this, 'range')) {
-                    $.data(this, 'range', new Range(this, options));
-                }
+        },
+        show: function() {
+            $.each(self.tip, function(i,$tip) {
+                $tip.show();
+            });
+        },
+        hide: function() {
+            $.each(self.tip, function(i,$tip) {
+                $tip.hide();
             });
         }
-    };
+    });
+    Range.registerComponent('arrow', {
+        defaults: {},
+        init: function(instance) {
+            this.$arrow = $('<span class="range-arrow"></span>').appendTo(instance.$element);
+        },
+    });
+    Range.registerComponent('scale', {
+        defaults: {},
+        init: function(instance) {},
+    });
 
 }(jQuery));
