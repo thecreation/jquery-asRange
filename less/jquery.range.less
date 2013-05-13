@@ -15,6 +15,8 @@
 		margin-left: -5px;
 
 		background-color: red;
+		opacity: 0;
+		z-index: 2;
 
 		.range-tip {
 			position: absolute;
@@ -31,6 +33,16 @@
 
 			color: #fff;
 			text-align: center;
+
+			-webkit-transition: opacity 0.3s ease-in-out 0s;
+            -moz-transition: opacity 0.3s ease-in-out 0s;
+            transition: opacity 0.3s ease-in-out 0s;
 		}
+	}
+	.range-view {
+		position: absolute;
+
+		background-color: yellow;
+		z-index: 1;
 	}
 }

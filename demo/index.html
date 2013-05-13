@@ -83,6 +83,108 @@ $(".range-single").range();
                     <div class="content"></div>
                 </div>
             </div>
+
+        </section>
+
+        <section>
+            <div class="example">
+                <pre class="has-example"><code class="language-javascript">
+$(".range-2").range({
+    pointer: 2,
+    limit: true,
+    tip: {
+        active: 'onmove'
+    }
+});     
+            </code></pre>
+                <div class="range-2"></div>
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-2").range({
+                            pointer: 2,
+                            limit: true,
+                            tip: {
+                                active: 'onmove'
+                            }
+                        });                           
+                    });
+                </script>
+                
+            </div>
+        </section>
+
+        <section>
+ <pre class="has-example"><code class="language-javascript">
+$(".range-5").range({
+    step: 1,
+    pointer: 1,
+    limit: true
+});    </code></pre>
+            <div class="example">
+                <div class="range-5"></div>
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-5").range({
+                            step: 1,
+                            pointer: 1,
+                            limit: true
+                        });                           
+                    });
+                </script>
+                
+            </div>
+
+        </section>
+
+        <section>
+ <pre class="has-example"><code class="language-javascript">
+$(".range-3").range({
+    pointer: 2,
+    limit: false
+});   </code></pre>      
+            <div class="example">
+                <div class="range-3"></div>
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-3").range({
+                            pointer: 2,
+                            limit: false
+                        });                           
+                    });
+                </script>
+                
+            </div>
+
+        </section>
+
+        <section>
+ <pre class="has-example"><code class="language-javascript">
+$(".range-4").range({
+    tip: false,
+    pointer: 2,
+    limit: false
+}); </code></pre>
+            <div class="example">
+                <div class="range-4"></div>
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-4").range({
+                            tip: false,
+                            pointer: 2,
+                            limit: false
+                        });                           
+                    });
+                </script>
+                
+            </div>
+
+        </section>
+
+        <section>
+ <pre class="has-example"><code class="language-javascript">
+$(".range-single").range(); </code></pre>
+
+
         </section>
 
 
@@ -91,9 +193,9 @@ $(".range-single").range();
 </div>
 
 <script>
-(function(){
-    $('#toc').toc();
-})();
+    (function(){
+        $('#toc').toc();
+    })();
 </script>
 </body>
 </html>
