@@ -427,6 +427,30 @@
                     })    
                 });
             }
+
+            if (instance.pointer.length === 2) {
+
+                instance.pointer[0].$element.on('change', function(e, pointer) {
+                    var left = pointer.getPosValue(),
+                        right = instance.pointer[1].getPosValue();
+
+                        console.log(left,right)
+
+                    self.$arrow.css({
+                        left: Math.min(left, right),
+                        width: Math.abs(right - left)
+                    })
+                });
+                instance.pointer[1].$element.on('change', function(e, pointer) {
+                    var right = pointer.getPosValue(),
+                        left = instance.pointer[0].getPosValue();
+
+                    self.$arrow.css({
+                        left: Math.min(left, right),
+                        width: Math.abs(right - left)
+                    });    
+                });
+            }
         },
     });
     Range.registerComponent('scale', {

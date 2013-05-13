@@ -8,6 +8,7 @@
 .range.range-simple .range-pointer {
   position: absolute;
   left: 50px;
+  z-index: 2;
   width: 10px;
   height: 20px;
   margin-left: -5px;
@@ -25,4 +26,14 @@
   text-align: center;
   background-color: blue;
   border: 1px solid #000;
+  -webkit-transition: opacity 0.3s ease-in-out 0s;
+     -moz-transition: opacity 0.3s ease-in-out 0s;
+          transition: opacity 0.3s ease-in-out 0s;
+}
+
+.range.range-simple .range-view {
+  position: absolute;
+  z-index: 1;
+  height: 20px;
+  background-color: yellow;
 }
