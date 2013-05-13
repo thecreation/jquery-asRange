@@ -434,8 +434,6 @@
                     var left = pointer.getPosValue(),
                         right = instance.pointer[1].getPosValue();
 
-                        console.log(left,right)
-
                     self.$arrow.css({
                         left: Math.min(left, right),
                         width: Math.abs(right - left)
@@ -454,8 +452,33 @@
         },
     });
     Range.registerComponent('scale', {
-        defaults: {},
-        init: function(instance) {},
+        defaults: {
+            scale: [0, 50, 100]
+        },
+        init: function(instance) {
+            var self = this,
+                opts = $.extend({},this.defaults,instance.options.tip),
+                len = opts.scale.length;
+                
+
+            this.$scale = $('<ul class="range-scale"></ul>');
+
+            $.each(opts.scale, function(i,v) {
+                var left,
+                    $li = $('<li>' + v +'</li>');
+
+                $li.css({
+                    left: i / (len - 1) * 100 + '%'
+                });
+
+                $li.appendTo(self.$scale);
+
+            });
+
+            this.$scale.appendTo(instance.$element);
+
+
+        },
     });
 
 }(jQuery));

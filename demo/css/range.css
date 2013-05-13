@@ -37,3 +37,25 @@
   height: 20px;
   background-color: yellow;
 }
+
+.range.range-simple .range-scale {
+  position: absolute;
+  bottom: -22px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.range.range-simple .range-scale li {
+  position: absolute;
+  top: 0;
+  width: 30px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  margin-left: -15px;
+  text-align: center;
+}
