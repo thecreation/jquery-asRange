@@ -71,6 +71,7 @@
                     mouseup: this.mouseup
                 });
 
+
                 if (typeof this.parent.options.callback === 'function') {
                     this.parent.options.callback(this);
                 }

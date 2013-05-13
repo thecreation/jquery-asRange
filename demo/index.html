@@ -59,13 +59,18 @@
         <section>
             <h3>range</h3>
             <pre class="has-example"><code class="language-javascript">
-$(".range-single").range(); 
+$(".range-single").range({
+    step: 10,
+    limit: true
+}); 
             </code></pre>
             <div class="example">
                 <div class="range-single"></div>
                 <script>    
                     $(document).ready(function() {
                         $(".range-single").range({
+                            step: 10,
+                            limit: true,
                             onChange: function(instance) {
                                 var pid = instance.uid,
                                     val = instance.get();
