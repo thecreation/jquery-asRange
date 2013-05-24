@@ -121,18 +121,18 @@ $(".range-2").range({
         <section>
  <pre class="has-example"><code class="language-javascript">
 $(".range-5").range({
-    step: 1,
+    step: 0.1,
     pointer: 1,
-    limit: true
+    range: [0,10],
 });    </code></pre>
             <div class="example">
                 <div class="range-5"></div>
                 <script>    
                     $(document).ready(function() {
                         $(".range-5").range({
-                            step: 1,
+                            step: 0.1,
                             pointer: 1,
-                            limit: true
+                            range: [0,10]
                         });                           
                     });
                 </script>

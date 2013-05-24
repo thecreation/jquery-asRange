@@ -1,0 +1,140 @@
+//var 
+//===============================================
+@rangeSkin3BgColor: #eee;
+@rangeSkin3PointerBgColor: lighten(@rangeSkin3BgColor,100%);
+@rangeSkin3PointerBdColor: darken(@rangeSkin3BgColor,6.5%);
+@rangeSkin3ViewBgColor: #27acd8;
+//===============================================
+
+.range.range-simple.skin-3 {
+	position: relative;
+	width: 331px;
+	height: 14px;
+
+	background-color: @rangeSkin3BgColor;
+	cursor: pointer;
+	.range-pointer {
+		display: none;
+	}
+	.range-view {
+		position: absolute;
+		width: 30%;
+		height: 14px;
+		
+		overflow: hidden;
+
+		background-color: @rangeSkin3ViewBgColor;
+	}
+
+	.range-scale {
+		display: none;
+	}
+}
+
+//==============================================
+
+//==============================================
+
+.range.range-normal.skin-3 {
+	position: relative;
+	width: 331px;
+	height: 14px;
+
+	background-color: @rangeSkin3BgColor;
+	cursor: pointer;
+	.range-pointer {
+		position: absolute;
+		left: 30%;
+
+		width: 14px;
+		height: 14px;
+
+		margin-left: -7px;
+
+		background-color: @rangeSkin3PointerBgColor;
+		//opacity: 0;
+		z-index: 2;
+		&:before {
+			position: absolute;
+			top: -1px;
+			right: -1px;
+			bottom: -1px;
+			left: -1px;
+			content: '';
+			background: @rangeSkin3PointerBgColor;
+			border: 1px solid @rangeSkin3PointerBdColor;
+		}
+		.range-tip {
+			display: none;
+		}
+	}
+	.range-view {
+		position: absolute;
+		width: 30%;
+		height: 14px;
+		
+		overflow: hidden;
+
+		background-color: @rangeSkin3ViewBgColor;
+	}
+
+	.range-scale {
+		display: none;
+	}
+}
+//==============================================
+
+//==============================================
+
+.range.range-normal-scale.skin-3 {
+	position: relative;
+	width: 331px;
+	height: 14px;
+
+	background-color: @rangeSkin3BgColor;
+	cursor: pointer;
+	.range-pointer {
+		position: absolute;
+		left: 30%;
+
+		width: 14px;
+		height: 14px;
+
+		margin-left: -7px;
+
+		background-color: @rangeSkin3PointerBgColor;
+		//opacity: 0;
+		z-index: 2;
+		&:before {
+			position: absolute;
+			top: -1px;
+			right: -1px;
+			bottom: -1px;
+			left: -1px;
+			content: '';
+			background: @rangeSkin3PointerBgColor;
+			border: 1px solid @rangeSkin3PointerBdColor;
+		}
+		.range-tip {
+			display: none;
+		}
+		+ .range-pointer {
+			left: 70%;
+		}
+	}
+	.range-view {
+		position: absolute;
+		left: 30%;
+		width: 40%;
+		height: 14px;
+		
+		overflow: hidden;
+
+		background-color: @rangeSkin3ViewBgColor;
+	}
+
+	.range-scale {
+		display: none;
+	}
+}
+//==============================================

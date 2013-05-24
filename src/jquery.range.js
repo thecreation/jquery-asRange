@@ -145,7 +145,8 @@
         // get actual value
         // @value number the position value
         getActualValue: function(value) {
-            return value / this.max * this.parent.interval + this.parent.start;
+            var value = value / this.max * this.parent.interval + this.parent.start;
+            return Math.round(value * 100) / 100;
         },
 
         // step control
@@ -186,7 +187,7 @@
 
         // public method     
         
-        // @value number the actual value
+        // @number value  the actual value
         set: function(value) {
             value = this.getPosValue(value);
             this._set(value);
@@ -218,7 +219,7 @@
         // flag
         this.initial = false;
 
-        this.$element.addClass(this.namespace).addClass(this.namespace + '-' + this.options.skin);
+        this.$element.addClass(this.namespace).addClass(this.options.skin);
 
         this.init();
     };
@@ -234,7 +235,7 @@
             this.width = this.$element.width();
             this.height = this.$element.height();
 
-            this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
+            //this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
 
             for (var i = 1; i <= this.options.pointer; i++) {
                 var $pointer = $('<span class="' + this.namespace +'-pointer"></span>').appendTo(this.$element);
@@ -243,9 +244,9 @@
                 this.pointer.push(p);
             }
 
-            this.$bar.css({
-                postion: 'absolute'
-            });
+            // this.$bar.css({
+            //     postion: 'absolute'
+            // });
 
             // alias of every pointer
             this.p1 = this.pointer[0];
@@ -300,7 +301,7 @@
 
     Range.defaults = {
         namespace: 'range',
-        skin: 'simple',
+        skin: 'skin-1',
 
         range: [0,100],
         value: [0,20],
@@ -315,7 +316,7 @@
         scale: false,
 
         // custom value format
-        // @value number  origin value
+        // @number value  origin value
         // return a formatted value
         format: function(value) {
 
@@ -383,6 +384,7 @@
                     });
 
                     p.$element.on('end', function(e, pointer) {
+                        
                         self.hide();
                     });
 
