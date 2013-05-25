@@ -187,8 +187,24 @@ $(".range-4").range({
 
         <section>
  <pre class="has-example"><code class="language-javascript">
-$(".range-single").range(); </code></pre>
-
+$(".range-single-1").range({
+    step: 0.01,
+    pointer: 1,
+    range: [0,1]
+}); </code></pre>
+            <div class="example">
+                <div class="range-single-1"></div>
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-single-1").range({
+                            step: 0.01,
+                            pointer: 1,
+                            range: [0,1]
+                        });                           
+                    });
+                </script>
+                
+            </div>
 
         </section>
 

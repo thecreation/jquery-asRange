@@ -13,7 +13,8 @@
         this.$element = $element;
         this.uid = id;
         this.parent = parent;
-        this.options = this.parent.options;
+        this.options = $.extend(true, {}, this.parent.options);
+        this.interval = this.parent.interval;
         this.value = null;
         this.direction = '';
 
@@ -96,6 +97,7 @@
                 posValue,
                 position = {};
 
+
             if (value < 0 ) {
                 value = 0;
             }
@@ -104,11 +106,14 @@
                 value = this.max;
             }
 
-            if (this.parent.options.step > 0) {
+            console.log(this.options.step)
+
+            if (this.options.step > 0) {
                 actualValue = this.getActualValue(value);
+                console.log(actualValue)
                 posValue = this.step(actualValue);
             } else {
-                console.log(value)
+                
                 posValue = value;
             }
 
@@ -139,28 +144,30 @@
             } else {
                 return this.value;
             }
-            
         },
 
         // get actual value
         // @value number the position value
         getActualValue: function(value) {
+            console.log(value,this.max,this.parent.interval,this.start)
             var value = value / this.max * this.parent.interval + this.parent.start;
-            return Math.round(value * 100) / 100;
+            return value;
         },
 
         // step control
         // @value number the position value
         // return position value
         step: function(value) {
-            var value,
-                step = parseInt(this.options.step);
+            var convert_value,
+                step = this.options.step;
 
             if (step > 0) { 
-                value =  Math.round( value / step ) * step;
+                //step = step * 100 / this.interval;
+                console.log(value,this.options)
+                convert_value =  Math.round( value / step ) * step;
             } 
 
-            return this.getPosValue(value);
+            return this.getPosValue(convert_value);
         }, 
 
         // limit pointer move range
@@ -196,7 +203,7 @@
         // reutrn actual value
         get: function() {
             var value = this.getActualValue(this.value);
-            return this.options.format(value);
+            return this.options.format(Math.round(value * 100) / 100);
         }
     }; 
 
@@ -355,9 +362,7 @@
                 }
             });
         }
-    };
-
-     
+    };     
 
     Range.registerComponent('tip', {
         defaults: {
@@ -413,6 +418,7 @@
             });
         }
     });
+
     Range.registerComponent('view', {
         defaults: {},
         init: function(instance) {
