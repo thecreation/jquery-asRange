@@ -45,6 +45,12 @@
             this.data.start = event[this.mouse];
             this.data[this.direction] = event[this.mouse] - offset[this.direction];
 
+            $.each(this.parent.pointer, function(i, p) {
+                p.$element.removeClass('pointer-active');
+            }); 
+
+            this.$element.addClass('pointer-active');
+
             this.mousemove = function(event) {
                 var value = this.data[this.direction] + ( event[this.mouse] || this.data.start ) - this.data.start;
 
@@ -106,18 +112,13 @@
                 value = this.max;
             }
 
-            console.log(this.options.step)
-
             if (this.options.step > 0) {
                 actualValue = this.getActualValue(value);
-                console.log(actualValue)
                 posValue = this.step(actualValue);
             } else {
                 
                 posValue = value;
-            }
-
-            
+            }    
 
             // make sure to redraw only when value changed 
             if (posValue !== this.value) {
@@ -147,23 +148,20 @@
         },
 
         // get actual value
-        // @value number the position value
+        // @param {value} number the position value
         getActualValue: function(value) {
-            console.log(value,this.max,this.parent.interval,this.start)
             var value = value / this.max * this.parent.interval + this.parent.start;
             return value;
         },
 
         // step control
-        // @value number the position value
+        // @param {value} number the position value
         // return position value
         step: function(value) {
             var convert_value,
                 step = this.options.step;
 
             if (step > 0) { 
-                //step = step * 100 / this.interval;
-                console.log(value,this.options)
                 convert_value =  Math.round( value / step ) * step;
             } 
 
@@ -194,7 +192,7 @@
 
         // public method     
         
-        // @number value  the actual value
+        // @param {value} Number the actual value
         set: function(value) {
             value = this.getPosValue(value);
             this._set(value);
@@ -280,9 +278,11 @@
         },
 
         getValue: function() {
-            var value;
+            var value = [];
 
-            // 
+            $.each(this.pointer, function(i, p) {
+                value[i] = p.get();
+            }); 
 
             return value;  
         },
@@ -323,7 +323,7 @@
         scale: false,
 
         // custom value format
-        // @number value  origin value
+        // @param {value} Number  origin value
         // return a formatted value
         format: function(value) {
 
@@ -333,7 +333,10 @@
         },
 
         // on state change
-        onChange: function() {},
+        onChange: function(instance) {
+            // console.log(instance.uid);
+            // console.log(instance.get());
+        },
 
         // on mouse up 
         callback: function() {}
@@ -418,7 +421,6 @@
             });
         }
     });
-
     Range.registerComponent('view', {
         defaults: {},
         init: function(instance) {
