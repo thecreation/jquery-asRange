@@ -16,23 +16,17 @@
         this.options = $.extend(true, {}, this.parent.options);
         this.interval = this.parent.interval;
         this.value = null;
-        this.direction = '';
+
+        this.direction = parent.direction;
+        this.mouse = parent.mouse;
+        this.max = parent.max;
 
         this.init();
     }
+
     Pointer.prototype = {
         constructor: Pointer,
         init: function() {
-
-            if (this.options.vertical === 'v') {
-                this.direction = 'top';
-                this.mouse = 'pageY';
-                this.max = this.parent.height;
-            } else {
-                this.direction = 'left';
-                this.mouse = 'pageX';
-                this.max = this.parent.width;
-            }
 
             this.$element.on('mousedown', $.proxy(this.mousedown, this));
         },
@@ -44,6 +38,8 @@
             this.data = {};
             this.data.start = event[this.mouse];
             this.data[this.direction] = event[this.mouse] - offset[this.direction];
+
+            this._set(this.data[this.direction]);
 
             $.each(this.parent.pointer, function(i, p) {
                 p.$element.removeClass('pointer-active');
@@ -240,6 +236,16 @@
             this.width = this.$element.width();
             this.height = this.$element.height();
 
+            if (this.options.vertical === 'v') {
+                this.direction = 'top';
+                this.mouse = 'pageY';
+                this.max = this.height;
+            } else {
+                this.direction = 'left';
+                this.mouse = 'pageX';
+                this.max = this.width;
+            }
+
             //this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
 
             for (var i = 1; i <= this.options.pointer; i++) {
@@ -270,11 +276,42 @@
 
             // initial pointer value
             this.setValue(this.value);
-            this.$element.on('click', function(event) {
-                // todo
+            this.$element.on('mousedown', function(event) {
+                var offset = self.$element.offset(),
+                    start = event[self.mouse] - offset[self.direction],
+                    p = self.stickTo.call(self, start);
+
+                p.mousedown.call(p, event);  
+
+                return false;           
             }); 
 
             this.initial = true;
+        },
+
+        stickTo: function(start) {
+            if (this.options.pointer === 1) {
+                return this.p1;
+            } 
+
+            if (this.options.pointer === 2) {
+                var p1 = this.p1.getPosValue(),
+                    p2 = this.p2.getPosValue(),
+                    diff = Math.abs(p1 - p2);
+                if (p1 <= p2) {
+                    if (start > p1 + diff / 2) {
+                        return this.p2;
+                    } else {
+                        return this.p1;
+                    }
+                } else {
+                    if (start > p2 + diff / 2) {
+                        return this.p1;
+                    } else {
+                        return this.p2;
+                    }
+                }
+            }
         },
 
         getValue: function() {
@@ -326,9 +363,7 @@
         // @param {value} Number  origin value
         // return a formatted value
         format: function(value) {
-
             // to do
-
             return value;
         },
 
@@ -412,12 +447,13 @@
         },
         show: function() {
             $.each(this.tip, function(i,$tip) {
-                $tip.show('slow');
+                $tip.fadeIn('slow');
+
             });
         },
         hide: function() {
             $.each(this.tip, function(i,$tip) {
-                $tip.hide('slow');
+                $tip.fadeOut('slow');
             });
         }
     });
