@@ -33,7 +33,7 @@
 
         mousedown: function(event) {
             var limit = {},
-                offset = this.parent.$element.offset();    
+                offset = this.parent.$element.offset();
 
             this.data = {};
             this.data.start = event[this.mouse];
@@ -43,12 +43,12 @@
 
             $.each(this.parent.pointer, function(i, p) {
                 p.$element.removeClass('pointer-active');
-            }); 
+            });
 
             this.$element.addClass('pointer-active');
 
             this.mousemove = function(event) {
-                var value = this.data[this.direction] + ( event[this.mouse] || this.data.start ) - this.data.start;
+                var value = this.data[this.direction] + (event[this.mouse] || this.data.start) - this.data.start;
 
                 if (this.parent.options.limit === true) {
 
@@ -61,13 +61,13 @@
                         value = limit.right;
                     }
 
-                } 
+                }
 
                 this._set(value);
                 return false;
             };
 
-            this.mouseup = function(event) {
+            this.mouseup = function() {
 
                 $(document).off({
                     mousemove: this.mousemove,
@@ -100,7 +100,7 @@
                 position = {};
 
 
-            if (value < 0 ) {
+            if (value < 0) {
                 value = 0;
             }
 
@@ -112,9 +112,9 @@
                 actualValue = this.getActualValue(value);
                 posValue = this.step(actualValue);
             } else {
-                
+
                 posValue = value;
-            }    
+            }
 
             // make sure to redraw only when value changed 
             if (posValue !== this.value) {
@@ -157,19 +157,19 @@
             var convert_value,
                 step = this.options.step;
 
-            if (step > 0) { 
-                convert_value =  Math.round( value / step ) * step;
-            } 
+            if (step > 0) {
+                convert_value = Math.round(value / step) * step;
+            }
 
             return this.getPosValue(convert_value);
-        }, 
+        },
 
         // limit pointer move range
         limit: function() {
-            var left,right;
+            var left, right;
 
             if (this.uid === 1) {
-                lfet = 0;
+                left = 0;
             } else {
                 left = this.parent.pointer[this.uid - 2].getPosValue();
             }
@@ -183,11 +183,11 @@
             return {
                 left: left,
                 right: right
-            }
+            };
         },
 
         // public method     
-        
+
         // @param {value} Number the actual value
         set: function(value) {
             value = this.getPosValue(value);
@@ -199,13 +199,15 @@
             var value = this.getActualValue(this.value);
             return this.options.format(Math.round(value * 100) / 100);
         }
-    }; 
+    };
 
     // main constructor
     var Range = $.range = function(element, options) {
 
         this.element = element;
-        this.$element = $(element).css({postion: 'relative'});
+        this.$element = $(element).css({
+            postion: 'relative'
+        });
 
         this.options = $.extend({}, Range.defaults, options);
         this.namespace = this.options.namespace;
@@ -249,7 +251,7 @@
             //this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
 
             for (var i = 1; i <= this.options.pointer; i++) {
-                var $pointer = $('<span class="' + this.namespace +'-pointer"></span>').appendTo(this.$element);
+                var $pointer = $('<span class="' + this.namespace + '-pointer"></span>').appendTo(this.$element);
                 var p = new Pointer($pointer, i, this);
 
                 this.pointer.push(p);
@@ -281,10 +283,10 @@
                     start = event[self.mouse] - offset[self.direction],
                     p = self.stickTo.call(self, start);
 
-                p.mousedown.call(p, event);  
+                p.mousedown.call(p, event);
 
-                return false;           
-            }); 
+                return false;
+            });
 
             this.initial = true;
         },
@@ -292,7 +294,7 @@
         stickTo: function(start) {
             if (this.options.pointer === 1) {
                 return this.p1;
-            } 
+            }
 
             if (this.options.pointer === 2) {
                 var p1 = this.p1.getPosValue(),
@@ -319,9 +321,9 @@
 
             $.each(this.pointer, function(i, p) {
                 value[i] = p.get();
-            }); 
+            });
 
-            return value;  
+            return value;
         },
 
         // @value Aarry  the actual value
@@ -347,8 +349,8 @@
         namespace: 'range',
         skin: 'skin-1',
 
-        range: [0,100],
-        value: [0,20],
+        range: [0, 100],
+        value: [0, 20],
         step: 10,
 
         pointer: 2,
@@ -377,7 +379,7 @@
         callback: function() {}
     };
 
-    Range.registerComponent = function (component, methods) {
+    Range.registerComponent = function(component, methods) {
         Range.prototype.components[component] = methods;
     };
 
@@ -400,34 +402,36 @@
                 }
             });
         }
-    };     
+    };
 
     Range.registerComponent('tip', {
         defaults: {
-            active: 'always', // 'always' 'onmove'
+            active: 'always' // 'always' 'onmove'
         },
         init: function(instance) {
             var self = this,
-                opts = $.extend({},this.defaults,instance.options.tip);
+                opts = $.extend({}, this.defaults, instance.options.tip);
 
             this.opts = opts;
 
             this.tip = [];
-            $.each(instance.pointer, function(i,p) {
+            $.each(instance.pointer, function(i, p) {
                 var $tip = $('<span class="range-tip"></span>').appendTo(instance.pointer[i].$element);
-                
+
                 if (self.opts.active === 'onmove') {
-                    $tip.css({display: 'none'});
+                    $tip.css({
+                        display: 'none'
+                    });
                     p.$element.on('change', function(e, pointer) {
                         $tip.text(pointer.get());
 
                         if (instance.initial === true) {
                             self.show();
-                        }                       
+                        }
                     });
 
                     p.$element.on('end', function(e, pointer) {
-                        
+
                         self.hide();
                     });
 
@@ -446,13 +450,13 @@
             });
         },
         show: function() {
-            $.each(this.tip, function(i,$tip) {
+            $.each(this.tip, function(i, $tip) {
                 $tip.fadeIn('slow');
 
             });
         },
         hide: function() {
-            $.each(this.tip, function(i,$tip) {
+            $.each(this.tip, function(i, $tip) {
                 $tip.fadeOut('slow');
             });
         }
@@ -470,8 +474,8 @@
 
                     self.$arrow.css({
                         left: 0,
-                        width: right -left
-                    })    
+                        width: right - left
+                    });
                 });
             }
 
@@ -484,7 +488,7 @@
                     self.$arrow.css({
                         left: Math.min(left, right),
                         width: Math.abs(right - left)
-                    })
+                    });
                 });
                 instance.pointer[1].$element.on('change', function(e, pointer) {
                     var right = pointer.getPosValue(),
@@ -493,10 +497,10 @@
                     self.$arrow.css({
                         left: Math.min(left, right),
                         width: Math.abs(right - left)
-                    });    
+                    });
                 });
             }
-        },
+        }
     });
     Range.registerComponent('scale', {
         defaults: {
@@ -504,15 +508,14 @@
         },
         init: function(instance) {
             var self = this,
-                opts = $.extend({},this.defaults,instance.options.tip),
+                opts = $.extend({}, this.defaults, instance.options.tip),
                 len = opts.scale.length;
-                
+
 
             this.$scale = $('<ul class="range-scale"></ul>');
 
-            $.each(opts.scale, function(i,v) {
-                var left,
-                    $li = $('<li>' + v +'</li>');
+            $.each(opts.scale, function(i, v) {
+                var $li = $('<li>' + v + '</li>');
 
                 $li.css({
                     left: i / (len - 1) * 100 + '%'
@@ -525,7 +528,7 @@
             this.$scale.appendTo(instance.$element);
 
 
-        },
+        }
     });
 
 }(jQuery));
