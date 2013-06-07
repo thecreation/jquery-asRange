@@ -207,9 +207,9 @@
         if (this.$range.is('input')) {
             var inputValue = this.$range.attr('value');
 
-            metas.min = parseInt(this.$range.attr('min'));
-            metas.max = parseInt(this.$range.attr('max'));
-            metas.step = parseInt(this.$range.attr('step'));
+            metas.min = parseFloat(this.$range.attr('min'));
+            metas.max = parseFloat(this.$range.attr('max'));
+            metas.step = parseFloat(this.$range.attr('step'));
             
             if (inputValue) {
                 metas.value = [];
@@ -248,6 +248,8 @@
         if (this.max < this.min || this.step <= this.interval) {
             throw new Error('error options about max min step');
         }
+
+        console.log(this.options.min, this.options.max, this.options.step)
 
         this.init();
     };

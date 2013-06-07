@@ -20,7 +20,7 @@
       throws(block, [expected], [message])
   */
 
-  module('jQuery#awesome', {
+  module('jQuery#range', {
     // This will run before each test in this module.
     setup: function() {
       this.elems = $('#qunit-fixture').children();
