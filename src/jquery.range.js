@@ -19,7 +19,7 @@
 
         this.direction = parent.direction;
         this.mouse = parent.mouse;
-        this.max = parent.max;
+        this.maxDimesion = parent.maxDimesion;
 
         this.init();
     }
@@ -27,7 +27,6 @@
     Pointer.prototype = {
         constructor: Pointer,
         init: function() {
-
             this.$element.on('mousedown', $.proxy(this.mousedown, this));
         },
 
@@ -94,31 +93,27 @@
 
         // @value number the position value
         _set: function(value) {
-
             var actualValue,
                 posValue,
                 position = {};
-
 
             if (value < 0) {
                 value = 0;
             }
 
-            if (value > this.max) {
-                value = this.max;
+            if (value > this.maxDimesion) {
+                value = this.maxDimesion;
             }
 
             if (this.options.step > 0) {
                 actualValue = this.getActualValue(value);
                 posValue = this.step(actualValue);
             } else {
-
                 posValue = value;
             }
 
             // make sure to redraw only when value changed 
             if (posValue !== this.value) {
-
                 position[this.direction] = posValue;
                 this.$element.css(position);
                 this.value = posValue;
@@ -137,7 +132,7 @@
 
             // here value = 0  change to false
             if (value !== undefined) {
-                return value / this.parent.interval * this.max;
+                return value / this.parent.interval * this.maxDimesion;
             } else {
                 return this.value;
             }
@@ -146,8 +141,8 @@
         // get actual value
         // @param {value} number the position value
         getActualValue: function(value) {
-            var value = value / this.max * this.parent.interval + this.parent.start;
-            return value;
+            var actualValue = value / this.maxDimesion * this.parent.interval + this.parent.min;
+            return actualValue;
         },
 
         // step control
@@ -177,7 +172,7 @@
             if (this.parent.pointer[this.uid]) {
                 right = this.parent.pointer[this.uid].getPosValue();
             } else {
-                right = this.max;
+                right = this.maxDimesion;
             }
 
             return {
@@ -202,27 +197,57 @@
     };
 
     // main constructor
-    var Range = $.range = function(element, options) {
+    var Range = $.range = function(range, options) {
+        var metas = {};
 
-        this.element = element;
-        this.$element = $(element).css({
-            postion: 'relative'
+        this.range = range;
+        this.$range = $(range);
+        this.$element = null;
+
+        if (this.$range.is('input')) {
+            var inputValue = this.$range.attr('value');
+
+            metas.min = parseInt(this.$range.attr('min'));
+            metas.max = parseInt(this.$range.attr('max'));
+            metas.step = parseInt(this.$range.attr('step'));
+            
+            if (inputValue) {
+                metas.value = [];
+                metas.value.push(inputValue);
+            }
+
+            this.$range.css({
+                display: 'none'
+            });
+
+            this.$element = $("<div></div>");
+            this.$range.after(this.$element);
+        } else {
+            this.$element = this.$range;
+        }
+
+        this.$element.css({
+            position: 'relative'
         });
 
-        this.options = $.extend({}, Range.defaults, options);
+        this.options = $.extend({}, Range.defaults, options, metas);
         this.namespace = this.options.namespace;
         this.components = $.extend(true, {}, this.components);
 
         // public properties
         this.value = this.options.value;
-        this.start = this.options.range[0];
-        this.end = this.options.range[1];
-        this.interval = this.end - this.start;
+        this.min = this.options.min;
+        this.max = this.options.max;
+        this.interval = this.max - this.min;
 
         // flag
         this.initial = false;
 
         this.$element.addClass(this.namespace).addClass(this.options.skin);
+
+        if (this.max < this.min || this.step <= this.interval) {
+            throw new Error('error options about max min step');
+        }
 
         this.init();
     };
@@ -241,15 +266,14 @@
             if (this.options.vertical === 'v') {
                 this.direction = 'top';
                 this.mouse = 'pageY';
-                this.max = this.height;
+                this.maxDimesion = this.height;
             } else {
                 this.direction = 'left';
                 this.mouse = 'pageX';
-                this.max = this.width;
+                this.maxDimesion = this.width;
             }
 
             //this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
-
             for (var i = 1; i <= this.options.pointer; i++) {
                 var $pointer = $('<span class="' + this.namespace + '-pointer"></span>').appendTo(this.$element);
                 var p = new Pointer($pointer, i, this);
@@ -257,16 +281,11 @@
                 this.pointer.push(p);
             }
 
-            // this.$bar.css({
-            //     postion: 'absolute'
-            // });
-
             // alias of every pointer
             this.p1 = this.pointer[0];
             this.p2 = this.pointer[1];
 
             // initial components
-
             this.components.view.init(this);
 
             if (this.options.tip !== false) {
@@ -284,7 +303,6 @@
                     p = self.stickTo.call(self, start);
 
                 p.mousedown.call(p, event);
-
                 return false;
             });
 
@@ -336,8 +354,8 @@
         },
 
         setInterval: function(start, end) {
-            this.start = start;
-            this.end = end;
+            this.min = start;
+            this.max = end;
             this.interval = end - start;
         },
 
@@ -347,9 +365,10 @@
 
     Range.defaults = {
         namespace: 'range',
-        skin: 'skin-1',
+        skin: null,
 
-        range: [0, 100],
+        max: 100,
+        min: 0,
         value: [0, 20],
         step: 10,
 
@@ -431,7 +450,6 @@
                     });
 
                     p.$element.on('end', function(e, pointer) {
-
                         self.hide();
                     });
 
@@ -440,11 +458,6 @@
                         $tip.text(pointer.get());
                     });
                 }
-
-                // p.$element.on('change', function(e, pointer) {
-                //     $tip.text(pointer.get());
-                // });
-
 
                 self.tip.push($tip);
             });
@@ -532,3 +545,4 @@
     });
 
 }(jQuery));
+

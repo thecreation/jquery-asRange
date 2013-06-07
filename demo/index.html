@@ -69,6 +69,7 @@ $(".range-single").range({
                 <script>    
                     $(document).ready(function() {
                         $(".range-single").range({
+                            skin: 'skin-1',
                             step: 10,
                             limit: true,
                             onChange: function(instance) {
@@ -95,6 +96,7 @@ $(".range-single").range({
             <div class="example">
                 <pre class="has-example"><code class="language-javascript">
 $(".range-2").range({
+    skin: 'skin-1',
     pointer: 2,
     limit: true,
     tip: {
@@ -106,6 +108,7 @@ $(".range-2").range({
                 <script>    
                     $(document).ready(function() {
                         $(".range-2").range({
+                            skin: 'skin-1',
                             pointer: 2,
                             limit: true,
                             tip: {
@@ -121,18 +124,22 @@ $(".range-2").range({
         <section>
  <pre class="has-example"><code class="language-javascript">
 $(".range-5").range({
+    skin: 'skin-1',
     step: 0.1,
     pointer: 1,
-    range: [0,10],
-});    </code></pre>
+    min: 0,
+    max: 10
+});        </code></pre>
             <div class="example">
                 <div class="range-5"></div>
                 <script>    
                     $(document).ready(function() {
                         $(".range-5").range({
+                            skin: 'skin-1',
                             step: 0.1,
                             pointer: 1,
-                            range: [0,10]
+                            min: 0,
+                            max: 10
                         });                           
                     });
                 </script>
@@ -144,6 +151,7 @@ $(".range-5").range({
         <section>
  <pre class="has-example"><code class="language-javascript">
 $(".range-3").range({
+    skin: 'skin-1',
     pointer: 2,
     limit: false
 });   </code></pre>      
@@ -152,6 +160,7 @@ $(".range-3").range({
                 <script>    
                     $(document).ready(function() {
                         $(".range-3").range({
+                            skin: 'skin-1',
                             pointer: 2,
                             limit: false
                         });                           
@@ -165,6 +174,7 @@ $(".range-3").range({
         <section>
  <pre class="has-example"><code class="language-javascript">
 $(".range-4").range({
+    skin: 'skin-1',
     tip: false,
     pointer: 2,
     limit: false
@@ -174,6 +184,7 @@ $(".range-4").range({
                 <script>    
                     $(document).ready(function() {
                         $(".range-4").range({
+                            skin: 'skin-1',
                             tip: false,
                             pointer: 2,
                             limit: false
@@ -188,18 +199,22 @@ $(".range-4").range({
         <section>
  <pre class="has-example"><code class="language-javascript">
 $(".range-single-1").range({
+    skin: 'skin-1',
     step: 0.01,
     pointer: 1,
-    range: [0,1]
+    min: 0,
+    max: 1
 }); </code></pre>
             <div class="example">
                 <div class="range-single-1"></div>
                 <script>    
                     $(document).ready(function() {
                         $(".range-single-1").range({
+                            skin: 'skin-1',
                             step: 0.01,
                             pointer: 1,
-                            range: [0,1]
+                            min: 0,
+                            max: 1
                         });                           
                     });
                 </script>
@@ -208,8 +223,32 @@ $(".range-single-1").range({
 
         </section>
 
+        <section>
+            <h3>build on input</h3>
+            <pre class="has-example"><code class="language-javascript">
+$(".range-input").range({
+    skin: 'skin-1',
+    pointer: 1,
+    limit: false
+});   </code></pre>      
+            <div class="example">
+                <input class="range-input" min="0" max="10" />
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-input").range({
+                            skin: 'skin-1',
+                            pointer: 1,
+                            limit: false
+                        });                           
+                    });
+                </script>
+                
+            </div>
+
+        </section>
 
     </section>    
+
 
 </div>
 
