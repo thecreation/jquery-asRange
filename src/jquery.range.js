@@ -306,6 +306,13 @@
                 return false;
             });
 
+            if (this.$range.is('input')) {
+                this.p1.$element.on('change', function(event,instance) {
+                    var value = instance.get();
+                    self.$element.val(value);
+                });
+            }
+
             this.initial = true;
         },
 

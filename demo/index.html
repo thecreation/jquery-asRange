@@ -45,6 +45,9 @@
             .example {
                 background-color: #F8F8F8;
             }
+            .submit {
+                margin-top: 20px;
+            }
         </style>
     </head>
 <body>
@@ -232,7 +235,11 @@ $(".range-input").range({
     limit: false
 });   </code></pre>      
             <div class="example">
-                <input class="range-input" min="0" max="10" />
+                <form method="post">
+                    <input class="range-input" type="range" min="0" max="10" name="points" />
+                    <button class="submit">submit</button>
+                </form>
+                
                 <script>    
                     $(document).ready(function() {
                         $(".range-input").range({
