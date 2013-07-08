@@ -34,6 +34,10 @@
             var limit = {},
                 offset = this.parent.$element.offset();
 
+            if (this.parent.enabled === false) {
+                return;
+            }
+
             this.data = {};
             this.data.start = event[this.mouse];
             this.data[this.direction] = event[this.mouse] - offset[this.direction];
@@ -181,7 +185,10 @@
             };
         },
 
-        // public method     
+
+        /*
+            Public Method
+         */   
 
         // @param {value} Number the actual value
         set: function(value) {
@@ -193,7 +200,12 @@
         get: function() {
             var value = this.getActualValue(this.value);
             return this.options.format(Math.round(value * 100) / 100);
+        },
+
+        destroy: function() {
+            this.$element.off('mousedown');
         }
+
     };
 
     // main constructor
@@ -242,14 +254,13 @@
 
         // flag
         this.initial = false;
+        this.enabled = true;
 
         this.$element.addClass(this.namespace).addClass(this.options.skin);
 
         if (this.max < this.min || this.step <= this.interval) {
             throw new Error('error options about max min step');
         }
-
-        console.log(this.options.min, this.options.max, this.options.step)
 
         this.init();
     };
@@ -317,7 +328,6 @@
 
             this.initial = true;
         },
-
         stickTo: function(start) {
             if (this.options.pointer === 1) {
                 return this.p1;
@@ -343,6 +353,10 @@
             }
         },
 
+        /*
+            Public Method
+         */
+        
         getValue: function() {
             var value = [];
 
@@ -352,8 +366,6 @@
 
             return value;
         },
-
-        // @value Aarry  the actual value
         setValue: function(value) {
             $.each(this.pointer, function(i, p) {
                 p.set(value[i]);
@@ -361,15 +373,26 @@
 
             this.value = value;
         },
-
         setInterval: function(start, end) {
             this.min = start;
             this.max = end;
             this.interval = end - start;
         },
-
-        enable: function() {},
-        disable: function() {}
+        enable: function() {
+            this.enabled = true;
+            this.$element.addClass(this.namespace + 'enabled');
+            return this;
+        },
+        disable: function() {
+            this.enabled = false;
+            this.$element.removeClass(this.namespace + 'enabled');
+            return this;
+        },
+        destroy: function() {
+            $.each(this.pointer, function(i, p) {
+                p.destroy();
+            });
+        }
     };
 
     Range.defaults = {
@@ -423,7 +446,6 @@
                 }
             });
         } else {
-
             return this.each(function() {
                 if (!$.data(this, 'range')) {
                     $.data(this, 'range', new Range(this, options));
@@ -474,7 +496,6 @@
         show: function() {
             $.each(this.tip, function(i, $tip) {
                 $tip.fadeIn('slow');
-
             });
         },
         hide: function() {
@@ -502,7 +523,6 @@
             }
 
             if (instance.pointer.length === 2) {
-
                 instance.pointer[0].$element.on('change', function(e, pointer) {
                     var left = pointer.getPosValue(),
                         right = instance.pointer[1].getPosValue();
@@ -533,9 +553,7 @@
                 opts = $.extend({}, this.defaults, instance.options.tip),
                 len = opts.scale.length;
 
-
             this.$scale = $('<ul class="range-scale"></ul>');
-
             $.each(opts.scale, function(i, v) {
                 var $li = $('<li>' + v + '</li>');
 
@@ -546,10 +564,7 @@
                 $li.appendTo(self.$scale);
 
             });
-
             this.$scale.appendTo(instance.$element);
-
-
         }
     });
 
