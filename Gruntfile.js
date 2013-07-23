@@ -110,6 +110,7 @@ module.exports = function(grunt) {
 
     // Default task.
     grunt.registerTask('default', ['jshint', 'qunit', 'clean', 'concat', 'uglify']);
+    grunt.registerTask('dist', ['concat', 'uglify']);
 
     grunt.registerTask('js', ['jsbeautifier', 'jshint']);
     grunt.registerTask('css', ['recess']);
