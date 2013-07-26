@@ -1,0 +1,24 @@
+{
+  "name": "range",
+  "title": "jQuery range",
+  "description": "A powerful slider for selecting value ranges",
+  "version": "0.1.1",
+  "author": {
+    "name": "amazingSurge",
+    "email": "amazingSurge@yahoo.com",
+    "url": "amazingSurge.com"
+  },
+  "bugs": "https://github.com/amazingSurge/jquery-range/issues",
+  "licenses": [
+    {
+      "type": "GPL",
+      "url": "https://github.com/amazingSurge/jquery-range/blob/master/LICENSE-GPL"
+    }
+  ],
+  "bugs": "https://github.com/amazingSurge/jquery-range/issues",
+  "homepage": "https://github.com/amazingSurge/jquery-range",
+  "docs": "https://github.com/amazingSurge/jquery-range",
+  "dependencies": {
+    "jquery": ">= 1.8.3"
+  }
+}

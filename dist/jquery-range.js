@@ -1,4 +1,4 @@
-/*! Range - v0.1.0 - 2013-07-23
+/*! Range - v0.1.0 - 2013-07-26
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2013 joeylin; Licensed MIT */
 (function($) {
@@ -90,7 +90,11 @@
             return false;
         },
 
-        // @value number the position value
+        /**
+         * [ set value]
+         * @param  {[number]} value [he position value]
+         * @return {[type]}       [none]
+         */
         _set: function(value) {
             var actualValue,
                 posValue,
@@ -125,8 +129,11 @@
             }
         },
 
-        // get postion value
-        // @param {value} number the actual value
+        /**
+         * [ get postion value]
+         * @param  {[number]} value [the actual value]
+         * @return {[number]}       [the position value]
+         */
         getPosValue: function(value) {
 
             // here value = 0  change to false
@@ -137,16 +144,21 @@
             }
         },
 
-        // get actual value
-        // @param {value} number the position value
+        /**
+         * [ get actual value]
+         * @param  {[number]} value [the position value]
+         * @return {[number]}       [the actual value]
+         */
         getActualValue: function(value) {
             var actualValue = value / this.maxDimesion * this.parent.interval + this.parent.min;
             return actualValue;
         },
 
-        // step control
-        // @param {value} number the position value
-        // return position value
+        /**
+         * [ step control]
+         * @param  {[number]} value [the position value]
+         * @return {[number]}       [the position value]
+         */
         step: function(value) {
             var convert_value,
                 step = this.options.step;
@@ -158,7 +170,10 @@
             return this.getPosValue(convert_value);
         },
 
-        // limit pointer move range
+        /**
+         * [ limit pointer move range]
+         * @return {[object]} [if the pointer is limited to its left or right]
+         */
         limit: function() {
             var left, right;
 
@@ -179,24 +194,35 @@
                 right: right
             };
         },
+        
+        /**
+         * Public Method
+         */
+            
 
-
-        /*
-            Public Method
-         */   
-
-        // @param {value} Number the actual value
+        /**
+         * [ set value]
+         * @param  {[Number]} value [the actual value]
+         * @return {[type]}       [none]
+         */
         set: function(value) {
             value = this.getPosValue(value);
             this._set(value);
         },
 
-        // reutrn actual value
+        /**
+         * [ get value]
+         * @return {[number]} [actual value]
+         */
         get: function() {
             var value = this.getActualValue(this.value);
             return this.options.format(Math.round(value * 100) / 100);
         },
 
+        /**
+         * [ destroy the plugin]
+         * @return {[type]} [none]
+         */
         destroy: function() {
             this.$element.off('mousedown');
         }
@@ -407,18 +433,23 @@
         tip: true,
         scale: false,
 
-        // custom value format
-        // @param {value} Number  origin value
-        // return a formatted value
+        /**
+         * [ callback: custom value format]
+         * @param  {[Number]} value [origin value]
+         * @return {[Number]}       [a formatted value]
+         */
         format: function(value) {
             // to do
             return value;
         },
 
-        // on state change
+        /**
+         * [ callback: on state change]
+         * @param  {[Object]} instance [a Range instance]
+         * @return {[type]}          [none]
+         */
         onChange: function(instance) {
-            // console.log(instance.uid);
-            // console.log(instance.get());
+            
         },
 
         // on mouse up 
@@ -449,119 +480,131 @@
         }
     };
 
-    Range.registerComponent('tip', {
-        defaults: {
-            active: 'always' // 'always' 'onmove'
-        },
-        init: function(instance) {
-            var self = this,
-                opts = $.extend({}, this.defaults, instance.options.tip);
-
-            this.opts = opts;
-
-            this.tip = [];
-            $.each(instance.pointer, function(i, p) {
-                var $tip = $('<span class="range-tip"></span>').appendTo(instance.pointer[i].$element);
-
-                if (self.opts.active === 'onmove') {
-                    $tip.css({
-                        display: 'none'
-                    });
-                    p.$element.on('change', function(e, pointer) {
-                        $tip.text(pointer.get());
-
-                        if (instance.initial === true) {
-                            self.show();
-                        }
-                    });
-
-                    p.$element.on('end', function(e, pointer) {
-                        self.hide();
-                    });
-
-                } else {
-                    p.$element.on('change', function(e, pointer) {
-                        $tip.text(pointer.get());
-                    });
-                }
-
-                self.tip.push($tip);
-            });
-        },
-        show: function() {
-            $.each(this.tip, function(i, $tip) {
-                $tip.fadeIn('slow');
-            });
-        },
-        hide: function() {
-            $.each(this.tip, function(i, $tip) {
-                $tip.fadeOut('slow');
-            });
-        }
-    });
-    Range.registerComponent('view', {
-        defaults: {},
-        init: function(instance) {
-            var self = this;
-            this.$arrow = $('<span class="range-view"></span>').appendTo(instance.$element);
-
-            if (instance.pointer.length === 1) {
-                instance.pointer[0].$element.on('change', function(e, pointer) {
-                    var left = 0,
-                        right = pointer.getPosValue();
-
-                    self.$arrow.css({
-                        left: 0,
-                        width: right - left
-                    });
-                });
-            }
-
-            if (instance.pointer.length === 2) {
-                instance.pointer[0].$element.on('change', function(e, pointer) {
-                    var left = pointer.getPosValue(),
-                        right = instance.pointer[1].getPosValue();
-
-                    self.$arrow.css({
-                        left: Math.min(left, right),
-                        width: Math.abs(right - left)
-                    });
-                });
-                instance.pointer[1].$element.on('change', function(e, pointer) {
-                    var right = pointer.getPosValue(),
-                        left = instance.pointer[0].getPosValue();
-
-                    self.$arrow.css({
-                        left: Math.min(left, right),
-                        width: Math.abs(right - left)
-                    });
-                });
-            }
-        }
-    });
-    Range.registerComponent('scale', {
-        defaults: {
-            scale: [0, 50, 100]
-        },
-        init: function(instance) {
-            var self = this,
-                opts = $.extend({}, this.defaults, instance.options.tip),
-                len = opts.scale.length;
-
-            this.$scale = $('<ul class="range-scale"></ul>');
-            $.each(opts.scale, function(i, v) {
-                var $li = $('<li>' + v + '</li>');
-
-                $li.css({
-                    left: i / (len - 1) * 100 + '%'
-                });
-
-                $li.appendTo(self.$scale);
-
-            });
-            this.$scale.appendTo(instance.$element);
-        }
-    });
-
 }(jQuery));
 
+
+
+
+
+
+
+// scale
+
+$.range.registerComponent('scale', {
+    defaults: {
+        scale: [0, 50, 100]
+    },
+    init: function(instance) {
+        var self = this,
+            opts = $.extend({}, this.defaults, instance.options.tip),
+            len = opts.scale.length;
+
+        this.$scale = $('<ul class="range-scale"></ul>');
+        $.each(opts.scale, function(i, v) {
+            var $li = $('<li>' + v + '</li>');
+
+            $li.css({
+                left: i / (len - 1) * 100 + '%'
+            });
+
+            $li.appendTo(self.$scale);
+
+        });
+        this.$scale.appendTo(instance.$element);
+    }
+});
+
+// jqueyr range veiw
+
+$.range.registerComponent('view', {
+    defaults: {},
+    init: function(instance) {
+        var self = this;
+        this.$arrow = $('<span class="range-view"></span>').appendTo(instance.$element);
+
+        if (instance.pointer.length === 1) {
+            instance.pointer[0].$element.on('change', function(e, pointer) {
+                var left = 0,
+                    right = pointer.getPosValue();
+
+                self.$arrow.css({
+                    left: 0,
+                    width: right - left
+                });
+            });
+        }
+
+        if (instance.pointer.length === 2) {
+            instance.pointer[0].$element.on('change', function(e, pointer) {
+                var left = pointer.getPosValue(),
+                    right = instance.pointer[1].getPosValue();
+
+                self.$arrow.css({
+                    left: Math.min(left, right),
+                    width: Math.abs(right - left)
+                });
+            });
+            instance.pointer[1].$element.on('change', function(e, pointer) {
+                var right = pointer.getPosValue(),
+                    left = instance.pointer[0].getPosValue();
+
+                self.$arrow.css({
+                    left: Math.min(left, right),
+                    width: Math.abs(right - left)
+                });
+            });
+        }
+    }
+});
+// jquery range tip
+
+$.range.registerComponent('tip', {
+    defaults: {
+        active: 'always' // 'always' 'onmove'
+    },
+    init: function(instance) {
+        var self = this,
+            opts = $.extend({}, this.defaults, instance.options.tip);
+
+        this.opts = opts;
+
+        this.tip = [];
+        $.each(instance.pointer, function(i, p) {
+            var $tip = $('<span class="range-tip"></span>').appendTo(instance.pointer[i].$element);
+
+            if (self.opts.active === 'onmove') {
+                $tip.css({
+                    display: 'none'
+                });
+                p.$element.on('change', function(e, pointer) {
+                    $tip.text(pointer.get());
+
+                    if (instance.initial === true) {
+                        self.show();
+                    }
+                });
+
+                p.$element.on('end', function(e, pointer) {
+                    self.hide();
+                });
+
+            } else {
+                p.$element.on('change', function(e, pointer) {
+                    $tip.text(pointer.get());
+                });
+            }
+
+            self.tip.push($tip);
+        });
+    },
+    show: function() {
+        $.each(this.tip, function(i, $tip) {
+            $tip.fadeIn('slow');
+        });
+    },
+    hide: function() {
+        $.each(this.tip, function(i, $tip) {
+            $tip.fadeOut('slow');
+        });
+    }
+});
