@@ -231,7 +231,6 @@
         destroy: function() {
             this.$element.off('mousedown');
         }
-
     };
 
     // main constructor
@@ -282,9 +281,13 @@
         this.initial = false;
         this.enabled = true;
 
-        this.$element.addClass(this.namespace).addClass(this.options.skin);
+        this.$element.addClass(this.namespace);
 
-        if (this.max < this.min || this.step <= this.interval) {
+        if (this.options.skin !== null) {
+            this.$element.addClass(this.namespace + '_' + this.options.skin);
+        }
+
+        if (this.max < this.min || this.step >= this.interval) {
             throw new Error('error options about max min step');
         }
 
@@ -453,8 +456,7 @@
          * @param  {[Object]} instance [a Range instance]
          * @return {[type]}          [none]
          */
-        onChange: function(instance) {
-            
+        onChange: function(instance) {         
         },
 
         // on mouse up 
