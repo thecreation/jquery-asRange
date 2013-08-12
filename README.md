@@ -46,7 +46,7 @@ Or you can also use <code>input</code>
 ```
 
 Initialize range:
-```html
+```javascript
 $(".range-input").range({skin: 'skin-1'});
 ```
 
