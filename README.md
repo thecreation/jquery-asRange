@@ -124,7 +124,7 @@ the most important thing is you should set skin value to let plugin load specifi
         <tr>
             <td>limit</td>
             <td>true</td>
-            <td>Optional property, if true, </td>
+            <td>Optional property, if true, limit the range of the pointer moving</td>
         </tr>
         <tr>
             <td>orientation</td>
