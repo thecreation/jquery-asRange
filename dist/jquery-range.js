@@ -1,4 +1,4 @@
-/*! Range - v0.1.0 - 2013-08-11
+/*! Range - v0.1.0 - 2013-08-25
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2013 amazingSurge; Licensed GPL */
 (function($) {
@@ -27,6 +27,7 @@
 
         mousedown: function(event) {
             var limit = {},
+                self = this,
                 offset = this.parent.$element.offset();
 
             if (this.parent.enabled === false) {
@@ -40,10 +41,10 @@
             this._set(this.data[this.direction]);
 
             $.each(this.parent.pointer, function(i, p) {
-                p.$element.removeClass('pointer-active');
+                p.$element.removeClass(self.namespace + '-pointer_active');
             });
 
-            this.$element.addClass('pointer-active');
+            this.$element.addClass(this.namespace + '-pointer_active');
 
             this.mousemove = function(event) {
                 var value = this.data[this.direction] + (event[this.mouse] || this.data.start) - this.data.start;
@@ -495,7 +496,7 @@ $.range.registerComponent('scale', {
             opts = $.extend({}, this.defaults, instance.options.tip),
             len = opts.scale.length;
 
-        this.$scale = $('<ul class="range-scale"></ul>');
+        this.$scale = $('<ul class="' + instance.namespace + '-range-scale"></ul>');
         $.each(opts.scale, function(i, v) {
             var $li = $('<li>' + v + '</li>');
 
@@ -516,7 +517,7 @@ $.range.registerComponent('view', {
     defaults: {},
     init: function(instance) {
         var self = this;
-        this.$arrow = $('<span class="range-view"></span>').appendTo(instance.$element);
+        this.$arrow = $('<span class="' + instance.namespace + '-range-view"></span>').appendTo(instance.$element);
 
         if (instance.pointer.length === 1) {
             instance.pointer[0].$element.on('change', function(e, pointer) {
@@ -566,7 +567,7 @@ $.range.registerComponent('tip', {
 
         this.tip = [];
         $.each(instance.pointer, function(i, p) {
-            var $tip = $('<span class="range-tip"></span>').appendTo(instance.pointer[i].$element);
+            var $tip = $('<span class="' + instance.namespace + '-range-tip"></span>').appendTo(instance.pointer[i].$element);
 
             if (self.opts.active === 'onmove') {
                 $tip.css({

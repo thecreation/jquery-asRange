@@ -32,6 +32,7 @@
 
         mousedown: function(event) {
             var limit = {},
+                self = this,
                 offset = this.parent.$element.offset();
 
             if (this.parent.enabled === false) {
@@ -45,10 +46,10 @@
             this._set(this.data[this.direction]);
 
             $.each(this.parent.pointer, function(i, p) {
-                p.$element.removeClass('pointer-active');
+                p.$element.removeClass(self.namespace + '-pointer_active');
             });
 
-            this.$element.addClass('pointer-active');
+            this.$element.addClass(this.namespace + '-pointer_active');
 
             this.mousemove = function(event) {
                 var value = this.data[this.direction] + (event[this.mouse] || this.data.start) - this.data.start;
