@@ -12,7 +12,11 @@ $.range.registerComponent('tip', {
 
         this.tip = [];
         $.each(instance.pointer, function(i, p) {
-            var $tip = $('<span class="' + instance.namespace + '-range-tip"></span>').appendTo(instance.pointer[i].$element);
+            var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
+
+            if (instance.namespace !== null) {
+                $tip.addClass(instance.namespace + '-tip');
+            }
 
             if (self.opts.active === 'onmove') {
                 $tip.css({

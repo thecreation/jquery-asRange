@@ -10,7 +10,12 @@ $.range.registerComponent('scale', {
             opts = $.extend({}, this.defaults, instance.options.tip),
             len = opts.scale.length;
 
-        this.$scale = $('<ul class="' + instance.namespace + '-range-scale"></ul>');
+        this.$scale = $('<ul></ul>');
+
+        if (instance.namespace !== null) {
+            this.$scale.addClass(instance.namespace + '-scale');
+        }
+
         $.each(opts.scale, function(i, v) {
             var $li = $('<li>' + v + '</li>');
 

@@ -44,8 +44,10 @@
                 p.$element.removeClass(self.namespace + '-pointer_active');
             });
 
-            this.$element.addClass(this.namespace + '-pointer_active');
-
+            if (this.parent.namespace !== null) {
+                this.$element.addClass(this.parent.namespace + '-pointer_active');
+            }
+            
             this.mousemove = function(event) {
                 var value = this.data[this.direction] + (event[this.mouse] || this.data.start) - this.data.start;
 
@@ -496,7 +498,12 @@ $.range.registerComponent('scale', {
             opts = $.extend({}, this.defaults, instance.options.tip),
             len = opts.scale.length;
 
-        this.$scale = $('<ul class="' + instance.namespace + '-range-scale"></ul>');
+        this.$scale = $('<ul></ul>');
+
+        if (instance.namespace !== null) {
+            this.$scale.addClass(instance.namespace + '-scale');
+        }
+
         $.each(opts.scale, function(i, v) {
             var $li = $('<li>' + v + '</li>');
 
@@ -517,7 +524,11 @@ $.range.registerComponent('view', {
     defaults: {},
     init: function(instance) {
         var self = this;
-        this.$arrow = $('<span class="' + instance.namespace + '-range-view"></span>').appendTo(instance.$element);
+        this.$arrow = $('<span></span>').appendTo(instance.$element);
+
+        if (instance.namespace !== null) {
+            this.$arrow.addClass(instance.namespace + '-view');
+        }
 
         if (instance.pointer.length === 1) {
             instance.pointer[0].$element.on('change', function(e, pointer) {
@@ -567,7 +578,11 @@ $.range.registerComponent('tip', {
 
         this.tip = [];
         $.each(instance.pointer, function(i, p) {
-            var $tip = $('<span class="' + instance.namespace + '-range-tip"></span>').appendTo(instance.pointer[i].$element);
+            var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
+
+            if (instance.namespace !== null) {
+                $tip.addClass(instance.namespace + '-tip');
+            }
 
             if (self.opts.active === 'onmove') {
                 $tip.css({

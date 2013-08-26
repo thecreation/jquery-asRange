@@ -49,8 +49,10 @@
                 p.$element.removeClass(self.namespace + '-pointer_active');
             });
 
-            this.$element.addClass(this.namespace + '-pointer_active');
-
+            if (this.parent.namespace !== null) {
+                this.$element.addClass(this.parent.namespace + '-pointer_active');
+            }
+            
             this.mousemove = function(event) {
                 var value = this.data[this.direction] + (event[this.mouse] || this.data.start) - this.data.start;
 

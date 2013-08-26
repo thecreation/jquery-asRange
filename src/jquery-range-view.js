@@ -5,7 +5,11 @@ $.range.registerComponent('view', {
     defaults: {},
     init: function(instance) {
         var self = this;
-        this.$arrow = $('<span class="' + instance.namespace + '-range-view"></span>').appendTo(instance.$element);
+        this.$arrow = $('<span></span>').appendTo(instance.$element);
+
+        if (instance.namespace !== null) {
+            this.$arrow.addClass(instance.namespace + '-view');
+        }
 
         if (instance.pointer.length === 1) {
             instance.pointer[0].$element.on('change', function(e, pointer) {
