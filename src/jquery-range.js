@@ -66,7 +66,6 @@
                     if (value > limit.right) {
                         value = limit.right;
                     }
-
                 }
 
                 this._set(value);
@@ -336,7 +335,7 @@
             if (this.options.tip !== false) {
                 this.components.tip.init(this);
             }
-            if (this.options.scale === false) {
+            if (this.options.scale !== false) {
                 this.components.scale.init(this);
             }
 
@@ -442,23 +441,14 @@
 
         // components
         tip: true,
-        scale: false,
-
-        /**
-         * [ callback: custom value format]
-         * @param  {[Number]} value [origin value]
-         * @return {[Number]}       [a formatted value]
-         */
+        //scale: false,
+        //
         format: function(value) {
             // to do
             return value;
         },
 
-        /**
-         * [ callback: on state change]
-         * @param  {[Object]} instance [a Range instance]
-         * @return {[type]}          [none]
-         */
+        
         onChange: function(instance) {         
         },
 

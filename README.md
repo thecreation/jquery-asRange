@@ -64,7 +64,11 @@ $(".range-single").range({
         limit: true,
         orientation: 'v',
         tip: true,
-        scale: false,
+        scale: {
+            values: [0,50,100],
+            gap: 1,
+            grid: 5
+        },
         format: function(value) {
             return value;
         },
@@ -138,8 +142,8 @@ the most important thing is you should set skin value to let plugin load specifi
         </tr>
 		<tr>
             <td>scale</td>
-            <td>false</td>
-            <td>Optional property, if false, the component of scale will be initialized</td>
+            <td>Object</td>
+            <td>Optional property, values means the value you want to add to scale; gap means how many parts you want to division between value; grid means how many small parts in the part</td>
         </tr>
 		<tr>
             <td>format</td>

@@ -1,4 +1,4 @@
-/*! Range - v0.1.0 - 2013-08-25
+/*! Range - v0.1.2 - 2013-10-10
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2013 amazingSurge; Licensed GPL */
 (function($) {
@@ -61,7 +61,6 @@
                     if (value > limit.right) {
                         value = limit.right;
                     }
-
                 }
 
                 this._set(value);
@@ -331,7 +330,7 @@
             if (this.options.tip !== false) {
                 this.components.tip.init(this);
             }
-            if (this.options.scale === false) {
+            if (this.options.scale !== false) {
                 this.components.scale.init(this);
             }
 
@@ -437,23 +436,14 @@
 
         // components
         tip: true,
-        scale: false,
-
-        /**
-         * [ callback: custom value format]
-         * @param  {[Number]} value [origin value]
-         * @return {[Number]}       [a formatted value]
-         */
+        //scale: false,
+        //
         format: function(value) {
             // to do
             return value;
         },
 
-        /**
-         * [ callback: on state change]
-         * @param  {[Object]} instance [a Range instance]
-         * @return {[type]}          [none]
-         */
+        
         onChange: function(instance) {         
         },
 
@@ -488,32 +478,56 @@
 }(jQuery));
 
 // scale
-
+// 
 $.range.registerComponent('scale', {
     defaults: {
-        scale: [0, 50, 100]
+        scale: {
+            values: [0,50,100],
+            gap: 1,
+            grid: 5
+        }
     },
     init: function(instance) {
-        var self = this,
-            opts = $.extend({}, this.defaults, instance.options.tip),
-            len = opts.scale.length;
+        var opts = $.extend({}, this.defaults, instance.options.scale),
+            scale = opts.scale;
 
-        this.$scale = $('<ul></ul>');
+        var classes = {
+            scale: instance.namespace + '-scale',
+            scaleGrid: instance.namespace + '-scaleGrid',
+            scaleValue: instance.namespace + '-scaleValue',
+            grid: instance.namespace + '-scale-grid',
+            inlineGrid: instance.namespace + '-scale-inlineGrid'
+        };
 
-        if (instance.namespace !== null) {
-            this.$scale.addClass(instance.namespace + '-scale');
+        var len = scale.values.length;
+        var num = ((scale.grid -1)*(scale.gap+1) + scale.gap)*(len-1) + len;
+        var perOfGrid =  100/(num-1);
+        var perOfValue = 100/(len-1);
+
+        this.$scale = $('<div></div>').addClass(classes.scale);
+        this.$grid = $('<ul></ul>').addClass(classes.scaleGrid);
+        this.$value = $('<ul></ul>').addClass(classes.scaleValue);
+
+        for (var i=0; i<num; i++) {
+            var $list;
+            if (i===0 || i===num || i%((num-1)/(len-1))===0) {
+                $list = $('<li class="' + classes.grid +'"></li>');
+            } else if ( i%scale.grid === 0 ) {
+                $list = $('<li class="' + classes.inlineGrid +'"></li>');
+            } else {
+                $list = $('<li></li>');
+            } 
+
+            // position scale 
+            $list.css({left: perOfGrid * i + '%'}).appendTo(this.$grid);
         }
 
-        $.each(opts.scale, function(i, v) {
-            var $li = $('<li>' + v + '</li>');
+        for (var j=0; j<len; j++) {
+            // position value
+            $('<li>' + scale.values[j] + '</li>').css({left: perOfValue * j + '%'}).appendTo(this.$value);
+        }
 
-            $li.css({
-                left: i / (len - 1) * 100 + '%'
-            });
-
-            $li.appendTo(self.$scale);
-
-        });
+        this.$grid.add(this.$value).appendTo(this.$scale);
         this.$scale.appendTo(instance.$element);
     }
 });

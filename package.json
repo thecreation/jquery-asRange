@@ -2,7 +2,7 @@
   "name": "jquery-range",
   "title": "Range",
   "description": "A powerful slider for selecting value ranges",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "homepage": "https://github.com/amazingSurge/jquery-range",
   "author": {
     "name": "amazingSurge",
