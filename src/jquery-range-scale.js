@@ -46,7 +46,7 @@ $.range.registerComponent('scale', {
 
         for (var j=0; j<len; j++) {
             // position value
-            $('<li>' + scale.values[j] + '</li>').css({left: perOfValue * j + '%'}).appendTo(this.$value);
+            $('<li><span>' + scale.values[j] + '</span></li>').css({left: perOfValue * j + '%'}).appendTo(this.$value);
         }
 
         this.$grid.add(this.$value).appendTo(this.$scale);

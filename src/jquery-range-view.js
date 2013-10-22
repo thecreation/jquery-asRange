@@ -5,41 +5,36 @@ $.range.registerComponent('view', {
     defaults: {},
     init: function(instance) {
         var self = this;
-        this.$arrow = $('<span></span>').appendTo(instance.$element);
 
-        if (instance.namespace !== null) {
-            this.$arrow.addClass(instance.namespace + '-view');
-        }
+        this.$arrow = $('<span></span>').appendTo(instance.$element);
+        this.$arrow.addClass(instance.namespace + '-view');
 
         if (instance.pointer.length === 1) {
-            instance.pointer[0].$element.on('change', function(e, pointer) {
-                var left = 0,
-                    right = pointer.getPosValue();
+            instance.pointer[0].$element.on('range::pointer::change', function(e, pointer) {
+                var left = 0, right = pointer.get();
 
                 self.$arrow.css({
                     left: 0,
-                    width: right - left
+                    width: (right - left) * 100 + '%'
                 });
             });
         }
 
         if (instance.pointer.length === 2) {
-            instance.pointer[0].$element.on('change', function(e, pointer) {
-                var left = pointer.getPosValue(),
-                    right = instance.pointer[1].getPosValue();
+            instance.pointer[0].$element.on('range::pointer::change', function(e, pointer) {
+                var left = pointer.get(), right = instance.pointer[1].get();
 
                 self.$arrow.css({
-                    left: Math.min(left, right),
-                    width: Math.abs(right - left)
+                    left: Math.min(left, right) * 100 + '%',
+                    width: Math.abs(right - left) * 100 + '%'
                 });
             });
-            instance.pointer[1].$element.on('change', function(e, pointer) {
-                var right = pointer.getPosValue(),
-                    left = instance.pointer[0].getPosValue();
+            instance.pointer[1].$element.on('range::pointer::change', function(e, pointer) {
+                var right = pointer.get(), left = instance.pointer[0].get();
 
                 self.$arrow.css({
-                    left: Math.min(left, right),
-                    width: Math.abs(right - left)
+                    left: Math.min(left, right) * 100 + '%',
+                    width: Math.abs(right - left) * 100 + '%'
                 });
             });
         }

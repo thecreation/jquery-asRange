@@ -9,48 +9,36 @@ $.range.registerComponent('tip', {
             opts = $.extend({}, this.defaults, instance.options.tip);
 
         this.opts = opts;
-
-        this.tip = [];
+        this.classes = {
+            tip: instance.namespace + '-tip',
+            show: instance.namespace + '-tip-show'
+        };
         $.each(instance.pointer, function(i, p) {
             var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
 
-            if (instance.namespace !== null) {
-                $tip.addClass(instance.namespace + '-tip');
-            }
+            $tip.addClass(self.classes.tip);
 
-            if (self.opts.active === 'onmove') {
-                $tip.css({
-                    display: 'none'
+            if (self.opts.active === 'onMove') {
+                $tip.css({ display: 'none'});
+                p.$element.on('range::pointer::end', function() {
+                    self.hide($tip);
+                    return false;
+                }).on('range::pointer::start', function() {
+                    self.show($tip);
+                    return false;
                 });
-                p.$element.on('change', function(e, pointer) {
-                    $tip.text(pointer.get());
-
-                    if (instance.initial === true) {
-                        self.show();
-                    }
-                });
-
-                p.$element.on('end', function(e, pointer) {
-                    self.hide();
-                });
-
-            } else {
-                p.$element.on('change', function(e, pointer) {
-                    $tip.text(pointer.get());
-                });
-            }
-
-            self.tip.push($tip);
+            } 
+            p.$element.on('range::pointer::change', function(e, pointer) {
+                $tip.text(pointer.get());
+            });
         });
     },
-    show: function() {
-        $.each(this.tip, function(i, $tip) {
-            $tip.fadeIn('slow');
-        });
+    show: function($tip) {
+        $tip.addClass(this.classes.show);
+        $tip.css({display: 'block'});
     },
-    hide: function() {
-        $.each(this.tip, function(i, $tip) {
-            $tip.fadeOut('slow');
-        });
+    hide: function($tip) {
+        $tip.removeClass(this.classes.show);
+        $tip.css({display: 'none'});
     }
 });
