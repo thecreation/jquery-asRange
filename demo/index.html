@@ -20,6 +20,8 @@
         <script src="js/vendor/jquery-1.9.1.min.js"></script>
         <script src="js/vendor/jquery.toc.js"></script>
         <script src="js/vendor/prism.js"></script>
+
+        <script src="js/jqueryjquery.Modernizr.js"></script>
         <script src="../dist/jquery-range.js"></script>
 
         <style type="text/css">
@@ -64,7 +66,10 @@
             <pre class="has-example"><code class="language-javascript">
 $(".range-single").range({
     step: 10,
-    limit: true
+    limit: true,
+    format: function(value) {
+        return '$' + value;
+    }
 }); 
             </code></pre>
             <div class="example">
@@ -75,6 +80,9 @@ $(".range-single").range({
                             skin: 'skin-1',
                             step: 10,
                             limit: true,
+                            format: function(value) {
+                                return '$' + value;
+                            },
                             onChange: function(instance) {
                                 var pid = instance.uid,
                                     val = instance.get();

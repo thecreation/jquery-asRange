@@ -70,7 +70,6 @@
 
             return false;
         },
-
         set: function(from, value) {
             if (from === 'px') {
                 value = value / this.parent.getLength();
@@ -88,7 +87,6 @@
             if (this.value === value) {
                 return;
             }
-
             var position = {};
 
             value = Math.round(value * 1000) / 1000;
@@ -333,6 +331,7 @@
             var self = this, value = [];
             $.each(this.pointer, function(i, p) {
                 var pointerValue = p.get() * self.interval + self.min;
+                pointerValue = Math.round(pointerValue * 1000) / 1000;
                 value[i] = pointerValue;
             });
             return value;
