@@ -17,7 +17,6 @@ $.range.registerComponent('tip', {
             var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
 
             $tip.addClass(self.classes.tip);
-
             if (self.opts.active === 'onMove') {
                 $tip.css({ display: 'none'});
                 p.$element.on('range::pointer::end', function() {
@@ -28,8 +27,15 @@ $.range.registerComponent('tip', {
                     return false;
                 });
             } 
-            p.$element.on('range::pointer::change', function(e, pointer) {
-                $tip.text(pointer.get());
+            p.$element.on('range::pointer::change', function() {
+                var value;
+                if (typeof instance.options.format === 'function') {
+                    value = instance.options.format(instance.get()[i]);
+                } else {
+                    value = instance.get()[i];
+                }
+                $tip.text(value);
+                return false;
             });
         });
     },

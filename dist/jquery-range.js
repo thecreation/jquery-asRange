@@ -101,15 +101,16 @@
                 if (value <= 0) { value = 0; }
                 if (value >= 1) { value = 1; }
             }
+            value = Math.round(value * 1000) / 1000;
             this.value = value;
 
             position[this.parent.position] = value * 100 + '%';
             this.$element.css(position);
+            this.$element.focus();
 
             if (typeof this.parent.options.onChange === 'function') {
                 this.parent.options.onChange(this);
             }
-
             this.$element.trigger('range::pointer::change', this);
         },
         get: function() {
@@ -127,11 +128,11 @@
             if (this.uid === 1) {
                 left = 0;
             } else {
-                left = pointer[this.uid - 2][value];
+                left = pointer[this.uid - 2]['value'];
             }
 
             if (pointer[this.uid]) {
-                right = pointer[this.uid][value];
+                right = pointer[this.uid]['value'];
             } else {
                 right = 1;
             }
@@ -239,7 +240,7 @@
 
             //this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
             for (var i = 1; i <= this.options.pointer; i++) {
-                var $pointer = $('<span class="' + this.namespace + '-pointer"></span>').appendTo(this.$element);
+                var $pointer = $('<div class="' + this.namespace + '-pointer pointer-' + i + '"></div>').appendTo(this.$element);
                 var p = new Pointer($pointer, i, this);
                 this.pointer.push(p);
             }
@@ -261,6 +262,11 @@
             // initial pointer value
             this.set(this.value);
             this.$element.on('mousedown', function(event) {
+                var rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
+                if (rightclick) {
+                    return false;
+                }
+
                 var offset = self.$element.offset(),
                     start = event[self.page] - offset[self.position],
                     p = self.stickTo.call(self, start);
@@ -283,6 +289,7 @@
                 });
             });
 
+            this.$element.trigger('range::ready', this);
             this.initial = true;
         },
         stickTo: function(start) {
@@ -323,16 +330,16 @@
          */
         
         get: function() {
-            var value = [];
+            var self = this, value = [];
             $.each(this.pointer, function(i, p) {
-                var pointerValue = p.get() * this.interval + this.min;
+                var pointerValue = p.get() * self.interval + self.min;
                 value[i] = pointerValue;
             });
             return value;
         },
         set: function(value) {
             $.each(this.pointer, function(i, p) {
-                p.set('px',value[i]);
+                p.set('actual',value[i]);
             });
 
             this.value = value;
@@ -371,6 +378,7 @@
         limit: true,
         pointer: 2,
         direction: 'h', // 'v' or 'h'
+        keyboard: true,
 
         // components
         tip: true,
@@ -380,7 +388,6 @@
             // to do
             return value;
         },
-        
         onChange: function(instance) {         
         },
 
@@ -529,7 +536,6 @@ $.range.registerComponent('tip', {
             var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
 
             $tip.addClass(self.classes.tip);
-
             if (self.opts.active === 'onMove') {
                 $tip.css({ display: 'none'});
                 p.$element.on('range::pointer::end', function() {
@@ -540,8 +546,15 @@ $.range.registerComponent('tip', {
                     return false;
                 });
             } 
-            p.$element.on('range::pointer::change', function(e, pointer) {
-                $tip.text(pointer.get());
+            p.$element.on('range::pointer::change', function() {
+                var value;
+                if (typeof instance.options.format === 'function') {
+                    value = instance.options.format(instance.get()[i]);
+                } else {
+                    value = instance.get()[i];
+                }
+                $tip.text(value);
+                return false;
             });
         });
     },
@@ -554,3 +567,81 @@ $.range.registerComponent('tip', {
         $tip.css({display: 'none'});
     }
 });
+// keyboard
+;(function(window, document, $, undefined) {
+    var $doc = $(document);
+    
+    $doc.on('range::ready', function(event, instance) {
+        var step,
+        keyboard = {
+            keys: {
+                'UP': 38,
+                'DOWN': 40,
+                'LEFT': 37,
+                'RIGHT': 39,
+                'RETURN': 13,
+                'ESCAPE': 27,
+                'BACKSPACE': 8,
+                'SPACE': 32
+            },
+            map: {},
+            bound: false,
+            press: function(e) {
+                var key = e.keyCode || e.which;
+                if (key in keyboard.map && typeof keyboard.map[key] === 'function') {
+                    keyboard.map[key](e);
+                }
+                return false;
+            },
+            attach: function(map) {
+                var key, up;
+                for (key in map) {
+                    if (map.hasOwnProperty(key)) {
+                        up = key.toUpperCase();
+                        if (up in keyboard.keys) {
+                            keyboard.map[keyboard.keys[up]] = map[key];
+                        } else {
+                            keyboard.map[up] = map[key];
+                        }
+                    }
+                }
+                if (!keyboard.bound) {
+                    keyboard.bound = true;
+                    $doc.bind('keydown', keyboard.press);
+                }
+            },
+            detach: function() {
+                keyboard.bound = false;
+                keyboard.map = {};
+                $doc.unbind('keydown', keyboard.press);
+            }
+        };
+        if (instance.options.keyboard === true) {
+            if (instance.options.step > 0) {
+                step = instance.options.step / instance.interval;
+            } else {
+                step = 0.01;
+            }
+            $.each(instance.pointer, function(i,p) {
+                var left = function() {
+                    var value = p.value;
+                    p.set('percent', value - step);
+                }; 
+                var right = function() {
+                    var value = p.value;
+                    p.set('percent', value + step);
+                };
+                p.$element.attr('tabindex', '0').on('focus', function() {
+                    keyboard.attach({
+                        left: left,
+                        right: right
+                    });
+                    return false;
+                }).on('blur', function() {
+                    keyboard.detach();
+                    return false;
+                }); 
+            });
+        }   
+    });
+})(window, document, jQuery);

@@ -103,7 +103,7 @@ $(".range-2").range({
     pointer: 2,
     limit: true,
     tip: {
-        active: 'onmove'
+        active: 'onMove'
     }
 });     
             </code></pre>
@@ -115,8 +115,39 @@ $(".range-2").range({
                             pointer: 2,
                             limit: true,
                             tip: {
-                                active: 'onmove'
+                                active: 'onMove'
                             }
+                        });                           
+                    });
+                </script>
+                
+            </div>
+        </section>
+
+        <section>
+            <div class="example">
+                <pre class="has-example"><code class="language-javascript">
+$(".range-2").range({
+    skin: 'skin-1',
+    pointer: 2,
+    limit: true,
+    tip: {
+        active: 'onMove'
+    },
+    keyboard: true
+});     
+            </code></pre>
+                <div class="range-keyboard"></div>
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-keyboard").range({
+                            skin: 'skin-1',
+                            pointer: 2,
+                            limit: true,
+                            tip: {
+                                active: 'onMove'
+                            },
+                            keyboard: true
                         });                           
                     });
                 </script>

@@ -75,7 +75,6 @@
 
             return false;
         },
-
         set: function(from, value) {
             if (from === 'px') {
                 value = value / this.parent.getLength();
@@ -93,7 +92,6 @@
             if (this.value === value) {
                 return;
             }
-
             var position = {};
 
             value = Math.round(value * 1000) / 1000;
@@ -106,15 +104,16 @@
                 if (value <= 0) { value = 0; }
                 if (value >= 1) { value = 1; }
             }
+            value = Math.round(value * 1000) / 1000;
             this.value = value;
 
             position[this.parent.position] = value * 100 + '%';
             this.$element.css(position);
+            this.$element.focus();
 
             if (typeof this.parent.options.onChange === 'function') {
                 this.parent.options.onChange(this);
             }
-
             this.$element.trigger('range::pointer::change', this);
         },
         get: function() {
@@ -132,11 +131,11 @@
             if (this.uid === 1) {
                 left = 0;
             } else {
-                left = pointer[this.uid - 2][value];
+                left = pointer[this.uid - 2]['value'];
             }
 
             if (pointer[this.uid]) {
-                right = pointer[this.uid][value];
+                right = pointer[this.uid]['value'];
             } else {
                 right = 1;
             }
@@ -244,7 +243,7 @@
 
             //this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
             for (var i = 1; i <= this.options.pointer; i++) {
-                var $pointer = $('<span class="' + this.namespace + '-pointer"></span>').appendTo(this.$element);
+                var $pointer = $('<div class="' + this.namespace + '-pointer pointer-' + i + '"></div>').appendTo(this.$element);
                 var p = new Pointer($pointer, i, this);
                 this.pointer.push(p);
             }
@@ -266,6 +265,11 @@
             // initial pointer value
             this.set(this.value);
             this.$element.on('mousedown', function(event) {
+                var rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
+                if (rightclick) {
+                    return false;
+                }
+
                 var offset = self.$element.offset(),
                     start = event[self.page] - offset[self.position],
                     p = self.stickTo.call(self, start);
@@ -288,6 +292,7 @@
                 });
             });
 
+            this.$element.trigger('range::ready', this);
             this.initial = true;
         },
         stickTo: function(start) {
@@ -328,16 +333,16 @@
          */
         
         get: function() {
-            var value = [];
+            var self = this, value = [];
             $.each(this.pointer, function(i, p) {
-                var pointerValue = p.get() * this.interval + this.min;
+                var pointerValue = p.get() * self.interval + self.min;
                 value[i] = pointerValue;
             });
             return value;
         },
         set: function(value) {
             $.each(this.pointer, function(i, p) {
-                p.set('px',value[i]);
+                p.set('actual',value[i]);
             });
 
             this.value = value;
@@ -376,6 +381,7 @@
         limit: true,
         pointer: 2,
         direction: 'h', // 'v' or 'h'
+        keyboard: true,
 
         // components
         tip: true,
@@ -385,7 +391,6 @@
             // to do
             return value;
         },
-        
         onChange: function(instance) {         
         },
 
