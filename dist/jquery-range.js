@@ -1,7 +1,28 @@
-/*! Range - v0.1.2 - 2013-10-23
+/*! Range - v0.1.2 - 2013-10-24
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2013 amazingSurge; Licensed GPL */
 (function($) {
+
+    var Touch = Modernizr.touch,
+        downEvent,
+        upEvent,
+        moveEvent;
+
+    if (Touch) {
+        downEvent = 'touchstart';
+        upEvent = 'touchend';
+        moveEvent = 'touchmove';
+    } else {
+        downEvent = 'mousedown';
+        upEvent = 'mouseup';
+        moveEvent = 'mousemove';
+    }
+    var getEventObject = function(event) {
+        if (Touch) {
+            event = event.touches[0];
+        }
+        return event;
+    };
 
     // Pointer constuctor
     function Pointer($element, id, parent) {
@@ -22,7 +43,7 @@
     Pointer.prototype = {
         constructor: Pointer,
         init: function() {
-            this.$element.on('mousedown', $.proxy(this.mousedown, this));
+            this.$element.on(downEvent, $.proxy(this.mousedown, this));
         },
         mousedown: function(event) {
             var self = this, page, position, offset = this.parent.$element.offset();
@@ -49,7 +70,8 @@
             this.$element.addClass(self.classes.active);
             
             this.mousemove = function(event) {
-                var value = this.data[position] + (event[page] || this.data.start) - this.data.start;
+                var event = getEventObject(event),
+                    value = this.data[position] + (event[page] || this.data.start) - this.data.start;
                 this.set('px',value);
                 return false;
             };
@@ -63,10 +85,12 @@
                 this.$element.trigger('range::pointer::end', this);
                 return false;
             };
-            $(document).on({
-                mousemove: $.proxy(this.mousemove, this),
-                mouseup: $.proxy(this.mouseup, this)
-            });
+            // $(document).on({
+            //     mousemove: $.proxy(this.mousemove, this),
+            //     mouseup: $.proxy(this.mouseup, this)
+            // });
+
+            $(document).on(moveEvent, $.proxy(this.mousemove, this)).on(upEvent, $.proxy(this.mouseup, this));
 
             return false;
         },
@@ -144,11 +168,10 @@
             return value;
         },
         destroy: function() {
-            this.$element.off('mousedown');
+            this.$element.off(downEvent);
             this.$element.remove();
         }
     };
-
 
     // main constructor
     var Range = $.range = function(range, options) {
@@ -259,8 +282,9 @@
 
             // initial pointer value
             this.set(this.value);
-            this.$element.on('mousedown', function(event) {
-                var rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
+            this.$element.on(downEvent, function(event) {
+                var event = getEventObject(event),
+                    rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
                 if (rightclick) {
                     return false;
                 }

@@ -23,7 +23,7 @@
         moveEvent = 'mousemove';
     }
     var getEventObject = function(event) {
-        if (Touch) {
+        if (event.touches) {
             event = event.touches[0];
         }
         return event;
@@ -80,13 +80,11 @@
                 this.set('px',value);
                 return false;
             };
-
             this.mouseup = function() {
                 $(document).off({
                     mousemove: this.mousemove,
                     mouseup: this.mouseup
                 });
-
                 this.$element.trigger('range::pointer::end', this);
                 return false;
             };
