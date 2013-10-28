@@ -1,4 +1,4 @@
-/*! Range - v0.1.2 - 2013-10-24
+/*! Range - v0.1.2 - 2013-10-28
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2013 amazingSurge; Licensed GPL */
 (function($) {
@@ -9,19 +9,20 @@
         moveEvent;
 
     if (Touch) {
-        downEvent = 'touchstart';
-        upEvent = 'touchend';
-        moveEvent = 'touchmove';
+        downEvent = 'touchstart.range';
+        upEvent = 'touchend.range';
+        moveEvent = 'touchmove.range';
     } else {
-        downEvent = 'mousedown';
-        upEvent = 'mouseup';
-        moveEvent = 'mousemove';
+        downEvent = 'mousedown.range';
+        upEvent = 'mouseup.range';
+        moveEvent = 'mousemove.range';
     }
     var getEventObject = function(event) {
+        var a = event.originalEvent;
         if (Touch) {
-            event = event.touches[0];
+            a = a.touches[0];
         }
-        return event;
+        return a;
     };
 
     // Pointer constuctor
@@ -36,15 +37,10 @@
         this.classes = {
             active: this.parent.namespace + '-pointer_active'
         };
-
-        this.init();
     }
 
     Pointer.prototype = {
         constructor: Pointer,
-        init: function() {
-            this.$element.on(downEvent, $.proxy(this.mousedown, this));
-        },
         mousedown: function(event) {
             var self = this, page, position, offset = this.parent.$element.offset();
                 
@@ -70,18 +66,15 @@
             this.$element.addClass(self.classes.active);
             
             this.mousemove = function(event) {
-                var event = getEventObject(event),
+                var origin = event,
+                    event = getEventObject(event),
                     value = this.data[position] + (event[page] || this.data.start) - this.data.start;
                 this.set('px',value);
+                origin.preventDefault();
                 return false;
             };
-
             this.mouseup = function() {
-                $(document).off({
-                    mousemove: this.mousemove,
-                    mouseup: this.mouseup
-                });
-
+                $(document).off(moveEvent).off(upEvent);
                 this.$element.trigger('range::pointer::end', this);
                 return false;
             };
@@ -285,7 +278,7 @@
             this.$element.on(downEvent, function(event) {
                 var event = getEventObject(event),
                     rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
-                if (rightclick) {
+                if (rightclick && !Touch) {
                     return false;
                 }
 

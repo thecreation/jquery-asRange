@@ -50,6 +50,12 @@
             .submit {
                 margin-top: 20px;
             }
+            
+            @media only screen and (max-width: 720px) {
+                #mobile {
+                    padding: 20px 0;
+                }
+            }
 
         </style>
     </head>
@@ -74,7 +80,7 @@ $(".range-single").range({
 }); 
             </code></pre>
             <div class="example">
-                <div class="range-single"></div>
+                <div id="mobile" class="range-single"></div>
                 <script>    
                     $(document).ready(function() {
                         $(".range-single").range({
