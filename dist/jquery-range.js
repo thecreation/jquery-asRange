@@ -1,6 +1,6 @@
-/*! Range - v0.1.2 - 2013-10-28
+/*! Range - v0.1.2 - 2014-01-03
 * https://github.com/amazingSurge/jquery-range
-* Copyright (c) 2013 amazingSurge; Licensed GPL */
+* Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
 
     var Touch = Modernizr.touch,
