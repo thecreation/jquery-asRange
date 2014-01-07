@@ -365,6 +365,14 @@
 
             this.value = value;
         },
+        val: function(value) {
+            if (value) {
+                this.set(value);
+                return this;
+            } else {
+                return this.get();
+            }
+        },
         setInterval: function(start, end) {
             this.min = start;
             this.max = end;
