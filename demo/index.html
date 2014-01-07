@@ -25,7 +25,7 @@
         <script src="../dist/jquery-range.js"></script>
 
         <style type="text/css">
-             #infobar {
+            #infobar {
                 width: 500px;
                 height: 200px;
                 border: 1px solid #333;
@@ -125,14 +125,15 @@ $(".range-2").range({
                 <div class="range-2"></div>
                 <script>    
                     $(document).ready(function() {
-                        $(".range-2").range({
+                        var one = $(".range-2").range({
                             skin: 'skin-1',
                             pointer: 2,
                             limit: true,
                             tip: {
                                 active: 'onMove'
                             }
-                        });                           
+                        });       
+                        console.log(one.range('set',[0,20]));                    
                     });
                 </script>
                 

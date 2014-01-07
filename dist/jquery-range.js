@@ -1,4 +1,4 @@
-/*! Range - v0.1.2 - 2014-01-03
+/*! Range - v0.1.2 - 2014-01-07
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
