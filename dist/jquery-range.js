@@ -2,8 +2,17 @@
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
+    function isTouchDevice() {
+        var el = document.createElement('div');
+        el.setAttribute('ongesturestart', 'return;');
+        if(typeof el.ongesturestart === "function"){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
-    var Touch = Modernizr.touch,
+    var Touch = isTouchDevice(),
         downEvent,
         upEvent,
         moveEvent;
