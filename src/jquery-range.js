@@ -214,7 +214,7 @@
             var self = this;
             $.each(['min','max','step'],function(key,value) {
                 var val = parseFloat(self.$range.attr(value));
-                if ($.isNumeric(val)) {
+                if (!isNaN(val)) {
                     metas[value] = val;
                 }
             });
@@ -224,6 +224,11 @@
             });
             this.$element = $("<div></div>");
             this.$range.after(this.$element);
+
+            // attach value change to input element
+            this.$element.on('range::pointer::change', function(event,instance) {
+                self.$range.attr('value',instance.value);
+            });
         } else {
             this.$element = this.$range;
         }
