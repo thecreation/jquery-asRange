@@ -376,7 +376,7 @@
             return value;
         },
         set: function(value) {
-            if (typeof value === "number") {
+            if (!isNaN(parseFloat(value))) {
                 value = [value];
             }
             $.each(this.pointer, function(i, p) {
