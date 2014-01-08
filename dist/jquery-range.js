@@ -5,9 +5,9 @@
     function isTouchDevice() {
         var el = document.createElement('div');
         el.setAttribute('ongesturestart', 'return;');
-        if(typeof el.ongesturestart === "function"){
+        if(typeof el.ongesturestart === "function") {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -206,9 +206,13 @@
                 metas.value = inputValue.split(',');
             }
 
-            metas.min = parseFloat(this.$range.attr('min'));
-            metas.max = parseFloat(this.$range.attr('max'));
-            metas.step = parseFloat(this.$range.attr('step'));
+            var self = this;
+            $.each(['min','max','step'],function(key,value) {
+                var val = parseFloat(self.$range.attr(value));
+                if ($.isNumeric(val)) {
+                    metas[value] = val;
+                }
+            });
             
             this.$range.css({
                 display: 'none'
