@@ -211,9 +211,19 @@
                 metas.value = inputValue.split(',');
             }
 
-            metas.min = parseFloat(this.$range.attr('min'));
-            metas.max = parseFloat(this.$range.attr('max'));
-            metas.step = parseFloat(this.$range.attr('step'));
+            var min = parseFloat(this.$range.attr('min'));
+            var max = parseFloat(this.$range.attr('max'));
+            var step = parseFloat(this.$range.attr('step'));
+
+            if (min) {
+                metas.min = min;
+            }
+            if (max) {
+                metas.max = max;
+            }
+            if (step) {
+                metas.step = step;
+            }
             
             this.$range.css({
                 display: 'none'
