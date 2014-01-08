@@ -10,9 +10,9 @@
     function isTouchDevice() {
         var el = document.createElement('div');
         el.setAttribute('ongesturestart', 'return;');
-        if(typeof el.ongesturestart === "function"){
+        if(typeof el.ongesturestart === "function") {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -92,13 +92,13 @@
                 this.$element.trigger('range::pointer::end', this);
                 return false;
             };
+
             // $(document).on({
             //     mousemove: $.proxy(this.mousemove, this),
             //     mouseup: $.proxy(this.mouseup, this)
             // });
 
             $(document).on(moveEvent, $.proxy(this.mousemove, this)).on(upEvent, $.proxy(this.mouseup, this));
-
             return false;
         },
         set: function(from, value) {
@@ -111,7 +111,6 @@
             if (from === 'percent') {
                 value = value;
             }
-
             this._set(value);
         },
         _set: function(value) {
@@ -240,14 +239,14 @@
         this.interval = this.max - this.min;
 
         // flag
-        this.initial = false;
-        this.enabled = true;
+        this.initialed = false;
+        this.disabled = false;
         this.page = direction[this.options.direction]['page'];
         this.position = direction[this.options.direction]['position'];
 
         this.$element.addClass(this.namespace);
 
-        if (this.options.skin !== null) {
+        if (this.options.skin) {
             this.$element.addClass(this.namespace + '_' + this.options.skin);
         }
 
@@ -319,7 +318,7 @@
             });
 
             this.$element.trigger('range::ready', this);
-            this.initial = true;
+            this.initialed = true;
         },
         stickTo: function(start) {
             var value = start / this.getLength();
@@ -368,10 +367,12 @@
             return value;
         },
         set: function(value) {
+            if (typeof value === "number") {
+                value = [value];
+            }
             $.each(this.pointer, function(i, p) {
                 p.set('actual',value[i]);
             });
-
             this.value = value;
         },
         val: function(value) {
@@ -388,13 +389,13 @@
             this.interval = end - start;
         },
         enable: function() {
-            this.enabled = true;
-            this.$element.addClass(this.namespace + 'enabled');
+            this.disabled = false;
+            this.$element.removeClass(this.namespace + 'disabled');
             return this;
         },
         disable: function() {
-            this.enabled = false;
-            this.$element.removeClass(this.namespace + 'enabled');
+            this.disabled = true;
+            this.$element.addClass(this.namespace + 'disabled');
             return this;
         },
         destroy: function() {
