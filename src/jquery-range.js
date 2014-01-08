@@ -45,7 +45,6 @@
         this.uid = id;
         this.parent = parent;
         this.options = $.extend(true, {}, this.parent.options);
-        this.interval = this.parent.interval;
         this.direction = this.options.direction;
         this.value = null;
         this.classes = {
@@ -106,7 +105,7 @@
                 value = value / this.parent.getLength();
             }
             if (from === 'actual') {
-                value = value / this.interval;
+                value = value / this.parent.interval;
             }
             if (from === 'percent') {
                 value = value;
@@ -120,7 +119,7 @@
             var position = {};
 
             value = Math.round(value * 1000) / 1000;
-            if (this.options.step > 0) {
+            if (this.parent.step > 0) {
                 value = this.setStep(value);
             }
             if (this.options.limit === true) {
@@ -145,10 +144,10 @@
             return this.value;
         },
         setStep: function(value) {
-            var value = value * this.interval,
-                step = this.options.step;
+            var value = value * this.parent.interval,
+                step = this.parent.step;
             value = Math.round(value / step) * step;
-            return value / this.interval;
+            return value / this.parent.interval;
         },
         setLimit: function(value) {
             var left, right, pointer = this.parent.pointer;
@@ -245,6 +244,7 @@
         this.value = this.options.value;
         this.min = this.options.min;
         this.max = this.options.max;
+        this.step = this.options.step;
         this.interval = this.max - this.min;
 
         // flag
@@ -365,7 +365,26 @@
         /*
             Public Method
          */
-        
+        update: function(options) {
+            var self = this;
+            $.each(['max','min','step','limit'], function(key,value) {
+                if (options[value]) {
+                    self[value] = options[value];
+                }
+            });
+            if (options.max || options.min) {
+                this.setInterval(options.min,options.max);
+            }
+            this.value = options.min;
+
+            $.each(this.components, function(key,value) {
+                if (typeof value.update === "function") {
+                    value.update(self);
+                }
+            });
+
+            this.set(this.value);
+        },
         get: function() {
             var self = this, value = [];
             $.each(this.pointer, function(i, p) {
@@ -376,7 +395,7 @@
             return value;
         },
         set: function(value) {
-            if (!isNaN(parseFloat(value))) {
+            if (typeof value === 'number') {
                 value = [value];
             }
             $.each(this.pointer, function(i, p) {

@@ -51,5 +51,9 @@ $.range.registerComponent('scale', {
 
         this.$grid.add(this.$value).appendTo(this.$scale);
         this.$scale.appendTo(instance.$element);
+    },
+    update: function(instance) {
+        this.$scale.remove();
+        this.init(instance);
     }
 });
