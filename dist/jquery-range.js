@@ -313,7 +313,7 @@
 
             $.each(this.pointer, function(i,p) {
                 p.$element.on('range::pointer::change', function() {
-                    self.value[p.uid-1] = p.value * self.interval;
+                    self.value = self.get();
                     if (typeof self.options.onChange === 'function') {
                        self.options.onChange.call(self, self.value, p.uid); 
                     }
