@@ -135,9 +135,6 @@
             this.$element.css(position);
             this.$element.focus();
 
-            if (typeof this.parent.options.onChange === 'function') {
-                this.parent.options.onChange(this);
-            }
             this.$element.trigger('range::pointer::change', this);
         },
         get: function() {
@@ -320,7 +317,11 @@
             }
 
             $.each(this.pointer, function(i,p) {
-                p.$element.on('range::pointer::end', function() {
+                p.$element.on('range::pointer::change', function() {
+                    self.value[p.uid-1] = p.value * self.interval;
+                    if (typeof self.options.onChange === 'function') {
+                       self.options.onChange.call(self, self.value, p.uid); 
+                    }
                     self.$element.trigger('range::change', self);
                     return false;
                 });

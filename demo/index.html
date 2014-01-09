@@ -90,11 +90,9 @@ $(".range-single").range({
                             format: function(value) {
                                 return '$' + value;
                             },
-                            onChange: function(instance) {
-                                var pid = instance.uid,
-                                    val = instance.get();
-
-                                $('<div> <span>pointer id: </span>'+ pid + ', ' + '<span>value: </span>' + val + '</div>').prependTo($('.content'));
+                            onChange: function(value,id) {
+                                var val = value[id-1];
+                                $('<div> <span>pointer id: </span>'+ id + ', ' + '<span>value: </span>' + val + '</div>').prependTo($('.content'));
                             }
                         });                           
                     });
