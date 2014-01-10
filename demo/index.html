@@ -256,6 +256,7 @@ $(".range-single-1").range({
 }); </code></pre>
             <div class="example">
                 <div class="range-single-1"></div>
+                <button class="range-update">update</button>
                 <script>    
                     $(document).ready(function() {
                         $(".range-single-1").range({
@@ -265,6 +266,15 @@ $(".range-single-1").range({
                             min: 0,
                             max: 1
                         });                           
+                    });
+                    $('.range-update').on('click', function() {
+                        var instance = $(".range-single-1").data('range');
+                        instance.update({
+                            step:1,
+                            min: 8,
+                            max: 25,
+                            value: 10
+                        });
                     });
                 </script>
                 

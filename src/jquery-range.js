@@ -141,10 +141,10 @@
             return this.value;
         },
         setStep: function(value) {
-            var value = value * this.parent.interval,
+            var value = value * this.parent.interval + this.parent.min,
                 step = this.parent.step;
             value = Math.round(value / step) * step;
-            return value / this.parent.interval;
+            return (value -this.parent.min) / this.parent.interval;
         },
         setLimit: function(value) {
             var left, right, pointer = this.parent.pointer;
@@ -246,6 +246,7 @@
 
         // flag
         this.initialized = false;
+        this.updating = false;
         this.disabled = false;
         this.page = direction[this.options.direction]['page'];
         this.position = direction[this.options.direction]['position'];
@@ -319,7 +320,7 @@
             $.each(this.pointer, function(i,p) {
                 p.$element.on('range::pointer::change', function() {
                     self.value = self.get();
-                    if (!self.initialized) {
+                    if (!self.initialized || self.updating) {
                         return false;
                     }
                     if (typeof self.options.onChange === 'function') {
@@ -371,6 +372,7 @@
          */
         update: function(options) {
             var self = this;
+            this.updating = true;
             $.each(['max','min','step','limit','value'], function(key,value) {
                 if (options[value]) {
                     self[value] = options[value];
@@ -391,12 +393,20 @@
             });
 
             this.set(this.value);
+            
+            if (typeof self.options.onUpdate === 'function') {
+               self.options.onUpdate.call(self); 
+            }
+            self.$element.trigger('range::update', self);
+
+            this.updating = false;
         },
         get: function() {
             var self = this, value = [];
             $.each(this.pointer, function(i, p) {
                 var pointerValue = p.get() * self.interval + self.min;
                 pointerValue = Math.round(pointerValue * 1000) / 1000;
+                pointerValue = Math.round(pointerValue / self.step) * self.step;
                 value[i] = pointerValue;
             });
             return value;
