@@ -137,6 +137,8 @@ $(".range-2").range({
             </div>
         </section>
 
+
+
         <section>
             <div class="example">
                 <pre class="has-example"><code class="language-javascript">
@@ -262,6 +264,33 @@ $(".range-single-1").range({
                             pointer: 1,
                             min: 0,
                             max: 1
+                        });                           
+                    });
+                </script>
+                
+            </div>
+
+        </section>
+
+        <section>
+ <pre class="has-example"><code class="language-javascript">
+$(".range-start").range({
+    skin: 'skin-1',
+    step: 1,
+    pointer: 1,
+    min: 2,
+    max: 12
+}); </code></pre>
+            <div class="example">
+                <div class="range-start"></div>
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-start").range({
+                            skin: 'skin-1',
+                            step: 1,
+                            pointer: 1,
+                            min: 2,
+                            max: 12
                         });                           
                     });
                 </script>

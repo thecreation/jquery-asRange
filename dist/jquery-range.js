@@ -100,7 +100,7 @@
                 value = value / this.parent.getLength();
             }
             if (from === 'actual') {
-                value = value / this.parent.interval;
+                value = (value - this.parent.min) / this.parent.interval;
             }
             if (from === 'percent') {
                 value = value;
@@ -374,7 +374,7 @@
             if (options.max || options.min) {
                 this.setInterval(options.min,options.max);
             }
-            
+
             if (!options.value) {
                 this.value = options.min;
             }
