@@ -366,7 +366,7 @@
          */
         update: function(options) {
             var self = this;
-            $.each(['max','min','step','limit'], function(key,value) {
+            $.each(['max','min','step','limit','value'], function(key,value) {
                 if (options[value]) {
                     self[value] = options[value];
                 }
@@ -374,7 +374,10 @@
             if (options.max || options.min) {
                 this.setInterval(options.min,options.max);
             }
-            this.value = options.min;
+            
+            if (!options.value) {
+                this.value = options.min;
+            }
 
             $.each(this.components, function(key,value) {
                 if (typeof value.update === "function") {
