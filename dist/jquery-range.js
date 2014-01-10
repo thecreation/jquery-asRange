@@ -1,4 +1,4 @@
-/*! Range - v0.1.2 - 2014-01-09
+/*! Range - v0.1.2 - 2014-01-10
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -240,7 +240,7 @@
         this.interval = this.max - this.min;
 
         // flag
-        this.initialed = false;
+        this.initialized = false;
         this.disabled = false;
         this.page = direction[this.options.direction]['page'];
         this.position = direction[this.options.direction]['position'];
@@ -314,6 +314,9 @@
             $.each(this.pointer, function(i,p) {
                 p.$element.on('range::pointer::change', function() {
                     self.value = self.get();
+                    if (!self.initialized) {
+                        return false;
+                    }
                     if (typeof self.options.onChange === 'function') {
                        self.options.onChange.call(self, self.value, p.uid); 
                     }
@@ -323,7 +326,7 @@
             });
 
             this.$element.trigger('range::ready', this);
-            this.initialed = true;
+            this.initialized = true;
         },
         stickTo: function(start) {
             var value = start / this.getLength();
