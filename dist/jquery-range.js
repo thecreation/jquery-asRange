@@ -663,8 +663,8 @@ $.range.registerComponent('tip', {
                 var key = e.keyCode || e.which;
                 if (key in keyboard.map && typeof keyboard.map[key] === 'function') {
                     keyboard.map[key](e);
+                    return false;
                 }
-                return false;
             },
             attach: function(map) {
                 var key, up;
