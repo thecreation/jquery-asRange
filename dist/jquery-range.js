@@ -1,4 +1,4 @@
-/*! Range - v0.1.2 - 2014-01-10
+/*! Range - v0.1.2 - 2014-01-14
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -397,11 +397,14 @@
             this.updating = false;
         },
         get: function() {
-            var self = this, value = [];
+            var self = this, value = [], step = self.step;
+            var length = step.toString().split('.')[1] ? step.toString().split('.')[1].length : 0;
             $.each(this.pointer, function(i, p) {
                 var pointerValue = p.get() * self.interval + self.min;
-                pointerValue = Math.round(pointerValue * 1000) / 1000;
                 pointerValue = Math.round(pointerValue / self.step) * self.step;
+                if (length > 0) {
+                    pointerValue = parseFloat(pointerValue.toFixed(length));
+                }
                 value[i] = pointerValue;
             });
             return value;
