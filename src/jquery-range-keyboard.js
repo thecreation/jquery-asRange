@@ -48,12 +48,17 @@
             }
         };
         if (instance.options.keyboard === true) {
-            if (instance.options.step > 0) {
-                step = instance.options.step / instance.interval;
-            } else {
-                step = 0.01;
-            }
+            // if (instance.options.step > 0) {
+            //     step = instance.options.step / instance.interval;
+            // } else {
+            //     step = 0.01;
+            // }
             $.each(instance.pointer, function(i,p) {
+                if (instance.options.step > 0) {
+                    step = instance.options.step / instance.interval;
+                } else {
+                    step = 0.01;
+                }
                 var left = function() {
                     var value = p.value;
                     p.set('percent', value - step);

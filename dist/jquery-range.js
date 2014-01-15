@@ -1,4 +1,4 @@
-/*! Range - v0.1.2 - 2014-01-14
+/*! Range - v0.1.2 - 2014-01-15
 * https://github.com/amazingSurge/jquery-range
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -703,12 +703,17 @@ $.range.registerComponent('tip', {
             }
         };
         if (instance.options.keyboard === true) {
-            if (instance.options.step > 0) {
-                step = instance.options.step / instance.interval;
-            } else {
-                step = 0.01;
-            }
+            // if (instance.options.step > 0) {
+            //     step = instance.options.step / instance.interval;
+            // } else {
+            //     step = 0.01;
+            // }
             $.each(instance.pointer, function(i,p) {
+                if (instance.options.step > 0) {
+                    step = instance.options.step / instance.interval;
+                } else {
+                    step = 0.01;
+                }
                 var left = function() {
                     var value = p.value;
                     p.set('percent', value - step);
