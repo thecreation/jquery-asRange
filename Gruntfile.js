@@ -17,7 +17,7 @@ module.exports = function(grunt) {
                 stripBanners: true
             },
             dist: {
-                src: ['src/<%= pkg.name %>.js', 'src/<%= pkg.name %>-scale.js', 'src/<%= pkg.name %>-view.js', 'src/<%= pkg.name %>-tip.js','src/<%= pkg.name %>-keyboard.js'],
+                src: ['src/<%= pkg.name %>.js', 'src/<%= pkg.name %>-scale.js', 'src/<%= pkg.name %>-view.js', 'src/<%= pkg.name %>-tip.js', 'src/<%= pkg.name %>-keyboard.js'],
                 dest: 'dist/<%= pkg.name %>.js'
             },
         },
@@ -88,7 +88,7 @@ module.exports = function(grunt) {
         recess: {
             core: {
                 src: ["less/**/*.less"],
-                dest: 'demo/css/range.css',
+                dest: 'demo/css/asRange.css',
                 options: {
                     compile: true
                 }
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
                 }]
             },
             jquery: {
-                src: ['range.jquery.json'],
+                src: ['asRange.jquery.json'],
                 overwrite: true, // overwrite matched source files
                 replacements: [{
                     from: /("version": ")([0-9\.]+)(")/g,

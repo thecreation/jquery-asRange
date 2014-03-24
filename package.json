@@ -1,35 +1,33 @@
 {
-  "name": "jquery-range",
-  "title": "Range",
-  "description": "A powerful slider for selecting value ranges",
-  "version": "0.1.2",
-  "homepage": "https://github.com/amazingSurge/jquery-range",
-  "author": {
-    "name": "amazingSurge",
-    "email": "amazingSurge@gmail.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/amazingSurge/jquery-range.git"
-  },
-  "bugs": "https://github.com/amazingSurge/jquery-range/issues",
-  "licenses": [
-    {
-      "type": "GPL",
-      "url": "https://github.com/amazingSurge/jquery-range/blob/master/LICENSE-GPL"
+    "name": "jquery-asRange",
+    "title": "asRange",
+    "description": "A powerful slider for selecting value asRanges",
+    "version": "0.1.2",
+    "homepage": "https://github.com/amazingSurge/jquery-asRange",
+    "author": {
+        "name": "amazingSurge",
+        "email": "amazingSurge@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/amazingSurge/jquery-asRange.git"
+    },
+    "bugs": "https://github.com/amazingSurge/jquery-asRange/issues",
+    "licenses": [{
+        "type": "GPL",
+        "url": "https://github.com/amazingSurge/jquery-asRange/blob/master/LICENSE-GPL"
+    }],
+    "devDependencies": {
+        "grunt-contrib-jshint": "~0.1.1",
+        "grunt-contrib-concat": "~0.1.2",
+        "grunt-contrib-uglify": "~0.1.1",
+        "grunt-contrib-watch": "~0.2.0",
+        "grunt-contrib-clean": "~0.4.0",
+        "grunt": "~0.4.1",
+        "grunt-jsbeautifier": "~0.1.6",
+        "grunt-recess": "~0.3.1"
+    },
+    "dependencies": {
+        "grunt-text-replace": "~0.3.6"
     }
-  ],
-  "devDependencies": {
-    "grunt-contrib-jshint": "~0.1.1",
-    "grunt-contrib-concat": "~0.1.2",
-    "grunt-contrib-uglify": "~0.1.1",
-    "grunt-contrib-watch": "~0.2.0",
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt": "~0.4.1",
-    "grunt-jsbeautifier": "~0.1.6",
-    "grunt-recess": "~0.3.1"
-  },
-  "dependencies": {
-    "grunt-text-replace": "~0.3.6"
-  }
 }

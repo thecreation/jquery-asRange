@@ -1,7 +1,7 @@
-# jQuery range
+# jQuery asRange
 
-The powerful jQuery plugin that creates a series of progress bar. <a href="http://amazingsurge.github.io/jquery-range/">Project page and demos</a><br />
-Download: <a href="https://github.com/amazingSurge/jquery-range/archive/master.zip">jquery-range-master.zip</a>
+The powerful jQuery plugin that creates a series of progress bar. <a href="http://amazingsurge.github.io/jquery-asRange/">Project page and demos</a><br />
+Download: <a href="https://github.com/amazingSurge/jquery-asRange/archive/master.zip">jquery-asRange-master.zip</a>
 
 ***
 
@@ -17,22 +17,22 @@ Download: <a href="https://github.com/amazingSurge/jquery-range/archive/master.z
 
 Import this libraries:
 * jQuery
-* jquery-range.min.js
+* jquery-asRange.min.js
 
 And CSS:
-* range.css - desirable if you have not yet connected one
+* asRange.css - desirable if you have not yet connected one
 
 
 Create base html element:
 ```html
 	<div class="example">
-		<div class="range-single"></div>
+		<div class="asRange-single"></div>
 	</div>
 ```
 
-Initialize range:
+Initialize asRange:
 ```javascript
-$(".range-single").range({skin: 'skin-1'});
+$(".asRange-single").asRange({skin: 'skin-1'});
 ```
 
 Or you can also use <code>input</code>

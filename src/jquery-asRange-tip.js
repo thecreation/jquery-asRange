@@ -18,16 +18,18 @@ $.range.registerComponent('tip', {
 
             $tip.addClass(self.classes.tip);
             if (self.opts.active === 'onMove') {
-                $tip.css({ display: 'none'});
-                p.$element.on('range::pointer::end', function() {
+                $tip.css({
+                    display: 'none'
+                });
+                p.$element.on('asRange::pointer::end', function() {
                     self.hide($tip);
                     return false;
-                }).on('range::pointer::start', function() {
+                }).on('asRange::pointer::start', function() {
                     self.show($tip);
                     return false;
                 });
-            } 
-            p.$element.on('range::pointer::change', function() {
+            }
+            p.$element.on('asRange::pointer::change', function() {
                 var value;
                 if (typeof instance.options.format === 'function') {
                     value = instance.options.format(instance.get()[i]);
@@ -41,10 +43,14 @@ $.range.registerComponent('tip', {
     },
     show: function($tip) {
         $tip.addClass(this.classes.show);
-        $tip.css({display: 'block'});
+        $tip.css({
+            display: 'block'
+        });
     },
     hide: function($tip) {
         $tip.removeClass(this.classes.show);
-        $tip.css({display: 'none'});
+        $tip.css({
+            display: 'none'
+        });
     }
 });

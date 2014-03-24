@@ -10,7 +10,7 @@
     function isTouchDevice() {
         var el = document.createElement('div');
         el.setAttribute('ongesturestart', 'return;');
-        if(typeof el.ongesturestart === "function") {
+        if (typeof el.ongesturestart === "function") {
             return true;
         } else {
             return false;
@@ -23,13 +23,13 @@
         moveEvent;
 
     if (Touch) {
-        downEvent = 'touchstart.range';
-        upEvent = 'touchend.range';
-        moveEvent = 'touchmove.range';
+        downEvent = 'touchstart.asRange';
+        upEvent = 'touchend.asRange';
+        moveEvent = 'touchmove.asRange';
     } else {
-        downEvent = 'mousedown.range';
-        upEvent = 'mouseup.range';
-        moveEvent = 'mousemove.range';
+        downEvent = 'mousedown.asRange';
+        upEvent = 'mouseup.asRange';
+        moveEvent = 'mousemove.asRange';
     }
     var getEventObject = function(event) {
         var a = event.originalEvent;
@@ -55,13 +55,14 @@
     Pointer.prototype = {
         constructor: Pointer,
         mousedown: function(event) {
-            var self = this, page, position, offset = this.parent.$element.offset();
-                
+            var self = this,
+                page, position, offset = this.parent.$element.offset();
+
             if (this.parent.enabled === false) {
                 return;
             }
 
-            this.$element.trigger('range::pointer::start', this);
+            this.$element.trigger('asRange::pointer::start', this);
 
             page = this.parent.page;
             position = this.parent.position;
@@ -77,18 +78,18 @@
             });
 
             this.$element.addClass(self.classes.active);
-            
+
             this.mousemove = function(event) {
                 var origin = event,
                     event = getEventObject(event),
                     value = this.data[position] + (event[page] || this.data.start) - this.data.start;
-                this.set('px',value);
+                this.set('px', value);
                 origin.preventDefault();
                 return false;
             };
             this.mouseup = function() {
                 $(document).off(moveEvent).off(upEvent);
-                this.$element.trigger('range::pointer::end', this);
+                this.$element.trigger('asRange::pointer::end', this);
                 return false;
             };
 
@@ -125,8 +126,12 @@
             if (this.options.limit === true) {
                 value = this.setLimit(value);
             } else {
-                if (value <= 0) { value = 0; }
-                if (value >= 1) { value = 1; }
+                if (value <= 0) {
+                    value = 0;
+                }
+                if (value >= 1) {
+                    value = 1;
+                }
             }
             value = Math.round(value * 1000) / 1000;
             this.value = value;
@@ -135,7 +140,7 @@
             this.$element.css(position);
             this.$element.focus();
 
-            this.$element.trigger('range::pointer::change', this);
+            this.$element.trigger('asRange::pointer::change', this);
         },
         get: function() {
             return this.value;
@@ -144,7 +149,7 @@
             var value = value * this.parent.interval + this.parent.min,
                 step = this.parent.step;
             value = Math.round(value / step) * step;
-            return (value -this.parent.min) / this.parent.interval;
+            return (value - this.parent.min) / this.parent.interval;
         },
         setLimit: function(value) {
             var left, right, pointer = this.parent.pointer;
@@ -176,18 +181,18 @@
     };
 
     // main constructor
-    var Range = $.range = function(range, options) {
+    var AsRange = $.asRange = function(range, options) {
         var metas = {},
-        direction = {
-            v: {
-                page: 'pageY',
-                position: 'top'
-            },
-            h: {
-                page: 'pageX',
-                position: 'left'
-            }
-        };
+            direction = {
+                v: {
+                    page: 'pageY',
+                    position: 'top'
+                },
+                h: {
+                    page: 'pageX',
+                    position: 'left'
+                }
+            };
 
         this.range = range;
         this.$range = $(range);
@@ -208,13 +213,13 @@
             }
 
             var self = this;
-            $.each(['min','max','step'],function(key,value) {
+            $.each(['min', 'max', 'step'], function(key, value) {
                 var val = parseFloat(self.$range.attr(value));
                 if (!isNaN(val)) {
                     metas[value] = val;
                 }
             });
-            
+
             this.$range.css({
                 display: 'none'
             });
@@ -222,8 +227,8 @@
             this.$range.after(this.$element);
 
             // attach value change to input element
-            this.$element.on('range::pointer::change', function(event,instance) {
-                self.$range.attr('value',instance.value);
+            this.$element.on('asRange::pointer::change', function(event, instance) {
+                self.$range.attr('value', instance.value);
             });
         } else {
             this.$element = this.$range;
@@ -233,7 +238,7 @@
             position: 'relative'
         });
 
-        this.options = $.extend({}, Range.defaults, options, metas);
+        this.options = $.extend({}, AsRange.defaults, options, metas);
         this.namespace = this.options.namespace;
         this.components = $.extend(true, {}, this.components);
 
@@ -264,8 +269,8 @@
         this.init();
     };
 
-    Range.prototype = {
-        constructor: Range,
+    AsRange.prototype = {
+        constructor: AsRange,
         components: {},
 
         init: function() {
@@ -311,27 +316,27 @@
             });
 
             if (this.$range.is('input')) {
-                this.$element.on('range::change', function() {
+                this.$element.on('asRange::change', function() {
                     var value = self.get();
                     self.$element.val(value);
                 });
             }
 
-            $.each(this.pointer, function(i,p) {
-                p.$element.on('range::pointer::change', function() {
+            $.each(this.pointer, function(i, p) {
+                p.$element.on('asRange::pointer::change', function() {
                     self.value = self.get();
                     if (!self.initialized || self.updating) {
                         return false;
                     }
                     if (typeof self.options.onChange === 'function') {
-                       self.options.onChange.call(self, self.value, p.uid); 
+                        self.options.onChange.call(self, self.value, p.uid);
                     }
-                    self.$element.trigger('range::change', self);
+                    self.$element.trigger('asRange::change', self);
                     return false;
                 });
             });
 
-            this.$element.trigger('range::ready', this);
+            this.$element.trigger('asRange::ready', this);
             this.initialized = true;
         },
         stickTo: function(start) {
@@ -373,36 +378,38 @@
         update: function(options) {
             var self = this;
             this.updating = true;
-            $.each(['max','min','step','limit','value'], function(key,value) {
+            $.each(['max', 'min', 'step', 'limit', 'value'], function(key, value) {
                 if (options[value]) {
                     self[value] = options[value];
                 }
             });
             if (options.max || options.min) {
-                this.setInterval(options.min,options.max);
+                this.setInterval(options.min, options.max);
             }
 
             if (!options.value) {
                 this.value = options.min;
             }
 
-            $.each(this.components, function(key,value) {
+            $.each(this.components, function(key, value) {
                 if (typeof value.update === "function") {
                     value.update(self);
                 }
             });
 
             this.set(this.value);
-            
+
             if (typeof self.options.onUpdate === 'function') {
-               self.options.onUpdate.call(self); 
+                self.options.onUpdate.call(self);
             }
-            self.$element.trigger('range::update', self);
+            self.$element.trigger('asRange::update', self);
 
             this.updating = false;
         },
         get: function() {
-            var self = this, value = [], step = self.step;
+            var self = this,
+                value = [],
+                step = self.step;
             var length = step.toString().split('.')[1] ? step.toString().split('.')[1].length : 0;
             $.each(this.pointer, function(i, p) {
                 var pointerValue = p.get() * self.interval + self.min;
@@ -418,8 +425,11 @@
             if (typeof value === 'number') {
                 value = [value];
             }
+            if (!$.isArray(value)) {
+                return;
+            }
             $.each(this.pointer, function(i, p) {
-                p.set('actual',value[i]);
+                p.set('actual', value[i]);
             });
             this.value = value;
         },
@@ -454,8 +464,8 @@
         }
     };
 
-    Range.defaults = {
-        namespace: 'range',
+    AsRange.defaults = {
+        namespace: 'asRange',
         skin: null,
 
         max: 100,
@@ -475,32 +485,31 @@
             // to do
             return value;
         },
-        onChange: function(instance) {         
-        },
+        onChange: function() {},
 
         // on mouse up 
         callback: function() {}
     };
 
-    Range.registerComponent = function(component, methods) {
-        Range.prototype.components[component] = methods;
+    AsRange.registerComponent = function(component, methods) {
+        AsRange.prototype.components[component] = methods;
     };
 
-    $.fn.range = function(options) {
+    $.fn.asRange = function(options) {
         if (typeof options === 'string') {
             var method = options;
             var method_arguments = arguments.length > 1 ? Array.prototype.slice.call(arguments, 1) : undefined;
 
             return this.each(function() {
-                var api = $.data(this, 'range');
+                var api = $.data(this, 'asRange');
                 if (typeof api[method] === 'function') {
                     api[method].apply(api, method_arguments);
                 }
             });
         } else {
             return this.each(function() {
-                if (!$.data(this, 'range')) {
-                    $.data(this, 'range', new Range(this, options));
+                if (!$.data(this, 'asRange')) {
+                    $.data(this, 'asRange', new AsRange(this, options));
                 }
             });
         }

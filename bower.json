@@ -1,15 +1,15 @@
 {
-  "name": "jquery-range",
-  "version": "0.1.2",
-  "main": "dist/jquery-range.js",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "jquery": ">=1.8.3"
-  }
+    "name": "jquery-asRange",
+    "version": "0.1.2",
+    "main": "dist/jquery-asRange.js",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "jquery": ">=1.8.3"
+    }
 }
