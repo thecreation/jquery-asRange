@@ -1,6 +1,6 @@
 // jqueyr range veiw
 
-$.range.registerComponent('view', {
+$.asRange.registerComponent('view', {
     defaults: {},
     init: function(instance) {
         var self = this;

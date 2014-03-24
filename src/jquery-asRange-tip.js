@@ -1,6 +1,6 @@
 // jquery range tip
 
-$.range.registerComponent('tip', {
+$.asRange.registerComponent('tip', {
     defaults: {
         active: 'always' // 'always' 'onmove'
     },

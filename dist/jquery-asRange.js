@@ -511,13 +511,12 @@
     };
 
 }(jQuery));
-
 // scale
 // 
-$.range.registerComponent('scale', {
+$.asRange.registerComponent('scale', {
     defaults: {
         scale: {
-            values: [0,50,100],
+            values: [0, 50, 100],
             gap: 1,
             grid: 5
         }
@@ -535,31 +534,35 @@ $.range.registerComponent('scale', {
         };
 
         var len = scale.values.length;
-        var num = ((scale.grid -1)*(scale.gap+1) + scale.gap)*(len-1) + len;
-        var perOfGrid =  100/(num-1);
-        var perOfValue = 100/(len-1);
+        var num = ((scale.grid - 1) * (scale.gap + 1) + scale.gap) * (len - 1) + len;
+        var perOfGrid = 100 / (num - 1);
+        var perOfValue = 100 / (len - 1);
 
         this.$scale = $('<div></div>').addClass(classes.scale);
         this.$grid = $('<ul></ul>').addClass(classes.scaleGrid);
         this.$value = $('<ul></ul>').addClass(classes.scaleValue);
 
-        for (var i=0; i<num; i++) {
+        for (var i = 0; i < num; i++) {
             var $list;
-            if (i===0 || i===num || i%((num-1)/(len-1))===0) {
-                $list = $('<li class="' + classes.grid +'"></li>');
-            } else if ( i%scale.grid === 0 ) {
-                $list = $('<li class="' + classes.inlineGrid +'"></li>');
+            if (i === 0 || i === num || i % ((num - 1) / (len - 1)) === 0) {
+                $list = $('<li class="' + classes.grid + '"></li>');
+            } else if (i % scale.grid === 0) {
+                $list = $('<li class="' + classes.inlineGrid + '"></li>');
             } else {
                 $list = $('<li></li>');
-            } 
+            }
 
             // position scale 
-            $list.css({left: perOfGrid * i + '%'}).appendTo(this.$grid);
+            $list.css({
+                left: perOfGrid * i + '%'
+            }).appendTo(this.$grid);
         }
 
-        for (var j=0; j<len; j++) {
+        for (var j = 0; j < len; j++) {
             // position value
-            $('<li><span>' + scale.values[j] + '</span></li>').css({left: perOfValue * j + '%'}).appendTo(this.$value);
+            $('<li><span>' + scale.values[j] + '</span></li>').css({
+                left: perOfValue * j + '%'
+            }).appendTo(this.$value);
         }
 
         this.$grid.add(this.$value).appendTo(this.$scale);
@@ -572,7 +575,7 @@ $.range.registerComponent('scale', {
 });
 // jqueyr range veiw
 
-$.range.registerComponent('view', {
+$.asRange.registerComponent('view', {
     defaults: {},
     init: function(instance) {
         var self = this;
@@ -616,7 +619,7 @@ $.range.registerComponent('view', {
 });
 // jquery range tip
 
-$.range.registerComponent('tip', {
+$.asRange.registerComponent('tip', {
     defaults: {
         active: 'always' // 'always' 'onmove'
     },
