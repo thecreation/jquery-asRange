@@ -81,8 +81,8 @@
 
             this.mousemove = function(event) {
                 var origin = event,
-                    event = getEventObject(event),
-                    value = this.data[position] + (event[page] || this.data.start) - this.data.start;
+                    eventObj = getEventObject(event),
+                    value = this.data[position] + (eventObj[page] || this.data.start) - this.data.start;
                 this.set('px', value);
                 origin.preventDefault();
                 return false;
@@ -476,6 +476,7 @@
         pointer: 2,
         direction: 'h', // 'v' or 'h'
         keyboard: true,
+        replaceFirst: 'default',
 
         // components
         tip: true,
@@ -486,7 +487,6 @@
             return value;
         },
         onChange: function() {},
-
         // on mouse up 
         callback: function() {}
     };
