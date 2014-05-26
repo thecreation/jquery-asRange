@@ -15,21 +15,19 @@
         defaults = {
             namespace: 'asRange',
             skin: null,
-
             max: 100,
             min: 0,
             value: null,
             step: 10,
             limit: true,
-            range: true,
+            range: false,
             direction: 'h', // 'v' or 'h'
             keyboard: true,
             replaceFirst: 'default',
-
+            
             // components
             tip: true,
             scale: true,
-
             format: function(value) {
                 return value;
             },
