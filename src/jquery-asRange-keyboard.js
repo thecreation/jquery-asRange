@@ -62,7 +62,7 @@
                     var value = p.value;
                     p.set('percent', value + step);
                 };
-                p.$wrap.attr('tabindex', '0').on('focus', function() {
+                p.$element.attr('tabindex', '0').on('focus', function() {
                     keyboard.attach({
                         left: left,
                         right: right

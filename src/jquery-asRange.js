@@ -7,59 +7,34 @@
  */
 
 (function($) {
-    function isTouchDevice() {
-        var el = document.createElement('div');
-        el.setAttribute('ongesturestart', 'return;');
-        if (typeof el.ongesturestart === "function") {
-            return true;
-        } else {
-            return false;
-        }
-    }
     var pluginName = 'asRange',
-        defaults = {
-            namespace: 'asRange',
-            skin: null,
-            max: 100,
-            min: 0,
-            value: null,
-            step: 10,
-            limit: true,
-            range: false,
-            direction: 'h', // 'v' or 'h'
-            keyboard: true,
-            replaceFirst: 'default',
-            
-            // components
-            tip: true,
-            scale: true,
-            format: function(value) {
-                return value;
-            },
-            onChange: function() {},
-            // on mouse up 
-            callback: function() {}
+    defaults = {
+        namespace: 'asRange',
+        skin: null,
+        max: 100,
+        min: 0,
+        value: null,
+        step: 10,
+        limit: true,
+        range: false,
+        direction: 'h', // 'v' or 'h'
+        keyboard: true,
+        replaceFirst: 'default',
+        
+        // components
+        tip: true,
+        scale: true,
+        format: function(value) {
+            return value;
         },
-        Touch = isTouchDevice(),
-        downEvent,
-        upEvent,
-        moveEvent;
+        onChange: function() {},
+        // on mouse up 
+        callback: function() {}
+    };
 
-    if (Touch) {
-        downEvent = 'touchstart.asRange';
-        upEvent = 'touchend.asRange';
-        moveEvent = 'touchmove.asRange';
-    } else {
-        downEvent = 'mousedown.asRange';
-        upEvent = 'mouseup.asRange';
-        moveEvent = 'mousemove.asRange';
-    }
-    var getEventObject = function(event) {
-        var a = event.originalEvent;
-        if (Touch) {
-            a = a.touches[0];
-        }
-        return a;
+    var getEventObject = function(e) {
+        if (e.touches) e = e.touches[0];
+        return e;
     };
 
     // main constructor
@@ -153,10 +128,31 @@
         components: {},
 
         init: function() {
-            var self = this;
+            this.$wrap.append('<div class="' + this.namespace + '-bar" />');
 
-            $('<div class="' + this.namespace + '-bar" />').appendTo(this.$wrap);
+            // build pointers
+            this.buildPointers();
 
+            // initial components
+            this.components.selected.init(this);
+
+            if (this.options.tip !== false) {
+                this.components.tip.init(this);
+            }
+            if (this.options.scale !== false) {
+                this.components.scale.init(this);
+            }
+
+            // initial pointer value
+            this.set(this.value);
+
+            // Bind events
+            this.bindEvents();
+
+            this.$element.trigger('asRange::ready', this);
+            this.initialized = true;
+        },
+        buildPointers: function() {
             this.pointer = [];
             var pointer_count = 1;
             if (this.options.range) {
@@ -174,19 +170,10 @@
             if(this.options.range){
                 this.p2 = this.pointer[1];
             }
-
-            // initial components
-            this.components.selected.init(this);
-            if (this.options.tip !== false) {
-                this.components.tip.init(this);
-            }
-            if (this.options.scale !== false) {
-                this.components.scale.init(this);
-            }
-
-            // initial pointer value
-            this.set(this.value);
-            this.$wrap.on(downEvent, function(event) {
+        },
+        bindEvents: function() {
+            var self = this;
+            this.$wrap.on('touchstart.asRange mousedown.asRange', function(event) {
                 event = getEventObject(event);
                 var rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
                 if (rightclick && !Touch) {
@@ -195,21 +182,21 @@
 
                 var offset = self.$wrap.offset(),
                     start = event[self.page] - offset[self.position],
-                    p = self.stickTo.call(self, start);
+                    p = self.getAdjacentPointer.call(self, start);
 
                 p.mousedown.call(p, event);
                 return false;
             });
 
             if (this.$element.is('input')) {
-                this.$wrap.on('asRange::change', function() {
+                this.$element.on('asRange::change', function() {
                     var value = self.get();
                     self.$element.val(value);
                 });
             }
 
             $.each(this.pointer, function(i, p) {
-                p.$wrap.on('asRange::pointer::change', function() {
+                p.$element.on('asRange::pointer::change', function() {
                     self.value = self.get();
                     if (!self.initialized || self.updating) {
                         return false;
@@ -217,15 +204,12 @@
                     if (typeof self.options.onChange === 'function') {
                         self.options.onChange.call(self, self.value, p.uid);
                     }
-                    self.$wrap.trigger('asRange::change', self);
+                    self.$element.trigger('asRange::change', self);
                     return false;
                 });
             });
-
-            this.$wrap.trigger('asRange::ready', this);
-            this.initialized = true;
         },
-        stickTo: function(start) {
+        getAdjacentPointer: function(start) {
             var value = start / this.getLength();
 
 
@@ -284,7 +268,7 @@
             if (typeof self.options.onUpdate === 'function') {
                 self.options.onUpdate.call(self);
             }
-            self.$wrap.trigger('asRange::update', self);
+            self.$element.trigger('asRange::update', self);
 
             this.updating = false;
         },
@@ -365,8 +349,8 @@
     };
 
     // Pointer constuctor
-    function Pointer($wrap, id, parent) {
-        this.$wrap = $wrap;
+    function Pointer($element, id, parent) {
+        this.$element = $element;
         this.uid = id;
         this.parent = parent;
         this.options = $.extend(true, {}, this.parent.options);
@@ -387,7 +371,7 @@
                 return;
             }
 
-            this.$wrap.trigger('asRange::pointer::start', this);
+            this.$element.trigger('asRange::pointer::start', this);
 
             page = this.parent.page;
             position = this.parent.position;
@@ -399,10 +383,10 @@
             this.set('px', this.data[position]);
 
             $.each(this.parent.pointer, function(i, p) {
-                p.$wrap.removeClass(self.classes.active);
+                p.deactive();
             });
 
-            this.$wrap.addClass(self.classes.active);
+            this.active();
 
             this.mousemove = function(event) {
                 var origin = event,
@@ -413,13 +397,20 @@
                 return false;
             };
             this.mouseup = function() {
-                $(document).off(moveEvent).off(upEvent);
-                this.$wrap.trigger('asRange::pointer::end', this);
+                $(document).off('touchmove.asRange mousemove.asRange touchend.asRange mouseup.asRange');
+                this.$element.trigger('asRange::pointer::end', this);
                 return false;
             };
 
-            $(document).on(moveEvent, $.proxy(this.mousemove, this)).on(upEvent, $.proxy(this.mouseup, this));
+            $(document).on('touchmove.asRange mousemove.asRange', $.proxy(this.mousemove, this))
+                        .on('touchend.asRange mouseup.asRange', $.proxy(this.mouseup, this));
             return false;
+        },
+        active: function(){
+            this.$element.addClass(this.classes.active);
+        },
+        deactive: function(){
+            this.$element.removeClass(this.classes.active);
         },
         set: function(from, value) {
             if (from === 'px') {
@@ -437,14 +428,13 @@
             if (this.value === value) {
                 return;
             }
-            var position = {};
-
+            
             value = Math.round(value * 1000) / 1000;
             if (this.parent.step > 0) {
-                value = this.setStep(value);
+                value = this.matchStep(value);
             }
             if (this.options.limit === true) {
-                value = this.setLimit(value);
+                value = this.matchLimit(value);
             } else {
                 if (value <= 0) {
                     value = 0;
@@ -456,22 +446,23 @@
             value = Math.round(value * 1000) / 1000;
             this.value = value;
 
+            var position = {};
             position[this.parent.position] = value * 100 + '%';
-            this.$wrap.css(position);
-            this.$wrap.focus();
+            this.$element.css(position);
+            this.$element.focus();
 
-            this.$wrap.trigger('asRange::pointer::change', this);
+            this.$element.trigger('asRange::pointer::change', this);
         },
         get: function() {
             return this.value;
         },
-        setStep: function(value) {
+        matchStep: function(value) {
             var step = this.parent.step;
             value = value * this.parent.interval + this.parent.min;
             value = Math.round(value / step) * step;
             return (value - this.parent.min) / this.parent.interval;
         },
-        setLimit: function(value) {
+        matchLimit: function(value) {
             var left, right, pointer = this.parent.pointer;
 
             if (this.uid === 1) {
@@ -495,8 +486,8 @@
             return value;
         },
         destroy: function() {
-            this.$wrap.off(downEvent);
-            this.$wrap.remove();
+            this.$element.off('.asRange');
+            this.$element.remove();
         }
     };
 

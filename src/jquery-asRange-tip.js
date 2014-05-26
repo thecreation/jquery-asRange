@@ -2,7 +2,7 @@
 
     $.asRange.registerComponent('tip', {
         defaults: {
-            active: 'always' // 'always' 'onmove'
+            active: 'always' // 'always' 'onMove'
         },
         init: function(instance) {
             var self = this,
@@ -14,14 +14,14 @@
                 show: instance.namespace + '-tip-show'
             };
             $.each(instance.pointer, function(i, p) {
-                var $tip = $('<span></span>').appendTo(instance.pointer[i].$wrap);
+                var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
 
                 $tip.addClass(self.classes.tip);
                 if (self.opts.active === 'onMove') {
                     $tip.css({
                         display: 'none'
                     });
-                    p.$wrap.on('asRange::pointer::end', function() {
+                    p.$element.on('asRange::pointer::end', function() {
                         self.hide($tip);
                         return false;
                     }).on('asRange::pointer::start', function() {
@@ -29,7 +29,7 @@
                         return false;
                     });
                 }
-                p.$wrap.on('asRange::pointer::change', function() {
+                p.$element.on('asRange::pointer::change', function() {
                     var value;
                     if(instance.options.range){
                         value = instance.get()[i];

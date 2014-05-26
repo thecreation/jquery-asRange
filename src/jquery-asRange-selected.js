@@ -8,7 +8,7 @@
             this.$arrow.addClass(instance.namespace + '-selected');
 
             if (instance.options.range === false) {
-                instance.pointer[0].$wrap.on('asRange::pointer::change', function(e, pointer) {
+                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
                     var left = 0,
                         right = pointer.get();
 
@@ -20,7 +20,7 @@
             }
 
             if (instance.options.range === true) {
-                instance.pointer[0].$wrap.on('asRange::pointer::change', function(e, pointer) {
+                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
                     var left = pointer.get(),
                         right = instance.pointer[1].get();
 
@@ -29,7 +29,7 @@
                         width: Math.abs(right - left) * 100 + '%'
                     });
                 });
-                instance.pointer[1].$wrap.on('asRange::pointer::change', function(e, pointer) {
+                instance.pointer[1].$element.on('asRange::pointer::change', function(e, pointer) {
                     var right = pointer.get(),
                         left = instance.pointer[0].get();
 
