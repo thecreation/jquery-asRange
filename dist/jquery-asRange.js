@@ -1,4 +1,4 @@
-/*! asRange - v0.1.2 - 2014-05-26
+/*! asRange - v0.2.0 - 2014-05-26
 * https://github.com/amazingSurge/jquery-asRange
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -141,8 +141,8 @@
             return this.value;
         },
         setStep: function(value) {
-            var value = value * this.parent.interval + this.parent.min,
-                step = this.parent.step;
+            var step = this.parent.step;
+            value = value * this.parent.interval + this.parent.min;
             value = Math.round(value / step) * step;
             return (value - this.parent.min) / this.parent.interval;
         },
@@ -152,11 +152,11 @@
             if (this.uid === 1) {
                 left = 0;
             } else {
-                left = pointer[this.uid - 2]['value'];
+                left = pointer[this.uid - 2].value;
             }
 
             if (pointer[this.uid]) {
-                right = pointer[this.uid]['value'];
+                right = pointer[this.uid].value;
             } else {
                 right = 1;
             }
@@ -248,8 +248,8 @@
         this.initialized = false;
         this.updating = false;
         this.disabled = false;
-        this.page = direction[this.options.direction]['page'];
-        this.position = direction[this.options.direction]['position'];
+        this.page = direction[this.options.direction].page;
+        this.position = direction[this.options.direction].position;
 
         this.$element.addClass(this.namespace);
 
@@ -274,7 +274,7 @@
 
             //this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
             for (var i = 1; i <= this.options.pointer; i++) {
-                var $pointer = $('<div class="' + this.namespace + '-pointer pointer-' + i + '"></div>').appendTo(this.$element);
+                var $pointer = $('<div class="' + this.namespace + '-pointer ' + this.namespace + '-pointer-' + i + '"></div>').appendTo(this.$element);
                 var p = new Pointer($pointer, i, this);
                 this.pointer.push(p);
             }
@@ -285,7 +285,7 @@
             this.p3 = this.pointer[2];
 
             // initial components
-            this.components.view.init(this);
+            this.components.selected.init(this);
             if (this.options.tip !== false) {
                 this.components.tip.init(this);
             }
@@ -296,8 +296,8 @@
             // initial pointer value
             this.set(this.value);
             this.$element.on(downEvent, function(event) {
-                var event = getEventObject(event),
-                    rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
+                event = getEventObject(event);
+                var rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
                 if (rightclick && !Touch) {
                     return false;
                 }
@@ -527,10 +527,10 @@
 
             var classes = {
                 scale: instance.namespace + '-scale',
-                scaleGrid: instance.namespace + '-scaleGrid',
-                scaleValue: instance.namespace + '-scaleValue',
+                lines: instance.namespace + '-scale-lines',
                 grid: instance.namespace + '-scale-grid',
-                inlineGrid: instance.namespace + '-scale-inlineGrid'
+                inlineGrid: instance.namespace + '-scale-inlineGrid',
+                values: instance.namespace + '-scale-values'
             };
 
             var len = scale.values.length;
@@ -539,8 +539,8 @@
             var perOfValue = 100 / (len - 1);
 
             this.$scale = $('<div></div>').addClass(classes.scale);
-            this.$grid = $('<ul></ul>').addClass(classes.scaleGrid);
-            this.$value = $('<ul></ul>').addClass(classes.scaleValue);
+            this.$lines = $('<ul></ul>').addClass(classes.lines);
+            this.$values = $('<ul></ul>').addClass(classes.values);
 
             for (var i = 0; i < num; i++) {
                 var $list;
@@ -555,17 +555,17 @@
                 // position scale 
                 $list.css({
                     left: perOfGrid * i + '%'
-                }).appendTo(this.$grid);
+                }).appendTo(this.$lines);
             }
 
             for (var j = 0; j < len; j++) {
                 // position value
                 $('<li><span>' + scale.values[j] + '</span></li>').css({
                     left: perOfValue * j + '%'
-                }).appendTo(this.$value);
+                }).appendTo(this.$values);
             }
 
-            this.$grid.add(this.$value).appendTo(this.$scale);
+            this.$lines.add(this.$values).appendTo(this.$scale);
             this.$scale.appendTo(instance.$element);
         },
         update: function(instance) {
@@ -574,15 +574,14 @@
         }
     });
 }(jQuery));
-
 (function($) {
-    $.asRange.registerComponent('view', {
+    $.asRange.registerComponent('selected', {
         defaults: {},
         init: function(instance) {
             var self = this;
 
             this.$arrow = $('<span></span>').appendTo(instance.$element);
-            this.$arrow.addClass(instance.namespace + '-view');
+            this.$arrow.addClass(instance.namespace + '-selected');
 
             if (instance.pointer.length === 1) {
                 instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
@@ -619,7 +618,6 @@
         }
     });
 }(jQuery));
-
 (function($) {
 
     $.asRange.registerComponent('tip', {

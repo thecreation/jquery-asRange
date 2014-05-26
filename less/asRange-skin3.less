@@ -3,7 +3,7 @@
 @rangeSkin3BgColor: #eee;
 @rangeSkin3PointerBgColor: lighten(@rangeSkin3BgColor,100%);
 @rangeSkin3PointerBdColor: darken(@rangeSkin3BgColor,6.5%);
-@rangeSkin3ViewBgColor: #27acd8;
+@rangeSkin3selectedBgColor: #27acd8;
 //===============================================
 
 .asRange.asRange-simple.asRange_skin-3 {
@@ -16,14 +16,14 @@
 	.asRange-pointer {
 		display: none;
 	}
-	.asRange-view {
+	.asRange-selected {
 		position: absolute;
 		width: 30%;
 		height: 14px;
 		
 		overflow: hidden;
 
-		background-color: @rangeSkin3ViewBgColor;
+		background-color: @rangeSkin3selectedBgColor;
 	}
 
 	.asRange-scale {
@@ -68,14 +68,14 @@
 			display: none;
 		}
 	}
-	.asRange-view {
+	.asRange-selected {
 		position: absolute;
 		width: 30%;
 		height: 14px;
 		
 		overflow: hidden;
 
-		background-color: @rangeSkin3ViewBgColor;
+		background-color: @rangeSkin3selectedBgColor;
 	}
 
 	.asRange-scale {
@@ -122,7 +122,7 @@
 			left: 70%;
 		}
 	}
-	.asRange-view {
+	.asRange-selected {
 		position: absolute;
 		left: 30%;
 		width: 40%;
@@ -130,7 +130,7 @@
 		
 		overflow: hidden;
 
-		background-color: @rangeSkin3ViewBgColor;
+		background-color: @rangeSkin3selectedBgColor;
 	}
 
 	.asRange-scale {

@@ -17,7 +17,7 @@ module.exports = function(grunt) {
                 stripBanners: true
             },
             dist: {
-                src: ['src/<%= pkg.name %>.js', 'src/<%= pkg.name %>-scale.js', 'src/<%= pkg.name %>-view.js', 'src/<%= pkg.name %>-tip.js', 'src/<%= pkg.name %>-keyboard.js'],
+                src: ['src/<%= pkg.name %>.js', 'src/<%= pkg.name %>-scale.js', 'src/<%= pkg.name %>-selected.js', 'src/<%= pkg.name %>-tip.js', 'src/<%= pkg.name %>-keyboard.js'],
                 dest: 'dist/<%= pkg.name %>.js'
             },
         },
@@ -43,13 +43,7 @@ module.exports = function(grunt) {
                     jshintrc: 'src/.jshintrc'
                 },
                 src: ['src/**/*.js']
-            },
-            test: {
-                options: {
-                    jshintrc: 'test/.jshintrc'
-                },
-                src: ['test/**/*.js']
-            },
+            }
         },
         watch: {
             gruntfile: {
@@ -59,11 +53,7 @@ module.exports = function(grunt) {
             src: {
                 files: '<%= jshint.src.src %>',
                 tasks: ['jshint:src', 'qunit']
-            },
-            test: {
-                files: '<%= jshint.test.src %>',
-                tasks: ['jshint:test', 'qunit']
-            },
+            }
         },
 
         jsbeautifier: {
@@ -87,7 +77,7 @@ module.exports = function(grunt) {
         },
         recess: {
             core: {
-                src: ["less/**/*.less"],
+                src: ["less/jquery.asRange.less"],
                 dest: 'demo/css/asRange.css',
                 options: {
                     compile: true
@@ -114,16 +104,10 @@ module.exports = function(grunt) {
         }
     });
 
-    // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-
-    grunt.loadNpmTasks('grunt-jsbeautifier');
-    grunt.loadNpmTasks('grunt-recess');
-    grunt.loadNpmTasks('grunt-text-replace');
+    // Load npm plugins to provide necessary tasks.
+    require('load-grunt-tasks')(grunt, {
+        pattern: ['grunt-*']
+    });
 
     // Default task.
     grunt.registerTask('default', ['jshint', 'clean', 'concat', 'uglify']);

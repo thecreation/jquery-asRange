@@ -9,8 +9,8 @@
 @rangeSkin2PointerLastBgColor: lighten(@rangeSkin2BgColor,67%);
 @rangeSkin2PointerBfBgColor: #eef2f6;
 @rangeSkin2PointerBfLastBgColor: darken(@rangeSkin2PointerBfBgColor,4%);
-@rangeSkin2ViewBgColor: #eea629;
-@rangeSkin2ViewFirstBgColor: darken(@rangeSkin2ViewBgColor,6.5%);
+@rangeSkin2selectedBgColor: #eea629;
+@rangeSkin2selectedFirstBgColor: darken(@rangeSkin2selectedBgColor,6.5%);
 //==============================================
 
 .asRange.asRange-simple.asRange_skin-2 {
@@ -131,15 +131,15 @@
             }
 		}
 	}
-	.asRange-view {
+	.asRange-selected {
 		position: absolute;
 		z-index: 1;
 		width: 30%;
 		height: 13px;
 
-		background-color: @rangeSkin2ViewFirstBgColor;
+		background-color: @rangeSkin2selectedFirstBgColor;
 		background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2U0OWQxZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlZWE2MjkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-		.background-vertical (@rangeSkin2ViewFirstBgColor,@rangeSkin2ViewBgColor);
+		.background-vertical (@rangeSkin2selectedFirstBgColor,@rangeSkin2selectedBgColor);
 		.box-shadow-inset (0 2px 4px 0 fade(@rangeSkin2BoxShadowColor,10%));
 		.border-radius (9px);
 	}
@@ -271,16 +271,16 @@
             }
 		}
 	}
-	.asRange-view {
+	.asRange-selected {
 		position: absolute;
 		left: 30%;
 		z-index: 1;
 		width: 40%;
 		height: 13px;
 
-		background-color: @rangeSkin2ViewFirstBgColor;
+		background-color: @rangeSkin2selectedFirstBgColor;
 		background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2U0OWQxZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlZWE2MjkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-		.background-vertical (@rangeSkin2ViewFirstBgColor,@rangeSkin2ViewBgColor);
+		.background-vertical (@rangeSkin2selectedFirstBgColor,@rangeSkin2selectedBgColor);
 		.box-shadow-inset (0 2px 4px 0 fade(@rangeSkin2BoxShadowColor,10%));
 		.border-radius (9px);
 	}
@@ -411,16 +411,16 @@
             }
 		}
 	}
-	.asRange-view {
+	.asRange-selected {
 		position: absolute;
 		left: 30%;
 		z-index: 1;
 		width: 40%;
 		height: 13px;
 
-		background-color: @rangeSkin2ViewFirstBgColor;
+		background-color: @rangeSkin2selectedFirstBgColor;
 		background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2U0OWQxZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlZWE2MjkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-		.background-vertical (@rangeSkin2ViewFirstBgColor,@rangeSkin2ViewBgColor);
+		.background-vertical (@rangeSkin2selectedFirstBgColor,@rangeSkin2selectedBgColor);
 		.box-shadow-inset (0 2px 4px 0 fade(@rangeSkin2BoxShadowColor,10%));
 		.border-radius (9px);
 	}

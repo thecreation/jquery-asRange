@@ -1,11 +1,11 @@
 (function($) {
-    $.asRange.registerComponent('view', {
+    $.asRange.registerComponent('selected', {
         defaults: {},
         init: function(instance) {
             var self = this;
 
             this.$arrow = $('<span></span>').appendTo(instance.$element);
-            this.$arrow.addClass(instance.namespace + '-view');
+            this.$arrow.addClass(instance.namespace + '-selected');
 
             if (instance.pointer.length === 1) {
                 instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {

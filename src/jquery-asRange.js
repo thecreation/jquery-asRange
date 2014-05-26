@@ -146,8 +146,8 @@
             return this.value;
         },
         setStep: function(value) {
-            var value = value * this.parent.interval + this.parent.min,
-                step = this.parent.step;
+            var step = this.parent.step;
+            value = value * this.parent.interval + this.parent.min;
             value = Math.round(value / step) * step;
             return (value - this.parent.min) / this.parent.interval;
         },
@@ -157,11 +157,11 @@
             if (this.uid === 1) {
                 left = 0;
             } else {
-                left = pointer[this.uid - 2]['value'];
+                left = pointer[this.uid - 2].value;
             }
 
             if (pointer[this.uid]) {
-                right = pointer[this.uid]['value'];
+                right = pointer[this.uid].value;
             } else {
                 right = 1;
             }
@@ -253,8 +253,8 @@
         this.initialized = false;
         this.updating = false;
         this.disabled = false;
-        this.page = direction[this.options.direction]['page'];
-        this.position = direction[this.options.direction]['position'];
+        this.page = direction[this.options.direction].page;
+        this.position = direction[this.options.direction].position;
 
         this.$element.addClass(this.namespace);
 
@@ -279,7 +279,7 @@
 
             //this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
             for (var i = 1; i <= this.options.pointer; i++) {
-                var $pointer = $('<div class="' + this.namespace + '-pointer pointer-' + i + '"></div>').appendTo(this.$element);
+                var $pointer = $('<div class="' + this.namespace + '-pointer ' + this.namespace + '-pointer-' + i + '"></div>').appendTo(this.$element);
                 var p = new Pointer($pointer, i, this);
                 this.pointer.push(p);
             }
@@ -290,7 +290,7 @@
             this.p3 = this.pointer[2];
 
             // initial components
-            this.components.view.init(this);
+            this.components.selected.init(this);
             if (this.options.tip !== false) {
                 this.components.tip.init(this);
             }
@@ -301,8 +301,8 @@
             // initial pointer value
             this.set(this.value);
             this.$element.on(downEvent, function(event) {
-                var event = getEventObject(event),
-                    rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
+                event = getEventObject(event);
+                var rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
                 if (rightclick && !Touch) {
                     return false;
                 }

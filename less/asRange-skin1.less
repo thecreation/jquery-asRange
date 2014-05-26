@@ -10,9 +10,9 @@
 @rangeSkin1TipFirstBgColor: lighten(@rangeSkin1BgColor,80%);
 @rangeSkin1TipLastBgColor: lighten(@rangeSkin1BgColor,53.5%);
 @rangeSkin1TipBfBgColor: lighten(@rangeSkin1BgColor,21.5%);
-@rangeSkin1ViewBgColor: #bce841;
-@rangeSkin1ViewLastBgColor: darken(@rangeSkin1ViewBgColor,17.3%);
-@rangeSkin1ViewBeforeBgColor: darken(@rangeSkin1ViewBgColor,8.5%);
+@rangeSkin1selectedBgColor: #bce841;
+@rangeSkin1selectedLastBgColor: darken(@rangeSkin1selectedBgColor,17.3%);
+@rangeSkin1selectedBeforeBgColor: darken(@rangeSkin1selectedBgColor,8.5%);
 //============================================
 .asRange.asRange_skin-1 {
 	position: relative;
@@ -120,17 +120,17 @@
             }
 		}
 	}
-	.asRange-view {
+	.asRange-selected {
 		position: absolute;
 		width: 30%;
 		height: 8px;
 		
 		overflow: hidden;
 
-		background-color: @rangeSkin1ViewBgColor;
+		background-color: @rangeSkin1selectedBgColor;
 		background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIzMCUiIHN0b3AtY29sb3I9IiNiY2U4NDEiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOGZiYzAwIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
-		.background-vertical (@rangeSkin1ViewBgColor,@rangeSkin1ViewLastBgColor,30%,100%);
-		.box-shadow-bothWay (3px 0 4px 2px fade(@rangeSkin1ViewBgColor,20%),0 1px 0 0 fade(@rangeSkin1PointerBgColor,40%));
+		.background-vertical (@rangeSkin1selectedBgColor,@rangeSkin1selectedLastBgColor,30%,100%);
+		.box-shadow-bothWay (3px 0 4px 2px fade(@rangeSkin1selectedBgColor,20%),0 1px 0 0 fade(@rangeSkin1PointerBgColor,40%));
 		.border-radius (9px);
 		&:before {
 			position: absolute;
@@ -141,8 +141,8 @@
 			display: inline-block;
 			width: 5px;
 			height: 100%;
-			background-color: fade(@rangeSkin1ViewBeforeBgColor,20%);
-			.box-shadow (0 0 3px 0 fade(@rangeSkin1ViewBeforeBgColor,20%));
+			background-color: fade(@rangeSkin1selectedBeforeBgColor,20%);
+			.box-shadow (0 0 3px 0 fade(@rangeSkin1selectedBeforeBgColor,20%));
 			.border-radius (6px);
 		}
 		&:after {
@@ -154,8 +154,8 @@
 			display: inline-block;
 			width: 5px;
 			height: 100%;
-			background-color: fade(@rangeSkin1ViewBeforeBgColor,20%);
-			.box-shadow (0 0 3px 0 fade(@rangeSkin1ViewBeforeBgColor,20%));
+			background-color: fade(@rangeSkin1selectedBeforeBgColor,20%);
+			.box-shadow (0 0 3px 0 fade(@rangeSkin1selectedBeforeBgColor,20%));
 			.border-radius (6px);
 		}
 	}
@@ -275,7 +275,7 @@
             }
 		}
 	}
-	.asRange-view {
+	.asRange-selected {
 		position: absolute;
 		left: 30%;
 		width: 40%;
@@ -283,10 +283,10 @@
 		
 		overflow: hidden;
 
-		background-color: @rangeSkin1ViewBgColor;
+		background-color: @rangeSkin1selectedBgColor;
 		background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIzMCUiIHN0b3AtY29sb3I9IiNiY2U4NDEiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOGZiYzAwIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
-		.background-vertical (@rangeSkin1ViewBgColor,@rangeSkin1ViewLastBgColor,30%,100%);
-		.box-shadow-bothWay (3px 0 4px 2px fade(@rangeSkin1ViewBgColor,20%),0 1px 0 0 fade(@rangeSkin1PointerBgColor,40%));
+		.background-vertical (@rangeSkin1selectedBgColor,@rangeSkin1selectedLastBgColor,30%,100%);
+		.box-shadow-bothWay (3px 0 4px 2px fade(@rangeSkin1selectedBgColor,20%),0 1px 0 0 fade(@rangeSkin1PointerBgColor,40%));
 		.border-radius (9px);
 		&:before {
 			position: absolute;
@@ -297,8 +297,8 @@
 			display: inline-block;
 			width: 5px;
 			height: 100%;
-			background-color: fade(@rangeSkin1ViewBeforeBgColor,20%);
-			.box-shadow (0 0 3px 0 fade(@rangeSkin1ViewBeforeBgColor,20%));
+			background-color: fade(@rangeSkin1selectedBeforeBgColor,20%);
+			.box-shadow (0 0 3px 0 fade(@rangeSkin1selectedBeforeBgColor,20%));
 			.border-radius (6px);
 		}
 		&:after {
@@ -310,8 +310,8 @@
 			display: inline-block;
 			width: 5px;
 			height: 100%;
-			background-color: fade(@rangeSkin1ViewBeforeBgColor,20%);
-			.box-shadow (0 0 3px 0 fade(@rangeSkin1ViewBeforeBgColor,20%));
+			background-color: fade(@rangeSkin1selectedBeforeBgColor,20%);
+			.box-shadow (0 0 3px 0 fade(@rangeSkin1selectedBeforeBgColor,20%));
 			.border-radius (6px);
 		}
 	}

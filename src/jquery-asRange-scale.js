@@ -13,10 +13,10 @@
 
             var classes = {
                 scale: instance.namespace + '-scale',
-                scaleGrid: instance.namespace + '-scaleGrid',
-                scaleValue: instance.namespace + '-scaleValue',
+                lines: instance.namespace + '-scale-lines',
                 grid: instance.namespace + '-scale-grid',
-                inlineGrid: instance.namespace + '-scale-inlineGrid'
+                inlineGrid: instance.namespace + '-scale-inlineGrid',
+                values: instance.namespace + '-scale-values'
             };
 
             var len = scale.values.length;
@@ -25,8 +25,8 @@
             var perOfValue = 100 / (len - 1);
 
             this.$scale = $('<div></div>').addClass(classes.scale);
-            this.$grid = $('<ul></ul>').addClass(classes.scaleGrid);
-            this.$value = $('<ul></ul>').addClass(classes.scaleValue);
+            this.$lines = $('<ul></ul>').addClass(classes.lines);
+            this.$values = $('<ul></ul>').addClass(classes.values);
 
             for (var i = 0; i < num; i++) {
                 var $list;
@@ -41,17 +41,17 @@
                 // position scale 
                 $list.css({
                     left: perOfGrid * i + '%'
-                }).appendTo(this.$grid);
+                }).appendTo(this.$lines);
             }
 
             for (var j = 0; j < len; j++) {
                 // position value
                 $('<li><span>' + scale.values[j] + '</span></li>').css({
                     left: perOfValue * j + '%'
-                }).appendTo(this.$value);
+                }).appendTo(this.$values);
             }
 
-            this.$grid.add(this.$value).appendTo(this.$scale);
+            this.$lines.add(this.$values).appendTo(this.$scale);
             this.$scale.appendTo(instance.$element);
         },
         update: function(instance) {
