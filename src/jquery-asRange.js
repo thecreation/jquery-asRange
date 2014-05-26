@@ -234,10 +234,6 @@
             this.$element = this.$range;
         }
 
-        this.$element.css({
-            position: 'relative'
-        });
-
         this.options = $.extend({}, AsRange.defaults, options, metas);
         this.namespace = this.options.namespace;
         this.components = $.extend(true, {}, this.components);
@@ -275,9 +271,10 @@
 
         init: function() {
             var self = this;
-            this.pointer = [];
 
-            //this.$bar = $('<span class="range-bar"></span>').appendTo(this.$element);
+            $('<div class="'+this.namespace+'-bar" />').appendTo(this.$element);
+
+            this.pointer = [];
             for (var i = 1; i <= this.options.pointer; i++) {
                 var $pointer = $('<div class="' + this.namespace + '-pointer ' + this.namespace + '-pointer-' + i + '"></div>').appendTo(this.$element);
                 var p = new Pointer($pointer, i, this);
@@ -318,7 +315,7 @@
             if (this.$range.is('input')) {
                 this.$element.on('asRange::change', function() {
                     var value = self.get();
-                    self.$element.val(value);
+                    self.$range.val(value);
                 });
             }
 
