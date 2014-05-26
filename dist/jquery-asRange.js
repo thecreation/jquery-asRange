@@ -1,4 +1,4 @@
-/*! asRange - v0.1.2 - 2014-03-24
+/*! asRange - v0.1.2 - 2014-05-26
 * https://github.com/amazingSurge/jquery-asRange
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -76,8 +76,8 @@
 
             this.mousemove = function(event) {
                 var origin = event,
-                    event = getEventObject(event),
-                    value = this.data[position] + (event[page] || this.data.start) - this.data.start;
+                    eventObj = getEventObject(event),
+                    value = this.data[position] + (eventObj[page] || this.data.start) - this.data.start;
                 this.set('px', value);
                 origin.preventDefault();
                 return false;
@@ -471,6 +471,7 @@
         pointer: 2,
         direction: 'h', // 'v' or 'h'
         keyboard: true,
+        replaceFirst: 'default',
 
         // components
         tip: true,
@@ -481,7 +482,6 @@
             return value;
         },
         onChange: function() {},
-
         // on mouse up 
         callback: function() {}
     };
@@ -511,168 +511,173 @@
     };
 
 }(jQuery));
-// scale
-// 
-$.asRange.registerComponent('scale', {
-    defaults: {
-        scale: {
-            values: [0, 50, 100],
-            gap: 1,
-            grid: 5
-        }
-    },
-    init: function(instance) {
-        var opts = $.extend({}, this.defaults, instance.options.scale),
-            scale = opts.scale;
 
-        var classes = {
-            scale: instance.namespace + '-scale',
-            scaleGrid: instance.namespace + '-scaleGrid',
-            scaleValue: instance.namespace + '-scaleValue',
-            grid: instance.namespace + '-scale-grid',
-            inlineGrid: instance.namespace + '-scale-inlineGrid'
-        };
-
-        var len = scale.values.length;
-        var num = ((scale.grid - 1) * (scale.gap + 1) + scale.gap) * (len - 1) + len;
-        var perOfGrid = 100 / (num - 1);
-        var perOfValue = 100 / (len - 1);
-
-        this.$scale = $('<div></div>').addClass(classes.scale);
-        this.$grid = $('<ul></ul>').addClass(classes.scaleGrid);
-        this.$value = $('<ul></ul>').addClass(classes.scaleValue);
-
-        for (var i = 0; i < num; i++) {
-            var $list;
-            if (i === 0 || i === num || i % ((num - 1) / (len - 1)) === 0) {
-                $list = $('<li class="' + classes.grid + '"></li>');
-            } else if (i % scale.grid === 0) {
-                $list = $('<li class="' + classes.inlineGrid + '"></li>');
-            } else {
-                $list = $('<li></li>');
+(function($) {
+    $.asRange.registerComponent('scale', {
+        defaults: {
+            scale: {
+                values: [0, 50, 100],
+                gap: 1,
+                grid: 5
             }
+        },
+        init: function(instance) {
+            var opts = $.extend({}, this.defaults, instance.options.scale),
+                scale = opts.scale;
 
-            // position scale 
-            $list.css({
-                left: perOfGrid * i + '%'
-            }).appendTo(this.$grid);
-        }
+            var classes = {
+                scale: instance.namespace + '-scale',
+                scaleGrid: instance.namespace + '-scaleGrid',
+                scaleValue: instance.namespace + '-scaleValue',
+                grid: instance.namespace + '-scale-grid',
+                inlineGrid: instance.namespace + '-scale-inlineGrid'
+            };
 
-        for (var j = 0; j < len; j++) {
-            // position value
-            $('<li><span>' + scale.values[j] + '</span></li>').css({
-                left: perOfValue * j + '%'
-            }).appendTo(this.$value);
-        }
+            var len = scale.values.length;
+            var num = ((scale.grid - 1) * (scale.gap + 1) + scale.gap) * (len - 1) + len;
+            var perOfGrid = 100 / (num - 1);
+            var perOfValue = 100 / (len - 1);
 
-        this.$grid.add(this.$value).appendTo(this.$scale);
-        this.$scale.appendTo(instance.$element);
-    },
-    update: function(instance) {
-        this.$scale.remove();
-        this.init(instance);
-    }
-});
-// jqueyr range veiw
+            this.$scale = $('<div></div>').addClass(classes.scale);
+            this.$grid = $('<ul></ul>').addClass(classes.scaleGrid);
+            this.$value = $('<ul></ul>').addClass(classes.scaleValue);
 
-$.asRange.registerComponent('view', {
-    defaults: {},
-    init: function(instance) {
-        var self = this;
-
-        this.$arrow = $('<span></span>').appendTo(instance.$element);
-        this.$arrow.addClass(instance.namespace + '-view');
-
-        if (instance.pointer.length === 1) {
-            instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
-                var left = 0,
-                    right = pointer.get();
-
-                self.$arrow.css({
-                    left: 0,
-                    width: (right - left) * 100 + '%'
-                });
-            });
-        }
-
-        if (instance.pointer.length === 2) {
-            instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
-                var left = pointer.get(),
-                    right = instance.pointer[1].get();
-
-                self.$arrow.css({
-                    left: Math.min(left, right) * 100 + '%',
-                    width: Math.abs(right - left) * 100 + '%'
-                });
-            });
-            instance.pointer[1].$element.on('asRange::pointer::change', function(e, pointer) {
-                var right = pointer.get(),
-                    left = instance.pointer[0].get();
-
-                self.$arrow.css({
-                    left: Math.min(left, right) * 100 + '%',
-                    width: Math.abs(right - left) * 100 + '%'
-                });
-            });
-        }
-    }
-});
-// jquery range tip
-
-$.asRange.registerComponent('tip', {
-    defaults: {
-        active: 'always' // 'always' 'onmove'
-    },
-    init: function(instance) {
-        var self = this,
-            opts = $.extend({}, this.defaults, instance.options.tip);
-
-        this.opts = opts;
-        this.classes = {
-            tip: instance.namespace + '-tip',
-            show: instance.namespace + '-tip-show'
-        };
-        $.each(instance.pointer, function(i, p) {
-            var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
-
-            $tip.addClass(self.classes.tip);
-            if (self.opts.active === 'onMove') {
-                $tip.css({
-                    display: 'none'
-                });
-                p.$element.on('asRange::pointer::end', function() {
-                    self.hide($tip);
-                    return false;
-                }).on('asRange::pointer::start', function() {
-                    self.show($tip);
-                    return false;
-                });
-            }
-            p.$element.on('asRange::pointer::change', function() {
-                var value;
-                if (typeof instance.options.format === 'function') {
-                    value = instance.options.format(instance.get()[i]);
+            for (var i = 0; i < num; i++) {
+                var $list;
+                if (i === 0 || i === num || i % ((num - 1) / (len - 1)) === 0) {
+                    $list = $('<li class="' + classes.grid + '"></li>');
+                } else if (i % scale.grid === 0) {
+                    $list = $('<li class="' + classes.inlineGrid + '"></li>');
                 } else {
-                    value = instance.get()[i];
+                    $list = $('<li></li>');
                 }
-                $tip.text(value);
-                return false;
+
+                // position scale 
+                $list.css({
+                    left: perOfGrid * i + '%'
+                }).appendTo(this.$grid);
+            }
+
+            for (var j = 0; j < len; j++) {
+                // position value
+                $('<li><span>' + scale.values[j] + '</span></li>').css({
+                    left: perOfValue * j + '%'
+                }).appendTo(this.$value);
+            }
+
+            this.$grid.add(this.$value).appendTo(this.$scale);
+            this.$scale.appendTo(instance.$element);
+        },
+        update: function(instance) {
+            this.$scale.remove();
+            this.init(instance);
+        }
+    });
+}(jQuery));
+
+(function($) {
+    $.asRange.registerComponent('view', {
+        defaults: {},
+        init: function(instance) {
+            var self = this;
+
+            this.$arrow = $('<span></span>').appendTo(instance.$element);
+            this.$arrow.addClass(instance.namespace + '-view');
+
+            if (instance.pointer.length === 1) {
+                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
+                    var left = 0,
+                        right = pointer.get();
+
+                    self.$arrow.css({
+                        left: 0,
+                        width: (right - left) * 100 + '%'
+                    });
+                });
+            }
+
+            if (instance.pointer.length === 2) {
+                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
+                    var left = pointer.get(),
+                        right = instance.pointer[1].get();
+
+                    self.$arrow.css({
+                        left: Math.min(left, right) * 100 + '%',
+                        width: Math.abs(right - left) * 100 + '%'
+                    });
+                });
+                instance.pointer[1].$element.on('asRange::pointer::change', function(e, pointer) {
+                    var right = pointer.get(),
+                        left = instance.pointer[0].get();
+
+                    self.$arrow.css({
+                        left: Math.min(left, right) * 100 + '%',
+                        width: Math.abs(right - left) * 100 + '%'
+                    });
+                });
+            }
+        }
+    });
+}(jQuery));
+
+(function($) {
+
+    $.asRange.registerComponent('tip', {
+        defaults: {
+            active: 'always' // 'always' 'onmove'
+        },
+        init: function(instance) {
+            var self = this,
+                opts = $.extend({}, this.defaults, instance.options.tip);
+
+            this.opts = opts;
+            this.classes = {
+                tip: instance.namespace + '-tip',
+                show: instance.namespace + '-tip-show'
+            };
+            $.each(instance.pointer, function(i, p) {
+                var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
+
+                $tip.addClass(self.classes.tip);
+                if (self.opts.active === 'onMove') {
+                    $tip.css({
+                        display: 'none'
+                    });
+                    p.$element.on('asRange::pointer::end', function() {
+                        self.hide($tip);
+                        return false;
+                    }).on('asRange::pointer::start', function() {
+                        self.show($tip);
+                        return false;
+                    });
+                }
+                p.$element.on('asRange::pointer::change', function() {
+                    var value;
+                    if (typeof instance.options.format === 'function') {
+                        value = instance.options.format(instance.get()[i]);
+                    } else {
+                        value = instance.get()[i];
+                    }
+                    $tip.text(value);
+                    return false;
+                });
             });
-        });
-    },
-    show: function($tip) {
-        $tip.addClass(this.classes.show);
-        $tip.css({
-            display: 'block'
-        });
-    },
-    hide: function($tip) {
-        $tip.removeClass(this.classes.show);
-        $tip.css({
-            display: 'none'
-        });
-    }
-});
+        },
+        show: function($tip) {
+            $tip.addClass(this.classes.show);
+            $tip.css({
+                display: 'block'
+            });
+        },
+        hide: function($tip) {
+            $tip.removeClass(this.classes.show);
+            $tip.css({
+                display: 'none'
+            });
+        }
+    });
+}(jQuery));
+
 // keyboard
 (function(window, document, $, undefined) {
     var $doc = $(document);
