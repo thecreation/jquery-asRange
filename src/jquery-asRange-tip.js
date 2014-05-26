@@ -14,14 +14,14 @@
                 show: instance.namespace + '-tip-show'
             };
             $.each(instance.pointer, function(i, p) {
-                var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
+                var $tip = $('<span></span>').appendTo(instance.pointer[i].$wrap);
 
                 $tip.addClass(self.classes.tip);
                 if (self.opts.active === 'onMove') {
                     $tip.css({
                         display: 'none'
                     });
-                    p.$element.on('asRange::pointer::end', function() {
+                    p.$wrap.on('asRange::pointer::end', function() {
                         self.hide($tip);
                         return false;
                     }).on('asRange::pointer::start', function() {
@@ -29,12 +29,15 @@
                         return false;
                     });
                 }
-                p.$element.on('asRange::pointer::change', function() {
+                p.$wrap.on('asRange::pointer::change', function() {
                     var value;
-                    if (typeof instance.options.format === 'function') {
-                        value = instance.options.format(instance.get()[i]);
-                    } else {
+                    if(instance.options.range){
                         value = instance.get()[i];
+                    } else {
+                        value = instance.get();
+                    }
+                    if (typeof instance.options.format === 'function') {
+                        value = instance.options.format(value);
                     }
                     $tip.text(value);
                     return false;

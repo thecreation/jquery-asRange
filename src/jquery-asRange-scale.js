@@ -52,7 +52,7 @@
             }
 
             this.$lines.add(this.$values).appendTo(this.$scale);
-            this.$scale.appendTo(instance.$element);
+            this.$scale.appendTo(instance.$wrap);
         },
         update: function(instance) {
             this.$scale.remove();

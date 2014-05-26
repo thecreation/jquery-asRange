@@ -68,7 +68,7 @@
         <section>
             <h3>asRange</h3>
             <pre class="has-example"><code class="language-javascript">
-$(".asRange-single").asRange({
+$(".range-example-single").asRange({
     step: 10,
     limit: true,
     format: function(value) {
@@ -77,10 +77,10 @@ $(".asRange-single").asRange({
 }); 
             </code></pre>
             <div class="example">
-                <div id="mobile" class="asRange-single"></div>
+                <div id="mobile" class="range-example-single"></div>
                 <script>    
                     $(document).ready(function() {
-                        $(".asRange-single").asRange({
+                        $(".range-example-single").asRange({
                             skin: 'skin-1',
                             step: 10,
                             limit: true,
@@ -107,27 +107,27 @@ $(".asRange-single").asRange({
         <section>
             <div class="example">
                 <pre class="has-example"><code class="language-javascript">
-$(".asRange-2").asRange({
+$(".range-example-2").asRange({
     skin: 'skin-1',
-    pointer: 2,
+    range: true,
     limit: true,
     tip: {
         active: 'onMove'
     }
 });     
             </code></pre>
-                <div class="asRange-2"></div>
+                <div class="range-example-2"></div>
                 <script>    
                     $(document).ready(function() {
-                        var one = $(".asRange-2").asRange({
+                        var one = $(".range-example-2").asRange({
                             skin: 'skin-1',
-                            pointer: 2,
+                            range: true,
                             limit: true,
                             tip: {
                                 active: 'onMove'
                             }
-                        });       
-                        console.log(one.asRange('set',[0,20]));                    
+                        });
+                        console.log(one.asRange('set',[0,20]));
                     });
                 </script>
                 
@@ -139,9 +139,9 @@ $(".asRange-2").asRange({
         <section>
             <div class="example">
                 <pre class="has-example"><code class="language-javascript">
-$(".asRange-2").asRange({
+$(".range-example-2").asRange({
     skin: 'skin-1',
-    pointer: 2,
+    range: true,
     limit: true,
     tip: {
         active: 'onMove'
@@ -149,12 +149,12 @@ $(".asRange-2").asRange({
     keyboard: true
 });     
             </code></pre>
-                <div class="asRange-keyboard"></div>
+                <div class="range-example-keyboard"></div>
                 <script>    
                     $(document).ready(function() {
-                        $(".asRange-keyboard").asRange({
+                        $(".range-example-keyboard").asRange({
                             skin: 'skin-1',
-                            pointer: 2,
+                            range: true,
                             limit: true,
                             tip: {
                                 active: 'onMove'
@@ -169,24 +169,24 @@ $(".asRange-2").asRange({
 
         <section>
  <pre class="has-example"><code class="language-javascript">
-$(".asRange-5").asRange({
+$(".range-example-5").asRange({
     skin: 'skin-1',
     step: 0.1,
-    pointer: 1,
+    range: false,
     min: 0,
     max: 10
 });        </code></pre>
             <div class="example">
-                <div class="asRange-5"></div>
+                <div class="range-example-5"></div>
                 <script>    
                     $(document).ready(function() {
-                        $(".asRange-5").asRange({
+                        $(".range-example-5").asRange({
                             skin: 'skin-1',
                             step: 0.1,
-                            pointer: 1,
+                            range: false,
                             min: 0,
                             max: 10
-                        });                           
+                        });
                     });
                 </script>
                 
@@ -196,18 +196,18 @@ $(".asRange-5").asRange({
 
         <section>
  <pre class="has-example"><code class="language-javascript">
-$(".asRange-3").asRange({
+$(".range-example-3").asRange({
     skin: 'skin-1',
-    pointer: 2,
+    range: true,
     limit: false
-});   </code></pre>      
+});</code></pre>
             <div class="example">
-                <div class="asRange-3"></div>
+                <div class="range-example-3"></div>
                 <script>    
                     $(document).ready(function() {
-                        $(".asRange-3").asRange({
+                        $(".range-example-3").asRange({
                             skin: 'skin-1',
-                            pointer: 2,
+                            range: true,
                             limit: false
                         });                           
                     });
@@ -219,20 +219,20 @@ $(".asRange-3").asRange({
 
         <section>
  <pre class="has-example"><code class="language-javascript">
-$(".asRange-4").asRange({
+$(".range-example-4").asRange({
     skin: 'skin-1',
     tip: false,
-    pointer: 2,
+    range: true,
     limit: false
 }); </code></pre>
             <div class="example">
-                <div class="asRange-4"></div>
+                <div class="range-example-4"></div>
                 <script>    
                     $(document).ready(function() {
-                        $(".asRange-4").asRange({
+                        $(".range-example-4").asRange({
                             skin: 'skin-1',
                             tip: false,
-                            pointer: 2,
+                            range: true,
                             limit: false
                         });                           
                     });
@@ -244,28 +244,28 @@ $(".asRange-4").asRange({
 
         <section>
  <pre class="has-example"><code class="language-javascript">
-$(".asRange-single-1").asRange({
+$(".range-example-single-1").asRange({
     skin: 'skin-1',
     step: 0.01,
-    pointer: 1,
+    range: false,
     min: 0,
     max: 1
 }); </code></pre>
             <div class="example">
-                <div class="asRange-single-1"></div>
-                <button class="asRange-update">update</button>
+                <div class="range-example-single-1"></div>
+                <button class="range-example-update">update</button>
                 <script>    
                     $(document).ready(function() {
-                        $(".asRange-single-1").asRange({
+                        $(".range-example-single-1").asRange({
                             skin: 'skin-1',
                             step: 0.01,
-                            pointer: 1,
+                            range: false,
                             min: 0,
                             max: 1
                         });                           
                     });
                     $('.asRange-update').on('click', function() {
-                        var instance = $(".asRange-single-1").data('asRange');
+                        var instance = $(".range-example-single-1").data('asRange');
                         instance.update({
                             step:1,
                             min: 8,
@@ -281,21 +281,21 @@ $(".asRange-single-1").asRange({
 
         <section>
  <pre class="has-example"><code class="language-javascript">
-$(".asRange-start").asRange({
+$(".range-example-start").asRange({
     skin: 'skin-1',
     step: 1,
-    pointer: 1,
+    range: false,
     min: 2,
     max: 12
 }); </code></pre>
             <div class="example">
-                <div class="asRange-start"></div>
+                <div class="range-example-start"></div>
                 <script>    
                     $(document).ready(function() {
-                        $(".asRange-start").asRange({
+                        $(".range-example-start").asRange({
                             skin: 'skin-1',
                             step: 1,
-                            pointer: 1,
+                            range: false,
                             min: 2,
                             max: 12
                         });                           
@@ -309,27 +309,134 @@ $(".asRange-start").asRange({
         <section>
             <h3>build on input</h3>
             <pre class="has-example"><code class="language-javascript">
-$(".asRange-input").asRange({
+$(".range-example-input").asRange({
     skin: 'skin-1',
-    pointer: 1,
+    range: false,
     limit: false
 });   </code></pre>      
             <div class="example">
                 <form method="post">
-                    <input class="asRange-input" type="range" min="0" max="10" name="points" step="0.01" />
+                    <input class="range-example-input" type="text" min="0" max="10"  value="5" name="points" step="0.01" />
                     <button class="submit">submit</button>
                 </form>
                 
                 <script>    
                     $(document).ready(function() {
-                        $(".asRange-input").asRange({
+                        $(".range-example-input").asRange({
                             skin: 'skin-1',
-                            pointer: 1,
+                            range: false,
                             limit: false
                         });                           
                     });
                 </script>
+            </div>
+
+        </section>
+
+        <section>
+            <h3>build on input with range</h3>
+            <pre class="has-example"><code class="language-javascript">
+$(".range-example-input-2").asRange({
+    skin: 'skin-1',
+    range: true,
+    limit: false
+});   </code></pre>      
+            <div class="example">
+                <form method="post">
+                    <input class="range-example-input-2" type="text" min="0" max="10"  value="2,6" name="points" step="1" />
+                    <button class="submit">submit</button>
+                </form>
                 
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-example-input-2").asRange({
+                            skin: 'skin-1',
+                            range: true,
+                            limit: false
+                        });                           
+                    });
+                </script>
+            </div>
+
+        </section>
+
+        <section>
+            <h3>build on input with range</h3>
+            <pre class="has-example"><code class="language-javascript">
+$(".range-example-input-3").asRange({
+    skin: 'skin-1',
+    range: true,
+    limit: false
+});   </code></pre>      
+            <div class="example">
+                <form method="post">
+                    <input class="range-example-input-3" type="text" min="0" max="10"  value="6" name="points" step="1" />
+                    <button class="submit">submit</button>
+                </form>
+                
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-example-input-3").asRange({
+                            skin: 'skin-1',
+                            range: true,
+                            limit: false
+                        });                           
+                    });
+                </script>
+            </div>
+
+        </section>
+
+        <section>
+            <h3>build on input with range</h3>
+            <pre class="has-example"><code class="language-javascript">
+$(".range-example-input-4").asRange({
+    skin: 'skin-1',
+    range: false,
+    limit: false
+});   </code></pre>      
+            <div class="example">
+                <form method="post">
+                    <input class="range-example-input-4" type="text" min="0" max="10" name="points" step="1" />
+                    <button class="submit">submit</button>
+                </form>
+                
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-example-input-4").asRange({
+                            skin: 'skin-1',
+                            range: false,
+                            limit: false
+                        });                           
+                    });
+                </script>
+            </div>
+
+        </section>
+
+        <section>
+            <h3>build on input with range</h3>
+            <pre class="has-example"><code class="language-javascript">
+$(".range-example-input-5").asRange({
+    skin: 'skin-1',
+    range: true,
+    limit: false
+});   </code></pre>      
+            <div class="example">
+                <form method="post">
+                    <input class="range-example-input-5" type="text" min="0" max="10" name="points" step="1" />
+                    <button class="submit">submit</button>
+                </form>
+                
+                <script>    
+                    $(document).ready(function() {
+                        $(".range-example-input-5").asRange({
+                            skin: 'skin-1',
+                            range: true,
+                            limit: false
+                        });                           
+                    });
+                </script>
             </div>
 
         </section>

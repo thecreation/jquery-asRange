@@ -4,11 +4,11 @@
         init: function(instance) {
             var self = this;
 
-            this.$arrow = $('<span></span>').appendTo(instance.$element);
+            this.$arrow = $('<span></span>').appendTo(instance.$wrap);
             this.$arrow.addClass(instance.namespace + '-selected');
 
-            if (instance.pointer.length === 1) {
-                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
+            if (instance.options.range === false) {
+                instance.pointer[0].$wrap.on('asRange::pointer::change', function(e, pointer) {
                     var left = 0,
                         right = pointer.get();
 
@@ -19,8 +19,8 @@
                 });
             }
 
-            if (instance.pointer.length === 2) {
-                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
+            if (instance.options.range === true) {
+                instance.pointer[0].$wrap.on('asRange::pointer::change', function(e, pointer) {
                     var left = pointer.get(),
                         right = instance.pointer[1].get();
 
@@ -29,7 +29,7 @@
                         width: Math.abs(right - left) * 100 + '%'
                     });
                 });
-                instance.pointer[1].$element.on('asRange::pointer::change', function(e, pointer) {
+                instance.pointer[1].$wrap.on('asRange::pointer::change', function(e, pointer) {
                     var right = pointer.get(),
                         left = instance.pointer[0].get();
 
