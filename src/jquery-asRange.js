@@ -364,8 +364,7 @@
     Pointer.prototype = {
         constructor: Pointer,
         mousedown: function(event) {
-            var self = this,
-                page, position, offset = this.parent.$wrap.offset();
+            var page, position, offset = this.parent.$wrap.offset();
 
             if (this.parent.enabled === false) {
                 return;
