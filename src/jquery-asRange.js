@@ -8,29 +8,29 @@
 
 (function($) {
     var pluginName = 'asRange',
-    defaults = {
-        namespace: 'asRange',
-        skin: null,
-        max: 100,
-        min: 0,
-        value: null,
-        step: 10,
-        limit: true,
-        range: false,
-        direction: 'h', // 'v' or 'h'
-        keyboard: true,
-        replaceFirst: 'default',
-        
-        // components
-        tip: true,
-        scale: true,
-        format: function(value) {
-            return value;
-        },
-        onChange: function() {},
-        // on mouse up 
-        callback: function() {}
-    };
+        defaults = {
+            namespace: 'asRange',
+            skin: null,
+            max: 100,
+            min: 0,
+            value: null,
+            step: 10,
+            limit: true,
+            range: false,
+            direction: 'h', // 'v' or 'h'
+            keyboard: true,
+            replaceFirst: 'default',
+
+            // components
+            tip: true,
+            scale: true,
+            format: function(value) {
+                return value;
+            },
+            onChange: function() {},
+            // on mouse up 
+            callback: function() {}
+        };
 
     var getEventObject = function(e) {
         if (e.touches) e = e.touches[0];
@@ -53,7 +53,7 @@
 
         this.element = element;
         this.$element = $(element);
-        
+
         if (this.$element.is('input')) {
             var value = this.$element.val();
 
@@ -83,17 +83,17 @@
 
         // public properties
         this.value = this.options.value;
-        if(this.value === null) {
+        if (this.value === null) {
             this.value = this.options.min;
         }
-        if(!this.options.range){
-            if($.isArray(this.value)){
+        if (!this.options.range) {
+            if ($.isArray(this.value)) {
                 this.value = this.value[0];
             }
         } else {
-            if(!$.isArray(this.value)){
+            if (!$.isArray(this.value)) {
                 this.value = [this.value, this.value];
-            } else if(this.value.length === 1){
+            } else if (this.value.length === 1) {
                 this.value[1] = this.value[0];
             }
         }
@@ -167,7 +167,7 @@
             // alias of pointer
             this.p1 = this.pointer[0];
 
-            if(this.options.range){
+            if (this.options.range) {
                 this.p2 = this.pointer[1];
             }
         },
@@ -364,8 +364,7 @@
     Pointer.prototype = {
         constructor: Pointer,
         mousedown: function(event) {
-            var self = this,
-                page, position, offset = this.parent.$wrap.offset();
+            var page, position, offset = this.parent.$wrap.offset();
 
             if (this.parent.enabled === false) {
                 return;
@@ -403,13 +402,13 @@
             };
 
             $(document).on('touchmove.asRange mousemove.asRange', $.proxy(this.mousemove, this))
-                        .on('touchend.asRange mouseup.asRange', $.proxy(this.mouseup, this));
+                .on('touchend.asRange mouseup.asRange', $.proxy(this.mouseup, this));
             return false;
         },
-        active: function(){
+        active: function() {
             this.$element.addClass(this.classes.active);
         },
-        deactive: function(){
+        deactive: function() {
             this.$element.removeClass(this.classes.active);
         },
         set: function(from, value) {
@@ -428,7 +427,7 @@
             if (this.value === value) {
                 return;
             }
-            
+
             value = Math.round(value * 1000) / 1000;
             if (this.parent.step > 0) {
                 value = this.matchStep(value);

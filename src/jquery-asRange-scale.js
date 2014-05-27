@@ -10,7 +10,7 @@
         init: function(instance) {
             var opts = $.extend({}, this.defaults, instance.options.scale),
                 scale = opts.scale;
-
+            opts.values = [instance.min, (instance.min + instance.max) / 2, instance.max];
             var classes = {
                 scale: instance.namespace + '-scale',
                 lines: instance.namespace + '-scale-lines',
