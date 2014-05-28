@@ -1,31 +1,31 @@
-/*! asRange - v0.2.0 - 2014-05-27
+/*! asRange - v0.2.0 - 2014-05-28
 * https://github.com/amazingSurge/jquery-asRange
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
     var pluginName = 'asRange',
-    defaults = {
-        namespace: 'asRange',
-        skin: null,
-        max: 100,
-        min: 0,
-        value: null,
-        step: 10,
-        limit: true,
-        range: false,
-        direction: 'h', // 'v' or 'h'
-        keyboard: true,
-        replaceFirst: 'default',
-        
-        // components
-        tip: true,
-        scale: true,
-        format: function(value) {
-            return value;
-        },
-        onChange: function() {},
-        // on mouse up 
-        callback: function() {}
-    };
+        defaults = {
+            namespace: 'asRange',
+            skin: null,
+            max: 100,
+            min: 0,
+            value: null,
+            step: 10,
+            limit: true,
+            range: false,
+            direction: 'h', // 'v' or 'h'
+            keyboard: true,
+            replaceFirst: 'default',
+
+            // components
+            tip: true,
+            scale: true,
+            format: function(value) {
+                return value;
+            },
+            onChange: function() {},
+            // on mouse up 
+            callback: function() {}
+        };
 
     var getEventObject = function(e) {
         if (e.touches) e = e.touches[0];
@@ -48,7 +48,7 @@
 
         this.element = element;
         this.$element = $(element);
-        
+
         if (this.$element.is('input')) {
             var value = this.$element.val();
 
@@ -78,17 +78,17 @@
 
         // public properties
         this.value = this.options.value;
-        if(this.value === null) {
+        if (this.value === null) {
             this.value = this.options.min;
         }
-        if(!this.options.range){
-            if($.isArray(this.value)){
+        if (!this.options.range) {
+            if ($.isArray(this.value)) {
                 this.value = this.value[0];
             }
         } else {
-            if(!$.isArray(this.value)){
+            if (!$.isArray(this.value)) {
                 this.value = [this.value, this.value];
-            } else if(this.value.length === 1){
+            } else if (this.value.length === 1) {
                 this.value[1] = this.value[0];
             }
         }
@@ -162,7 +162,7 @@
             // alias of pointer
             this.p1 = this.pointer[0];
 
-            if(this.options.range){
+            if (this.options.range) {
                 this.p2 = this.pointer[1];
             }
         },
@@ -397,13 +397,13 @@
             };
 
             $(document).on('touchmove.asRange mousemove.asRange', $.proxy(this.mousemove, this))
-                        .on('touchend.asRange mouseup.asRange', $.proxy(this.mouseup, this));
+                .on('touchend.asRange mouseup.asRange', $.proxy(this.mouseup, this));
             return false;
         },
-        active: function(){
+        active: function() {
             this.$element.addClass(this.classes.active);
         },
-        deactive: function(){
+        deactive: function() {
             this.$element.removeClass(this.classes.active);
         },
         set: function(from, value) {
@@ -422,7 +422,7 @@
             if (this.value === value) {
                 return;
             }
-            
+
             value = Math.round(value * 1000) / 1000;
             if (this.parent.step > 0) {
                 value = this.matchStep(value);
@@ -520,7 +520,7 @@
     $.asRange.registerComponent('scale', {
         defaults: {
             scale: {
-                values: [0, 50, 100],
+                valuesNumber: 3,
                 gap: 1,
                 grid: 5
             }
@@ -528,7 +528,13 @@
         init: function(instance) {
             var opts = $.extend({}, this.defaults, instance.options.scale),
                 scale = opts.scale;
-
+            opts.values = [];
+            opts.values.push(instance.min);
+            var part = (instance.max - instance.min) / (opts.valuesNumber - 1);
+            for (var j = 1; j <= (opts.valuesNumber - 2); j++) {
+                opts.values.push(part * j);
+            }
+            opts.values.push(instance.max);
             var classes = {
                 scale: instance.namespace + '-scale',
                 lines: instance.namespace + '-scale-lines',
@@ -562,10 +568,10 @@
                 }).appendTo(this.$lines);
             }
 
-            for (var j = 0; j < len; j++) {
+            for (var v = 0; v < len; v++) {
                 // position value
-                $('<li><span>' + scale.values[j] + '</span></li>').css({
-                    left: perOfValue * j + '%'
+                $('<li><span>' + scale.values[v] + '</span></li>').css({
+                    left: perOfValue * v + '%'
                 }).appendTo(this.$values);
             }
 

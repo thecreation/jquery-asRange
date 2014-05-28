@@ -13,8 +13,8 @@
             opts.values = [];
             opts.values.push(instance.min);
             var part = (instance.max - instance.min) / (opts.valuesNumber - 1);
-            for (var i = 1; i <= (opts.valuesNumber - 2); i++) {
-                opts.values.push(part * i);
+            for (var j = 1; j <= (opts.valuesNumber - 2); j++) {
+                opts.values.push(part * j);
             }
             opts.values.push(instance.max);
             var classes = {
@@ -50,10 +50,10 @@
                 }).appendTo(this.$lines);
             }
 
-            for (var j = 0; j < len; j++) {
+            for (var v = 0; v < len; v++) {
                 // position value
-                $('<li><span>' + scale.values[j] + '</span></li>').css({
-                    left: perOfValue * j + '%'
+                $('<li><span>' + scale.values[v] + '</span></li>').css({
+                    left: perOfValue * v + '%'
                 }).appendTo(this.$values);
             }
 
