@@ -2,7 +2,7 @@
     $.asRange.registerComponent('scale', {
         defaults: {
             scale: {
-                values: [0, 50, 100],
+                valuesNumber: 3,
                 gap: 1,
                 grid: 5
             }
@@ -10,7 +10,13 @@
         init: function(instance) {
             var opts = $.extend({}, this.defaults, instance.options.scale),
                 scale = opts.scale;
-            opts.values = [instance.min, (instance.min + instance.max) / 2, instance.max];
+            opts.values = [];
+            opts.values.push(instance.min);
+            var part = (instance.max - instance.min) / (opts.valuesNumber - 1);
+            for (var i = 1; i <= (opts.valuesNumber - 2); i++) {
+                opts.values.push(part * i);
+            }
+            opts.values.push(instance.max);
             var classes = {
                 scale: instance.namespace + '-scale',
                 lines: instance.namespace + '-scale-lines',
