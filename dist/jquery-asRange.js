@@ -1,4 +1,4 @@
-/*! asRange - v0.2.0 - 2014-05-28
+/*! asRange - v0.2.2 - 2014-05-28
 * https://github.com/amazingSurge/jquery-asRange
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -528,13 +528,13 @@
         init: function(instance) {
             var opts = $.extend({}, this.defaults, instance.options.scale),
                 scale = opts.scale;
-            opts.values = [];
-            opts.values.push(instance.min);
-            var part = (instance.max - instance.min) / (opts.valuesNumber - 1);
-            for (var j = 1; j <= (opts.valuesNumber - 2); j++) {
-                opts.values.push(part * j);
+            scale.values = [];
+            scale.values.push(instance.min);
+            var part = (instance.max - instance.min) / (scale.valuesNumber - 1);
+            for (var j = 1; j <= (scale.valuesNumber - 2); j++) {
+                scale.values.push(part * j);
             }
-            opts.values.push(instance.max);
+            scale.values.push(instance.max);
             var classes = {
                 scale: instance.namespace + '-scale',
                 lines: instance.namespace + '-scale-lines',
