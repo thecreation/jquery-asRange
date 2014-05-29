@@ -1,4 +1,4 @@
-/*! asRange - v0.2.2 - 2014-05-28
+/*! asRange - v0.2.2 - 2014-05-29
 * https://github.com/amazingSurge/jquery-asRange
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -55,6 +55,7 @@
             if (typeof value === 'string') {
                 metas.value = value.split(',');
             }
+            
             var self = this;
             $.each(['min', 'max', 'step'], function(index, key) {
                 var val = parseFloat(self.$element.attr(key));
@@ -81,11 +82,13 @@
         if (this.value === null) {
             this.value = this.options.min;
         }
+
         if (!this.options.range) {
             if ($.isArray(this.value)) {
                 this.value = this.value[0];
             }
         } else {
+            
             if (!$.isArray(this.value)) {
                 this.value = [this.value, this.value];
             } else if (this.value.length === 1) {
@@ -206,7 +209,6 @@
         },
         getAdjacentPointer: function(start) {
             var value = start / this.getLength();
-
 
             if (this.options.range) {
                 var p1 = this.p1.value,
@@ -416,6 +418,7 @@
             if (from === 'percent') {
                 value = value;
             }
+
             this._set(value);
         },
         _set: function(value) {
@@ -465,7 +468,7 @@
                 left = pointer[this.uid - 2].value;
             }
 
-            if (pointer[this.uid]) {
+            if (pointer[this.uid] && pointer[this.uid].value !== null) {
                 right = pointer[this.uid].value;
             } else {
                 right = 1;
@@ -515,6 +518,258 @@
     };
 
 }(jQuery));
+
+(function($) {
+    $.asRange.registerComponent('scale', {
+        defaults: {
+            scale: {
+                valuesNumber: 3,
+                gap: 1,
+                grid: 5
+            }
+        },
+        init: function(instance) {
+            var opts = $.extend({}, this.defaults, instance.options.scale),
+                scale = opts.scale;
+            scale.values = [];
+            scale.values.push(instance.min);
+            var part = (instance.max - instance.min) / (scale.valuesNumber - 1);
+            for (var j = 1; j <= (scale.valuesNumber - 2); j++) {
+                scale.values.push(part * j);
+            }
+            scale.values.push(instance.max);
+            var classes = {
+                scale: instance.namespace + '-scale',
+                lines: instance.namespace + '-scale-lines',
+                grid: instance.namespace + '-scale-grid',
+                inlineGrid: instance.namespace + '-scale-inlineGrid',
+                values: instance.namespace + '-scale-values'
+            };
+
+            var len = scale.values.length;
+            var num = ((scale.grid - 1) * (scale.gap + 1) + scale.gap) * (len - 1) + len;
+            var perOfGrid = 100 / (num - 1);
+            var perOfValue = 100 / (len - 1);
+
+            this.$scale = $('<div></div>').addClass(classes.scale);
+            this.$lines = $('<ul></ul>').addClass(classes.lines);
+            this.$values = $('<ul></ul>').addClass(classes.values);
+
+            for (var i = 0; i < num; i++) {
+                var $list;
+                if (i === 0 || i === num || i % ((num - 1) / (len - 1)) === 0) {
+                    $list = $('<li class="' + classes.grid + '"></li>');
+                } else if (i % scale.grid === 0) {
+                    $list = $('<li class="' + classes.inlineGrid + '"></li>');
+                } else {
+                    $list = $('<li></li>');
+                }
+
+                // position scale 
+                $list.css({
+                    left: perOfGrid * i + '%'
+                }).appendTo(this.$lines);
+            }
+
+            for (var v = 0; v < len; v++) {
+                // position value
+                $('<li><span>' + scale.values[v] + '</span></li>').css({
+                    left: perOfValue * v + '%'
+                }).appendTo(this.$values);
+            }
+
+            this.$lines.add(this.$values).appendTo(this.$scale);
+            this.$scale.appendTo(instance.$wrap);
+        },
+        update: function(instance) {
+            this.$scale.remove();
+            this.init(instance);
+        }
+    });
+}(jQuery));
+(function($) {
+    $.asRange.registerComponent('selected', {
+        defaults: {},
+        init: function(instance) {
+            var self = this;
+
+            this.$arrow = $('<span></span>').appendTo(instance.$wrap);
+            this.$arrow.addClass(instance.namespace + '-selected');
+
+            if (instance.options.range === false) {
+                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
+                    var left = 0,
+                        right = pointer.get();
+
+                    self.$arrow.css({
+                        left: 0,
+                        width: (right - left) * 100 + '%'
+                    });
+                });
+            }
+
+            if (instance.options.range === true) {
+                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
+                    var left = pointer.get(),
+                        right = instance.pointer[1].get();
+
+                    self.$arrow.css({
+                        left: Math.min(left, right) * 100 + '%',
+                        width: Math.abs(right - left) * 100 + '%'
+                    });
+                });
+                instance.pointer[1].$element.on('asRange::pointer::change', function(e, pointer) {
+                    var right = pointer.get(),
+                        left = instance.pointer[0].get();
+
+                    self.$arrow.css({
+                        left: Math.min(left, right) * 100 + '%',
+                        width: Math.abs(right - left) * 100 + '%'
+                    });
+                });
+            }
+        }
+    });
+}(jQuery));
+(function($) {
+
+    $.asRange.registerComponent('tip', {
+        defaults: {
+            active: 'always' // 'always' 'onMove'
+        },
+        init: function(instance) {
+            var self = this,
+                opts = $.extend({}, this.defaults, instance.options.tip);
+
+            this.opts = opts;
+            this.classes = {
+                tip: instance.namespace + '-tip',
+                show: instance.namespace + '-tip-show'
+            };
+            $.each(instance.pointer, function(i, p) {
+                var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
+
+                $tip.addClass(self.classes.tip);
+                if (self.opts.active === 'onMove') {
+                    $tip.css({
+                        display: 'none'
+                    });
+                    p.$element.on('asRange::pointer::end', function() {
+                        self.hide($tip);
+                        return false;
+                    }).on('asRange::pointer::start', function() {
+                        self.show($tip);
+                        return false;
+                    });
+                }
+                p.$element.on('asRange::pointer::change', function() {
+                    var value;
+                    if(instance.options.range){
+                        value = instance.get()[i];
+                    } else {
+                        value = instance.get();
+                    }
+                    if (typeof instance.options.format === 'function') {
+                        value = instance.options.format(value);
+                    }
+                    $tip.text(value);
+                    return false;
+                });
+            });
+        },
+        show: function($tip) {
+            $tip.addClass(this.classes.show);
+            $tip.css({
+                display: 'block'
+            });
+        },
+        hide: function($tip) {
+            $tip.removeClass(this.classes.show);
+            $tip.css({
+                display: 'none'
+            });
+        }
+    });
+}(jQuery));
+// keyboard
+(function(window, document, $, undefined) {
+    var $doc = $(document);
+
+    $doc.on('asRange::ready', function(event, instance) {
+        var step,
+            keyboard = {
+                keys: {
+                    'UP': 38,
+                    'DOWN': 40,
+                    'LEFT': 37,
+                    'RIGHT': 39,
+                    'RETURN': 13,
+                    'ESCAPE': 27,
+                    'BACKSPACE': 8,
+                    'SPACE': 32
+                },
+                map: {},
+                bound: false,
+                press: function(e) {
+                    var key = e.keyCode || e.which;
+                    if (key in keyboard.map && typeof keyboard.map[key] === 'function') {
+                        keyboard.map[key](e);
+                        return false;
+                    }
+                },
+                attach: function(map) {
+                    var key, up;
+                    for (key in map) {
+                        if (map.hasOwnProperty(key)) {
+                            up = key.toUpperCase();
+                            if (up in keyboard.keys) {
+                                keyboard.map[keyboard.keys[up]] = map[key];
+                            } else {
+                                keyboard.map[up] = map[key];
+                            }
+                        }
+                    }
+                    if (!keyboard.bound) {
+                        keyboard.bound = true;
+                        $doc.bind('keydown', keyboard.press);
+                    }
+                },
+                detach: function() {
+                    keyboard.bound = false;
+                    keyboard.map = {};
+                    $doc.unbind('keydown', keyboard.press);
+                }
+            };
+        if (instance.options.keyboard === true) {
+            $.each(instance.pointer, function(i, p) {
+                if (instance.options.step > 0) {
+                    step = instance.options.step / instance.interval;
+                } else {
+                    step = 0.01;
+                }
+                var left = function() {
+                    var value = p.value;
+                    p.set('percent', value - step);
+                };
+                var right = function() {
+                    var value = p.value;
+                    p.set('percent', value + step);
+                };
+                p.$element.attr('tabindex', '0').on('focus', function() {
+                    keyboard.attach({
+                        left: left,
+                        right: right
+                    });
+                    return false;
+                }).on('blur', function() {
+                    keyboard.detach();
+                    return false;
+                });
+            });
+        }
+    });
+})(window, document, jQuery);
+
 
 (function($) {
     $.asRange.registerComponent('scale', {
