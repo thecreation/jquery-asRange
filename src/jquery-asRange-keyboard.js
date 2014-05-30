@@ -49,18 +49,18 @@
             };
         if (instance.options.keyboard === true) {
             $.each(instance.pointer, function(i, p) {
-                if (instance.options.step > 0) {
-                    step = instance.options.step / instance.interval;
+                if (instance.options.step) {
+                    step = instance.options.step;
                 } else {
-                    step = 0.01;
+                    step = 1;
                 }
                 var left = function() {
                     var value = p.value;
-                    p.set('percent', value - step);
+                    p.set(value - step);
                 };
                 var right = function() {
                     var value = p.value;
-                    p.set('percent', value + step);
+                    p.set(value + step);
                 };
                 p.$element.attr('tabindex', '0').on('focus', function() {
                     keyboard.attach({

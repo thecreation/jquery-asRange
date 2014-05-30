@@ -8,36 +8,23 @@
             this.$arrow.addClass(instance.namespace + '-selected');
 
             if (instance.options.range === false) {
-                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
-                    var left = 0,
-                        right = pointer.get();
-
+                instance.p1.$element.on('asRange::pointer::change', function(e, pointer) {
                     self.$arrow.css({
                         left: 0,
-                        width: (right - left) * 100 + '%'
+                        width: pointer.getPercent() + '%'
                     });
                 });
             }
 
             if (instance.options.range === true) {
-                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
-                    var left = pointer.get(),
-                        right = instance.pointer[1].get();
-
+                var onUpdate = function(e, pointer){
                     self.$arrow.css({
-                        left: Math.min(left, right) * 100 + '%',
-                        width: Math.abs(right - left) * 100 + '%'
+                        left: instance.p1.getPercent() + '%',
+                        width: (instance.p2.getPercent() - instance.p1.getPercent()) + '%'
                     });
-                });
-                instance.pointer[1].$element.on('asRange::pointer::change', function(e, pointer) {
-                    var right = pointer.get(),
-                        left = instance.pointer[0].get();
-
-                    self.$arrow.css({
-                        left: Math.min(left, right) * 100 + '%',
-                        width: Math.abs(right - left) * 100 + '%'
-                    });
-                });
+                };
+                instance.p1.$element.on('asRange::pointer::change', onUpdate);
+                instance.p2.$element.on('asRange::pointer::change', onUpdate);
             }
         }
     });

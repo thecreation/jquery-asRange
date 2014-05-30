@@ -39,18 +39,7 @@
 
     // main constructor
     var Plugin = $[pluginName] = function(element, options) {
-        var metas = {},
-            direction = {
-                v: {
-                    page: 'pageY',
-                    position: 'top'
-                },
-                h: {
-                    page: 'pageX',
-                    position: 'left'
-                }
-            };
-
+        var metas = {};
         this.element = element;
         this.$element = $(element);
 
@@ -110,9 +99,19 @@
         this.initialized = false;
         this.updating = false;
         this.disabled = false;
-        this.page = direction[this.options.direction].page;
-        this.position = direction[this.options.direction].position;
 
+        if(this.options.direction === 'v') {
+            this.direction = {
+                axis: 'pageY',
+                position: 'top'
+            };
+        } else {
+            this.direction = {
+                axis: 'pageX',
+                position: 'left'
+            };
+        }
+        
         this.$wrap.addClass(this.namespace);
 
         if (this.options.skin) {
@@ -177,6 +176,9 @@
         bindEvents: function() {
             var self = this;
             this.$wrap.on('touchstart.asRange mousedown.asRange', function(event) {
+                if (self.disabled === true) {
+                    return;
+                }
                 event = getEventObject(event);
                 var rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
                 if (rightclick && !Touch) {
@@ -184,7 +186,7 @@
                 }
 
                 var offset = self.$wrap.offset(),
-                    start = event[self.page] - offset[self.position],
+                    start = event[self.direction.axis] - offset[self.direction.position],
                     p = self.getAdjacentPointer.call(self, start);
 
                 p.mousedown.call(p, event);
@@ -212,9 +214,15 @@
                 });
             });
         },
+        getValueFromPosition: function(px){
+            if(px > 0){
+                return this.min + (px / this.getLength()) * this.interval;
+            } else {
+                return 0;
+            }
+        },
         getAdjacentPointer: function(start) {
-            var value = start / this.getLength();
-
+            var value = this.getValueFromPosition(start);
             if (this.options.range) {
                 var p1 = this.p1.value,
                     p2 = this.p2.value,
@@ -237,7 +245,7 @@
             }
         },
         getLength: function() {
-            if (this.direction === 'v') {
+            if (this.options.direction === 'v') {
                 return this.$wrap.height();
             } else {
                 return this.$wrap.width();
@@ -278,15 +286,9 @@
             var self = this,
                 value = [],
                 step = self.step;
-            var length = step.toString().split('.')[1] ? step.toString().split('.')[1].length : 0;
 
             $.each(this.pointer, function(i, p) {
-                var pointerValue = p.get() * self.interval + self.min;
-                pointerValue = Math.round(pointerValue / self.step) * self.step;
-                if (length > 0) {
-                    pointerValue = parseFloat(pointerValue.toFixed(length));
-                }
-                value[i] = pointerValue;
+                value[i] = p.get();
             });
 
             if (self.options.range) {
@@ -305,10 +307,10 @@
                     return;
                 }
                 $.each(this.pointer, function(i, p) {
-                    p.set('actual', value[i]);
+                    p.set(value[i]);
                 });
             } else {
-                this.p1.set('actual', value);
+                this.p1.set(value);
             }
 
             this.value = value;
@@ -366,22 +368,18 @@
     Pointer.prototype = {
         constructor: Pointer,
         mousedown: function(event) {
-            var page, position, offset = this.parent.$wrap.offset();
-
-            if (this.parent.enabled === false) {
-                return;
-            }
+            var axis =this.parent.direction.axis,
+                position = this.parent.direction.position, 
+                offset = this.parent.$wrap.offset();
 
             this.$element.trigger('asRange::pointer::start', this);
 
-            page = this.parent.page;
-            position = this.parent.position;
-
             this.data = {};
-            this.data.start = event[page];
-            this.data[position] = event[page] - offset[position];
+            this.data.start = event[axis];
+            this.data.position = event[axis] - offset[position];
 
-            this.set('px', this.data[position]);
+            var value = this.parent.getValueFromPosition(this.data.position);
+            this.set(value);
 
             $.each(this.parent.pointer, function(i, p) {
                 p.deactive();
@@ -390,15 +388,15 @@
             this.active();
 
             this.mousemove = function(event) {
-                var origin = event,
-                    eventObj = getEventObject(event),
-                    value = this.data[position] + (eventObj[page] || this.data.start) - this.data.start;
-                this.set('px', value);
-                origin.preventDefault();
+                var eventObj = getEventObject(event),
+                    value = this.parent.getValueFromPosition( this.data.position + (eventObj[axis] || this.data.start) - this.data.start );
+                this.set(value);
+                
+                event.preventDefault();
                 return false;
             };
             this.mouseup = function() {
-                $(document).off('touchmove.asRange mousemove.asRange touchend.asRange mouseup.asRange');
+                $(document).off('.asRange mousemove.asRange touchend.asRange mouseup.asRange');
                 this.$element.trigger('asRange::pointer::end', this);
                 return false;
             };
@@ -413,62 +411,60 @@
         deactive: function() {
             this.$element.removeClass(this.classes.active);
         },
-        set: function(from, value) {
-            if (from === 'px') {
-                value = value / this.parent.getLength();
-            }
-            if (from === 'actual') {
-                value = (value - this.parent.min) / this.parent.interval;
-            }
-            if (from === 'percent') {
-                value = value;
-            }
-
-            this._set(value);
-        },
-        _set: function(value) {
+        set: function(value) {
             if (this.value === value) {
                 return;
             }
 
-            value = Math.round(value * 1000) / 1000;
-            if (this.parent.step > 0) {
+            if (this.parent.step) {
                 value = this.matchStep(value);
             }
             if (this.options.limit === true) {
                 value = this.matchLimit(value);
             } else {
-                if (value <= 0) {
-                    value = 0;
+                if (value <= this.parent.min) {
+                    value = this.parent.min;
                 }
-                if (value >= 1) {
-                    value = 1;
+                if (value >= this.parent.max) {
+                    value = this.parent.max;
                 }
             }
-            value = Math.round(value * 1000) / 1000;
             this.value = value;
 
-            var position = {};
-            position[this.parent.position] = value * 100 + '%';
-            this.$element.css(position);
+            this.updatePosition();
             this.$element.focus();
 
             this.$element.trigger('asRange::pointer::change', this);
+        },
+        updatePosition: function(){
+            var position = {};
+
+            position[this.parent.direction.position] = this.getPercent() + '%';
+            this.$element.css(position);
+        },
+        getPercent: function(){
+            return ((this.value - this.parent.min) / this.parent.interval) * 100;
         },
         get: function() {
             return this.value;
         },
         matchStep: function(value) {
-            var step = this.parent.step;
-            value = value * this.parent.interval + this.parent.min;
+            var step = this.parent.step,
+                decimal = step.toString().split('.')[1];
+
             value = Math.round(value / step) * step;
-            return (value - this.parent.min) / this.parent.interval;
+
+            if(decimal){
+                value = value.toFixed(decimal.length);
+            }
+            
+            return parseFloat(value);
         },
         matchLimit: function(value) {
             var left, right, pointer = this.parent.pointer;
 
             if (this.uid === 1) {
-                left = 0;
+                left = this.parent.min;
             } else {
                 left = pointer[this.uid - 2].value;
             }
@@ -476,7 +472,7 @@
             if (pointer[this.uid] && pointer[this.uid].value !== null) {
                 right = pointer[this.uid].value;
             } else {
-                right = 1;
+                right = this.parent.max;
             }
 
             if (value <= left) {
@@ -523,255 +519,3 @@
     };
 
 }(jQuery));
-
-(function($) {
-    $.asRange.registerComponent('scale', {
-        defaults: {
-            scale: {
-                valuesNumber: 3,
-                gap: 1,
-                grid: 5
-            }
-        },
-        init: function(instance) {
-            var opts = $.extend({}, this.defaults, instance.options.scale),
-                scale = opts.scale;
-            scale.values = [];
-            scale.values.push(instance.min);
-            var part = (instance.max - instance.min) / (scale.valuesNumber - 1);
-            for (var j = 1; j <= (scale.valuesNumber - 2); j++) {
-                scale.values.push(part * j);
-            }
-            scale.values.push(instance.max);
-            var classes = {
-                scale: instance.namespace + '-scale',
-                lines: instance.namespace + '-scale-lines',
-                grid: instance.namespace + '-scale-grid',
-                inlineGrid: instance.namespace + '-scale-inlineGrid',
-                values: instance.namespace + '-scale-values'
-            };
-
-            var len = scale.values.length;
-            var num = ((scale.grid - 1) * (scale.gap + 1) + scale.gap) * (len - 1) + len;
-            var perOfGrid = 100 / (num - 1);
-            var perOfValue = 100 / (len - 1);
-
-            this.$scale = $('<div></div>').addClass(classes.scale);
-            this.$lines = $('<ul></ul>').addClass(classes.lines);
-            this.$values = $('<ul></ul>').addClass(classes.values);
-
-            for (var i = 0; i < num; i++) {
-                var $list;
-                if (i === 0 || i === num || i % ((num - 1) / (len - 1)) === 0) {
-                    $list = $('<li class="' + classes.grid + '"></li>');
-                } else if (i % scale.grid === 0) {
-                    $list = $('<li class="' + classes.inlineGrid + '"></li>');
-                } else {
-                    $list = $('<li></li>');
-                }
-
-                // position scale 
-                $list.css({
-                    left: perOfGrid * i + '%'
-                }).appendTo(this.$lines);
-            }
-
-            for (var v = 0; v < len; v++) {
-                // position value
-                $('<li><span>' + scale.values[v] + '</span></li>').css({
-                    left: perOfValue * v + '%'
-                }).appendTo(this.$values);
-            }
-
-            this.$lines.add(this.$values).appendTo(this.$scale);
-            this.$scale.appendTo(instance.$wrap);
-        },
-        update: function(instance) {
-            this.$scale.remove();
-            this.init(instance);
-        }
-    });
-}(jQuery));
-(function($) {
-    $.asRange.registerComponent('selected', {
-        defaults: {},
-        init: function(instance) {
-            var self = this;
-
-            this.$arrow = $('<span></span>').appendTo(instance.$wrap);
-            this.$arrow.addClass(instance.namespace + '-selected');
-
-            if (instance.options.range === false) {
-                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
-                    var left = 0,
-                        right = pointer.get();
-
-                    self.$arrow.css({
-                        left: 0,
-                        width: (right - left) * 100 + '%'
-                    });
-                });
-            }
-
-            if (instance.options.range === true) {
-                instance.pointer[0].$element.on('asRange::pointer::change', function(e, pointer) {
-                    var left = pointer.get(),
-                        right = instance.pointer[1].get();
-
-                    self.$arrow.css({
-                        left: Math.min(left, right) * 100 + '%',
-                        width: Math.abs(right - left) * 100 + '%'
-                    });
-                });
-                instance.pointer[1].$element.on('asRange::pointer::change', function(e, pointer) {
-                    var right = pointer.get(),
-                        left = instance.pointer[0].get();
-
-                    self.$arrow.css({
-                        left: Math.min(left, right) * 100 + '%',
-                        width: Math.abs(right - left) * 100 + '%'
-                    });
-                });
-            }
-        }
-    });
-}(jQuery));
-(function($) {
-
-    $.asRange.registerComponent('tip', {
-        defaults: {
-            active: 'always' // 'always' 'onMove'
-        },
-        init: function(instance) {
-            var self = this,
-                opts = $.extend({}, this.defaults, instance.options.tip);
-
-            this.opts = opts;
-            this.classes = {
-                tip: instance.namespace + '-tip',
-                show: instance.namespace + '-tip-show'
-            };
-            $.each(instance.pointer, function(i, p) {
-                var $tip = $('<span></span>').appendTo(instance.pointer[i].$element);
-
-                $tip.addClass(self.classes.tip);
-                if (self.opts.active === 'onMove') {
-                    $tip.css({
-                        display: 'none'
-                    });
-                    p.$element.on('asRange::pointer::end', function() {
-                        self.hide($tip);
-                        return false;
-                    }).on('asRange::pointer::start', function() {
-                        self.show($tip);
-                        return false;
-                    });
-                }
-                p.$element.on('asRange::pointer::change', function() {
-                    var value;
-                    if(instance.options.range){
-                        value = instance.get()[i];
-                    } else {
-                        value = instance.get();
-                    }
-                    if (typeof instance.options.format === 'function') {
-                        value = instance.options.format(value);
-                    }
-                    $tip.text(value);
-                    return false;
-                });
-            });
-        },
-        show: function($tip) {
-            $tip.addClass(this.classes.show);
-            $tip.css({
-                display: 'block'
-            });
-        },
-        hide: function($tip) {
-            $tip.removeClass(this.classes.show);
-            $tip.css({
-                display: 'none'
-            });
-        }
-    });
-}(jQuery));
-// keyboard
-(function(window, document, $, undefined) {
-    var $doc = $(document);
-
-    $doc.on('asRange::ready', function(event, instance) {
-        var step,
-            keyboard = {
-                keys: {
-                    'UP': 38,
-                    'DOWN': 40,
-                    'LEFT': 37,
-                    'RIGHT': 39,
-                    'RETURN': 13,
-                    'ESCAPE': 27,
-                    'BACKSPACE': 8,
-                    'SPACE': 32
-                },
-                map: {},
-                bound: false,
-                press: function(e) {
-                    var key = e.keyCode || e.which;
-                    if (key in keyboard.map && typeof keyboard.map[key] === 'function') {
-                        keyboard.map[key](e);
-                        return false;
-                    }
-                },
-                attach: function(map) {
-                    var key, up;
-                    for (key in map) {
-                        if (map.hasOwnProperty(key)) {
-                            up = key.toUpperCase();
-                            if (up in keyboard.keys) {
-                                keyboard.map[keyboard.keys[up]] = map[key];
-                            } else {
-                                keyboard.map[up] = map[key];
-                            }
-                        }
-                    }
-                    if (!keyboard.bound) {
-                        keyboard.bound = true;
-                        $doc.bind('keydown', keyboard.press);
-                    }
-                },
-                detach: function() {
-                    keyboard.bound = false;
-                    keyboard.map = {};
-                    $doc.unbind('keydown', keyboard.press);
-                }
-            };
-        if (instance.options.keyboard === true) {
-            $.each(instance.pointer, function(i, p) {
-                if (instance.options.step > 0) {
-                    step = instance.options.step / instance.interval;
-                } else {
-                    step = 0.01;
-                }
-                var left = function() {
-                    var value = p.value;
-                    p.set('percent', value - step);
-                };
-                var right = function() {
-                    var value = p.value;
-                    p.set('percent', value + step);
-                };
-                p.$element.attr('tabindex', '0').on('focus', function() {
-                    keyboard.attach({
-                        left: left,
-                        right: right
-                    });
-                    return false;
-                }).on('blur', function() {
-                    keyboard.detach();
-                    return false;
-                });
-            });
-        }
-    });
-})(window, document, jQuery);
-
