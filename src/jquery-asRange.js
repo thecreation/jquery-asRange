@@ -209,7 +209,7 @@
                     if (typeof self.options.onChange === 'function') {
                         self.options.onChange.call(self, self.value, p.uid);
                     }
-                    self.$element.trigger('asRange::change', self);
+                    self.$element.trigger('asRange::change', [self.value, self.options.name, pluginName, self]);
                     return false;
                 });
             });
