@@ -1,4 +1,4 @@
-/*! asRange - v0.2.3 - 2014-08-18
+/*! asRange - v0.2.3 - 2014-09-04
 * https://github.com/amazingSurge/jquery-asRange
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -279,8 +279,7 @@
         },
         get: function() {
             var self = this,
-                value = [],
-                step = self.step;
+                value = [];
 
             $.each(this.pointer, function(i, p) {
                 value[i] = p.get();
@@ -487,11 +486,11 @@
     $.fn.asRange = function(options) {
         if (typeof options === 'string') {
             var method = options;
-            var method_arguments = arguments.length > 1 ? Array.prototype.slice.call(arguments, 1) : undefined;
+            var method_arguments = arguments.length > 1 ? Array.prototype.slice.call(arguments, 1) : [];
 
             if (/^\_/.test(method)) {
                 return false;
-            } else if ((/^(get)$/.test(method)) || (method === 'val' && method_arguments === undefined)) {
+            } else if ((/^(get)$/.test(method)) || (method === 'val' && method_arguments === [])) {
                 var api = this.first().data(pluginName);
                 if (api && typeof api[method] === 'function') {
                     return api[method].apply(api, method_arguments);
@@ -601,7 +600,7 @@
             }
 
             if (instance.options.range === true) {
-                var onUpdate = function(e, pointer){
+                var onUpdate = function(){
                     self.$arrow.css({
                         left: instance.p1.getPercent() + '%',
                         width: (instance.p2.getPercent() - instance.p1.getPercent()) + '%'
