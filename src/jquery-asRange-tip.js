@@ -31,7 +31,7 @@
                 }
                 p.$element.on('asRange::pointer::change', function() {
                     var value;
-                    if(instance.options.range){
+                    if (instance.options.range) {
                         value = instance.get()[i];
                     } else {
                         value = instance.get();

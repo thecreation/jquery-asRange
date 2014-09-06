@@ -1,15 +1,14 @@
 /*
- * range
- * https://github.com/amazingSurge/jquery-range
+ * asRange
+ * https://github.com/amazingSurge/jquery-asRange
  *
- * Copyright (c) 2013 amazingSurge
+ * Copyright (c) 2014 amazingSurge
  * Licensed under the GPL license.
  */
-
 (function($) {
     var pluginName = 'asRange',
         defaults = {
-            namespace: 'asRange',
+            namespace: pluginName,
             skin: null,
             max: 100,
             min: 0,
@@ -20,16 +19,11 @@
             direction: 'h', // 'v' or 'h'
             keyboard: true,
             replaceFirst: 'default',
-
-            // components
             tip: true,
             scale: true,
             format: function(value) {
                 return value;
-            },
-            onChange: function() {},
-            // on mouse up 
-            callback: function() {}
+            }
         };
 
     var getEventObject = function(e) {
@@ -49,7 +43,7 @@
             if (typeof value === 'string') {
                 metas.value = value.split(',');
             }
-            
+
             var self = this;
             $.each(['min', 'max', 'step'], function(index, key) {
                 var val = parseFloat(self.$element.attr(key));
@@ -82,7 +76,6 @@
                 this.value = this.value[0];
             }
         } else {
-            
             if (!$.isArray(this.value)) {
                 this.value = [this.value, this.value];
             } else if (this.value.length === 1) {
@@ -100,7 +93,7 @@
         this.updating = false;
         this.disabled = false;
 
-        if(this.options.direction === 'v') {
+        if (this.options.direction === 'v') {
             this.direction = {
                 axis: 'pageY',
                 position: 'top'
@@ -111,7 +104,7 @@
                 position: 'left'
             };
         }
-        
+
         this.$wrap.addClass(this.namespace);
 
         if (this.options.skin) {
@@ -151,8 +144,25 @@
             // Bind events
             this.bindEvents();
 
-            this.$element.trigger('asRange::ready', this);
+            this._trigger('ready');
             this.initialized = true;
+        },
+        _trigger: function(eventType) {
+            var method_arguments = Array.prototype.slice.call(arguments, 1),
+                data = method_arguments.concat([this]);
+
+            // event
+            this.$element.trigger(pluginName + '::' + eventType, data);
+            this.$element.trigger(eventType + '.' + pluginName, data);
+
+            // callback
+            eventType = eventType.replace(/\b\w+\b/g, function(word) {
+                return word.substring(0, 1).toUpperCase() + word.substring(1);
+            });
+            var onFunction = 'on' + eventType;
+            if (typeof this.options[onFunction] === 'function') {
+                this.options[onFunction].apply(this, method_arguments);
+            }
         },
         buildPointers: function() {
             this.pointer = [];
@@ -209,13 +219,13 @@
                     if (typeof self.options.onChange === 'function') {
                         self.options.onChange.call(self, self.value, p.uid);
                     }
-                    self.$element.trigger('asRange::change', [self.value, self.options.name, pluginName, self]);
+                    self._trigger('change', [self.value, self.options.name, pluginName, self]);
                     return false;
                 });
             });
         },
-        getValueFromPosition: function(px){
-            if(px > 0){
+        getValueFromPosition: function(px) {
+            if (px > 0) {
                 return this.min + (px / this.getLength()) * this.interval;
             } else {
                 return 0;
@@ -278,7 +288,7 @@
             if (typeof self.options.onUpdate === 'function') {
                 self.options.onUpdate.call(self);
             }
-            self.$element.trigger('asRange::update', self);
+            self._trigger('update');
 
             this.updating = false;
         },
@@ -367,8 +377,8 @@
     Pointer.prototype = {
         constructor: Pointer,
         mousedown: function(event) {
-            var axis =this.parent.direction.axis,
-                position = this.parent.direction.position, 
+            var axis = this.parent.direction.axis,
+                position = this.parent.direction.position,
                 offset = this.parent.$wrap.offset();
 
             this.$element.trigger('asRange::pointer::start', this);
@@ -388,9 +398,9 @@
 
             this.mousemove = function(event) {
                 var eventObj = getEventObject(event),
-                    value = this.parent.getValueFromPosition( this.data.position + (eventObj[axis] || this.data.start) - this.data.start );
+                    value = this.parent.getValueFromPosition(this.data.position + (eventObj[axis] || this.data.start) - this.data.start);
                 this.set(value);
-                
+
                 event.preventDefault();
                 return false;
             };
@@ -435,13 +445,13 @@
 
             this.$element.trigger('asRange::pointer::change', this);
         },
-        updatePosition: function(){
+        updatePosition: function() {
             var position = {};
 
             position[this.parent.direction.position] = this.getPercent() + '%';
             this.$element.css(position);
         },
-        getPercent: function(){
+        getPercent: function() {
             return ((this.value - this.parent.min) / this.parent.interval) * 100;
         },
         get: function() {
@@ -453,10 +463,10 @@
 
             value = Math.round(value / step) * step;
 
-            if(decimal){
+            if (decimal) {
                 value = value.toFixed(decimal.length);
             }
-            
+
             return parseFloat(value);
         },
         matchLimit: function(value) {
@@ -491,11 +501,11 @@
     $.fn.asRange = function(options) {
         if (typeof options === 'string') {
             var method = options;
-            var method_arguments = arguments.length > 1 ? Array.prototype.slice.call(arguments, 1) : [];
+            var method_arguments = Array.prototype.slice.call(arguments, 1);
 
             if (/^\_/.test(method)) {
                 return false;
-            } else if ((/^(get)$/.test(method)) || (method === 'val' && method_arguments === [])) {
+            } else if ((/^(get)$/.test(method)) || (method === 'val' && method_arguments.length === 1)) {
                 var api = this.first().data(pluginName);
                 if (api && typeof api[method] === 'function') {
                     return api[method].apply(api, method_arguments);

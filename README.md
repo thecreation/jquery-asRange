@@ -1,6 +1,6 @@
 # jQuery asRange
 
-The powerful jQuery plugin that creates a series of progress bar. <a href="http://amazingsurge.github.io/jquery-asRange/">Project page and demos</a><br />
+The powerful jQuery plugin that creates a series of progress bar. 
 Download: <a href="https://github.com/amazingSurge/jquery-asRange/archive/master.zip">jquery-asRange-master.zip</a>
 
 ***
@@ -210,17 +210,9 @@ jquery-range is verified to work in Internet Explorer 7+, Firefox 2+, Opera 9+, 
 
 Mobile browsers (like Opera mini, Chrome mobile, Safari mobile, Android browser and others) is coming soon.
 
-## Changes
-
-| Version | Notes                                                            |
-|---------|------------------------------------------------------------------|
-|     ... | ...                                                              |
-
 
 ## Author
 [amazingSurge](http://amazingSurge.com)
 
 ## License
-jQuery-range plugin is released under the <a href="https://github.com/amazingSurge/jquery-range/blob/master/LICENCE.GPL" target="_blank">GPL licence</a>.
-
-
+jQuery-range plugin is released under the <a href="https://github.com/amazingSurge/jquery-range/blob/master/LICENCE.GPL" target="_blank">GPL licence</a>.s

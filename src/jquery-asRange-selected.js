@@ -17,7 +17,7 @@
             }
 
             if (instance.options.range === true) {
-                var onUpdate = function(){
+                var onUpdate = function() {
                     self.$arrow.css({
                         left: instance.p1.getPercent() + '%',
                         width: (instance.p2.getPercent() - instance.p1.getPercent()) + '%'
