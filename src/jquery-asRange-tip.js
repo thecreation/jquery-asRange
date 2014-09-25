@@ -37,8 +37,15 @@
                         value = instance.get();
                     }
                     if (typeof instance.options.format === 'function') {
-                        if (instance.options.replaceFirst && value === instance.options.replace) {
-                            value = instance.options.replace;
+                        if (instance.options.replaceFirst && typeof value !== 'number') {
+                            if (typeof instance.options.replaceFirst === 'string') {
+                                value = instance.options.replaceFirst;
+                            }
+                            if (typeof instance.options.replaceFirst === 'object') {
+                                for (var key in instance.options.replaceFirst) {
+                                    value = instance.options.replaceFirst[key];
+                                }
+                            }
                         } else {
                             value = instance.options.format(value);
                         }

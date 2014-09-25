@@ -18,8 +18,7 @@
             range: false,
             direction: 'h', // 'v' or 'h'
             keyboard: true,
-            replaceFirst: false,
-            replace: 'default',
+            replaceFirst: false, // false, 'inherit', {'inherit': 'default'}
             tip: true,
             scale: true,
             format: function(value) {
@@ -66,6 +65,9 @@
         this.namespace = this.options.namespace;
         this.components = $.extend(true, {}, this.components);
         this.pluginName = pluginName;
+        if (this.options.range) {
+            this.options.replaceFirst = false;
+        }
 
         // public properties
         this.value = this.options.value;
@@ -293,14 +295,21 @@
 
             $.each(this.pointer, function(i, p) {
                 value[i] = p.get();
-                if (value[i] === self.options.min && self.options.replaceFirst) {
-                    value[i] = self.options.replace;
-                }
             });
 
             if (self.options.range) {
                 return value;
             } else {
+                if (value[0] === self.options.min) {
+                    if (typeof self.options.replaceFirst === 'string') {
+                        value[0] = self.options.replaceFirst;
+                    }
+                    if (typeof self.options.replaceFirst === 'object') {
+                        for (var key in self.options.replaceFirst) {
+                            value[0] = key;
+                        }
+                    }
+                }
                 return value[0];
             }
 
