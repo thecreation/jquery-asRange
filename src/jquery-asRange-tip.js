@@ -21,15 +21,15 @@
                     $tip.css({
                         display: 'none'
                     });
-                    p.$element.on('asRange::pointer::end', function() {
+                    p.$element.on(instance.pluginName + '::moveEnd', function() {
                         self.hide($tip);
                         return false;
-                    }).on('asRange::pointer::start', function() {
+                    }).on(instance.pluginName + '::moveStart', function() {
                         self.show($tip);
                         return false;
                     });
                 }
-                p.$element.on('asRange::pointer::change', function() {
+                p.$element.on(instance.pluginName + '::move', function() {
                     var value;
                     if (instance.options.range) {
                         value = instance.get()[i];
@@ -37,7 +37,11 @@
                         value = instance.get();
                     }
                     if (typeof instance.options.format === 'function') {
-                        value = instance.options.format(value);
+                        if (instance.options.replaceFirst && value === instance.options.replace) {
+                            value = instance.options.replace;
+                        } else {
+                            value = instance.options.format(value);
+                        }
                     }
                     $tip.text(value);
                     return false;

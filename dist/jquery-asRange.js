@@ -1,4 +1,4 @@
-/*! asRange - v0.2.3 - 2014-09-06
+/*! asRange - v0.2.3 - 2014-09-25
 * https://github.com/amazingSurge/jquery-asRange
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -14,7 +14,8 @@
             range: false,
             direction: 'h', // 'v' or 'h'
             keyboard: true,
-            replaceFirst: 'default',
+            replaceFirst: false,
+            replace: 'default',
             tip: true,
             scale: true,
             format: function(value) {
@@ -60,6 +61,7 @@
         this.options = $.extend({}, defaults, options, this.$element.data(), metas);
         this.namespace = this.options.namespace;
         this.components = $.extend(true, {}, this.components);
+        this.pluginName = pluginName;
 
         // public properties
         this.value = this.options.value;
@@ -199,20 +201,17 @@
             });
 
             if (this.$element.is('input')) {
-                this.$element.on('asRange::change', function() {
+                this.$element.on(pluginName + '::change', function() {
                     var value = self.get();
                     self.$element.val(value);
                 });
             }
 
             $.each(this.pointer, function(i, p) {
-                p.$element.on('asRange::pointer::change', function() {
+                p.$element.on(pluginName + '::move', function() {
                     self.value = self.get();
                     if (!self.initialized || self.updating) {
                         return false;
-                    }
-                    if (typeof self.options.onChange === 'function') {
-                        self.options.onChange.call(self, self.value, p.uid);
                     }
                     self._trigger('change', [self.value, self.options.name, pluginName, self]);
                     return false;
@@ -280,10 +279,7 @@
 
             this.set(this.value);
 
-            if (typeof self.options.onUpdate === 'function') {
-                self.options.onUpdate.call(self);
-            }
-            self._trigger('update');
+            this._trigger('update');
 
             this.updating = false;
         },
@@ -293,6 +289,9 @@
 
             $.each(this.pointer, function(i, p) {
                 value[i] = p.get();
+                if (value[i] === self.options.min && self.options.replaceFirst) {
+                    value[i] = self.options.replace;
+                }
             });
 
             if (self.options.range) {
@@ -376,7 +375,7 @@
                 position = this.parent.direction.position,
                 offset = this.parent.$wrap.offset();
 
-            this.$element.trigger('asRange::pointer::start', this);
+            this.$element.trigger(pluginName + '::moveStart', this);
 
             this.data = {};
             this.data.start = event[axis];
@@ -401,7 +400,7 @@
             };
             this.mouseup = function() {
                 $(document).off('.asRange mousemove.asRange touchend.asRange mouseup.asRange');
-                this.$element.trigger('asRange::pointer::end', this);
+                this.$element.trigger(pluginName + '::moveEnd', this);
                 return false;
             };
 
@@ -438,7 +437,7 @@
             this.updatePosition();
             this.$element.focus();
 
-            this.$element.trigger('asRange::pointer::change', this);
+            this.$element.trigger(pluginName + '::move', this);
         },
         updatePosition: function() {
             var position = {};
@@ -603,7 +602,7 @@
             this.$arrow.addClass(instance.namespace + '-selected');
 
             if (instance.options.range === false) {
-                instance.p1.$element.on('asRange::pointer::change', function(e, pointer) {
+                instance.p1.$element.on(instance.pluginName + '::move', function(e, pointer) {
                     self.$arrow.css({
                         left: 0,
                         width: pointer.getPercent() + '%'
@@ -613,13 +612,21 @@
 
             if (instance.options.range === true) {
                 var onUpdate = function() {
+                    var width = instance.p2.getPercent() - instance.p1.getPercent(),
+                        left;
+                    if (width >= 0) {
+                        left = instance.p1.getPercent();
+                    } else {
+                        width = -width;
+                        left = instance.p2.getPercent();
+                    }
                     self.$arrow.css({
-                        left: instance.p1.getPercent() + '%',
-                        width: (instance.p2.getPercent() - instance.p1.getPercent()) + '%'
+                        left: left + '%',
+                        width: width + '%'
                     });
                 };
-                instance.p1.$element.on('asRange::pointer::change', onUpdate);
-                instance.p2.$element.on('asRange::pointer::change', onUpdate);
+                instance.p1.$element.on(instance.pluginName + '::move', onUpdate);
+                instance.p2.$element.on(instance.pluginName + '::move', onUpdate);
             }
         }
     });
@@ -648,15 +655,15 @@
                     $tip.css({
                         display: 'none'
                     });
-                    p.$element.on('asRange::pointer::end', function() {
+                    p.$element.on(instance.pluginName + '::moveEnd', function() {
                         self.hide($tip);
                         return false;
-                    }).on('asRange::pointer::start', function() {
+                    }).on(instance.pluginName + '::moveStart', function() {
                         self.show($tip);
                         return false;
                     });
                 }
-                p.$element.on('asRange::pointer::change', function() {
+                p.$element.on(instance.pluginName + '::move', function() {
                     var value;
                     if (instance.options.range) {
                         value = instance.get()[i];
@@ -664,7 +671,11 @@
                         value = instance.get();
                     }
                     if (typeof instance.options.format === 'function') {
-                        value = instance.options.format(value);
+                        if (instance.options.replaceFirst && value === instance.options.replace) {
+                            value = instance.options.replace;
+                        } else {
+                            value = instance.options.format(value);
+                        }
                     }
                     $tip.text(value);
                     return false;

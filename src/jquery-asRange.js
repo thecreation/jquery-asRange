@@ -18,7 +18,8 @@
             range: false,
             direction: 'h', // 'v' or 'h'
             keyboard: true,
-            replaceFirst: 'default',
+            replaceFirst: false,
+            replace: 'default',
             tip: true,
             scale: true,
             format: function(value) {
@@ -64,6 +65,7 @@
         this.options = $.extend({}, defaults, options, this.$element.data(), metas);
         this.namespace = this.options.namespace;
         this.components = $.extend(true, {}, this.components);
+        this.pluginName = pluginName;
 
         // public properties
         this.value = this.options.value;
@@ -203,20 +205,17 @@
             });
 
             if (this.$element.is('input')) {
-                this.$element.on('asRange::change', function() {
+                this.$element.on(pluginName + '::change', function() {
                     var value = self.get();
                     self.$element.val(value);
                 });
             }
 
             $.each(this.pointer, function(i, p) {
-                p.$element.on('asRange::pointer::change', function() {
+                p.$element.on(pluginName + '::move', function() {
                     self.value = self.get();
                     if (!self.initialized || self.updating) {
                         return false;
-                    }
-                    if (typeof self.options.onChange === 'function') {
-                        self.options.onChange.call(self, self.value, p.uid);
                     }
                     self._trigger('change', [self.value, self.options.name, pluginName, self]);
                     return false;
@@ -284,10 +283,7 @@
 
             this.set(this.value);
 
-            if (typeof self.options.onUpdate === 'function') {
-                self.options.onUpdate.call(self);
-            }
-            self._trigger('update');
+            this._trigger('update');
 
             this.updating = false;
         },
@@ -297,6 +293,9 @@
 
             $.each(this.pointer, function(i, p) {
                 value[i] = p.get();
+                if (value[i] === self.options.min && self.options.replaceFirst) {
+                    value[i] = self.options.replace;
+                }
             });
 
             if (self.options.range) {
@@ -380,7 +379,7 @@
                 position = this.parent.direction.position,
                 offset = this.parent.$wrap.offset();
 
-            this.$element.trigger('asRange::pointer::start', this);
+            this.$element.trigger(pluginName + '::moveStart', this);
 
             this.data = {};
             this.data.start = event[axis];
@@ -405,7 +404,7 @@
             };
             this.mouseup = function() {
                 $(document).off('.asRange mousemove.asRange touchend.asRange mouseup.asRange');
-                this.$element.trigger('asRange::pointer::end', this);
+                this.$element.trigger(pluginName + '::moveEnd', this);
                 return false;
             };
 
@@ -442,7 +441,7 @@
             this.updatePosition();
             this.$element.focus();
 
-            this.$element.trigger('asRange::pointer::change', this);
+            this.$element.trigger(pluginName + '::move', this);
         },
         updatePosition: function() {
             var position = {};
