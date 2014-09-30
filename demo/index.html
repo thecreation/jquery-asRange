@@ -89,8 +89,7 @@ $(".range-example-single").asRange({
                                 return '$' + value;
                             },
                             onChange: function(value) {
-                                var val = value[0];
-                                $('<div> <span>value: </span>'+ val[0] + '-' + val[1] + '</div>').prependTo($('.content'));
+                                $('<div> <span>value: </span>'+ value[0] + '-' + value[1] + '</div>').prependTo($('.content'));
                             }
                         });                           
                     });

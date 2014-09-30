@@ -219,7 +219,7 @@
                     if (!self.initialized || self.updating) {
                         return false;
                     }
-                    self._trigger('change', [self.value, self.options.name, pluginName, self]);
+                    self._trigger('change', self.value, self.options.name, pluginName, self);
                     return false;
                 });
             });

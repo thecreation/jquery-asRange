@@ -1,4 +1,4 @@
-/*! asRange - v0.2.3 - 2014-09-25
+/*! asRange - v0.2.4 - 2014-09-30
 * https://github.com/amazingSurge/jquery-asRange
 * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function($) {
@@ -215,7 +215,7 @@
                     if (!self.initialized || self.updating) {
                         return false;
                     }
-                    self._trigger('change', [self.value, self.options.name, pluginName, self]);
+                    self._trigger('change', self.value, self.options.name, pluginName, self);
                     return false;
                 });
             });
