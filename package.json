@@ -6,11 +6,12 @@
     "homepage": "https://github.com/amazingSurge/jquery-asRange",
     "author": {
         "name": "amazingSurge",
-        "email": "amazingSurge@gmail.com"
+        "email": "amazingSurge@yahoo.com",
+        "url": "amazingSurge.com"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/amazingSurge/jquery-asRange.git"
+        "url": "git@github.com:amazingSurge/jquery-asRange.git"
     },
     "bugs": "https://github.com/amazingSurge/jquery-asRange/issues",
     "licenses": [{
@@ -23,7 +24,7 @@
         "grunt-contrib-uglify": "*",
         "grunt-contrib-watch": "*",
         "grunt-contrib-clean": "*",
-        "grunt": "~0.4.5",
+        "grunt": "*",
         "grunt-jsbeautifier": "*",
         "grunt-contrib-less": "*",
         "grunt-autoprefixer": "*",
