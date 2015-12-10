@@ -1,6 +1,6 @@
-/*! asRange - v0.2.4 - 2014-09-30
+/*! asRange - v0.2.6 - 2015-12-10
 * https://github.com/amazingSurge/jquery-asRange
-* Copyright (c) 2014 amazingSurge; Licensed GPL */
+* Copyright (c) 2015 amazingSurge; Licensed GPL */
 (function($) {
     var pluginName = 'asRange',
         defaults = {
@@ -22,8 +22,12 @@
             }
         };
 
-    var getEventObject = function(e) {
-        if (e.touches) e = e.touches[0];
+    var getEventObject = function(event) {
+        var e = event.originalEvent;
+        if (e.touches && e.touches.length && e.touches[0]) {
+            e = e.touches[0];
+        }
+
         return e;
     };
 
@@ -190,7 +194,7 @@
                 }
                 event = getEventObject(event);
                 var rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
-                if (rightclick && !Touch) {
+                if (rightclick) {
                     return false;
                 }
 
@@ -408,7 +412,7 @@
                 return false;
             };
             this.mouseup = function() {
-                $(document).off('.asRange mousemove.asRange touchend.asRange mouseup.asRange');
+                $(document).off('.asRange mousemove.asRange touchend.asRange mouseup.asRange touchcancel.asRange');
                 this.$element.trigger(pluginName + '::moveEnd', this);
                 return false;
             };
