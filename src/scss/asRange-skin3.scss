@@ -1,0 +1,140 @@
+
+$rangeBgColor: #eee;
+$rangePointerBgColor: lighten($rangeBgColor,100%);
+$rangePointerBdColor: darken($rangeBgColor,6.5%);
+$rangeSelectedBgColor: #27acd8;
+
+.asRange.asRange-simple.asRange_skin-3 {
+  position: relative;
+  width: 331px;
+  height: 14px;
+
+  background-color: $rangeBgColor;
+  cursor: pointer;
+
+  .asRange-pointer {
+    display: none;
+  }
+
+  .asRange-selected {
+    position: absolute;
+    width: 30%;
+    height: 14px;
+
+    overflow: hidden;
+
+    background-color: $rangeSelectedBgColor;
+  }
+
+  .asRange-scale {
+    display: none;
+  }
+}
+
+.asRange.asRange-normal.asRange_skin-3 {
+  position: relative;
+  width: 331px;
+  height: 14px;
+
+  background-color: $rangeBgColor;
+  cursor: pointer;
+  .asRange-pointer {
+    position: absolute;
+    left: 30%;
+
+    width: 14px;
+    height: 14px;
+
+    margin-left: -7px;
+
+    background-color: $rangePointerBgColor;
+    //opacity: 0;
+    z-index: 2;
+
+    &:before {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
+      left: -1px;
+      content: '';
+      background: $rangePointerBgColor;
+      border: 1px solid $rangePointerBdColor;
+    }
+
+    .asRange-tip {
+      display: none;
+    }
+  }
+
+  .asRange-selected {
+    position: absolute;
+    width: 30%;
+    height: 14px;
+
+    overflow: hidden;
+
+    background-color: $rangeSelectedBgColor;
+  }
+
+  .asRange-scale {
+    display: none;
+  }
+}
+
+.asRange.asRange-normal-scale.asRange_skin-3 {
+  position: relative;
+  width: 331px;
+  height: 14px;
+
+  background-color: $rangeBgColor;
+  cursor: pointer;
+
+  .asRange-pointer {
+    position: absolute;
+    left: 30%;
+
+    width: 14px;
+    height: 14px;
+
+    margin-left: -7px;
+
+    background-color: $rangePointerBgColor;
+    //opacity: 0;
+    z-index: 2;
+
+    &:before {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
+      left: -1px;
+      content: '';
+      background: $rangePointerBgColor;
+      border: 1px solid $rangePointerBdColor;
+    }
+
+    .asRange-tip {
+      display: none;
+    }
+
+    + .asRange-pointer {
+      left: 70%;
+    }
+  }
+
+  .asRange-selected {
+    position: absolute;
+    left: 30%;
+    width: 40%;
+    height: 14px;
+
+    overflow: hidden;
+
+    background-color: $rangeSelectedBgColor;
+  }
+
+  .asRange-scale {
+    display: none;
+  }
+}

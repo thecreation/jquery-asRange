@@ -1,85 +1,119 @@
-# jQuery asRange
+# [jQuery asRange](https://github.com/amazingSurge/jquery-asRange) ![bower][bower-image] [![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url] [![prs-welcome]](#contributing)
 
-The powerful jQuery plugin that creates a series of progress bar. 
-Download: <a href="https://github.com/amazingSurge/jquery-asRange/archive/master.zip">jquery-asRange-master.zip</a>
+> A jquery plugin for convent input into range slider.
 
-***
+## Table of contents
+- [Main files](#main-files)
+- [Quick start](#quick-start)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Options](#options)
+- [Methods](#methods)
+- [Events](#events)
+- [No conflict](#no-conflict)
+- [Browser support](#browser-support)
+- [Contributing](#contributing)
+- [Development](#development)
+- [Changelog](#changelog)
+- [Copyright and license](#copyright-and-license)
 
-## Features
+## Main files
+```
+dist/
+├── jquery-asRange.js
+├── jquery-asRange.es.js
+├── jquery-asRange.min.js
+└── css/
+    ├── asRange.css
+    └── asRange.min.css
+```
 
-* **Different styles support** — range provides a variety of progress bar for user
-* **Lightweight size** — 1 kb gzipped
+## Quick start
+Several quick start options are available:
+#### Download the latest build
 
-## Dependencies
-* <a href="http://jquery.com/" target="_blank">jQuery 1.83+</a>
+ * [Development](https://raw.githubusercontent.com/amazingSurge/jquery-asRange/master/dist/jquery-asRange.js) - unminified
+ * [Production](https://raw.githubusercontent.com/amazingSurge/jquery-asRange/master/dist/jquery-asRange.min.js) - minified
+
+#### Install From Bower
+```sh
+bower install jquery-asRange --save
+```
+
+#### Install From Npm
+```sh
+npm install jquery-asRange --save
+```
+
+#### Build From Source
+If you want build from source:
+
+```sh
+git clone git@github.com:amazingSurge/jquery-asRange.git
+cd jquery-asRange
+npm install
+npm install -g gulp-cli babel-cli
+gulp build
+```
+
+Done!
+
+## Requirements
+`jquery-asRange` requires the latest version of [`jQuery`](https://jquery.com/download/).
 
 ## Usage
+#### Including files:
 
-Import this libraries:
-* jQuery
-* jquery-asRange.min.js
-
-And CSS:
-* asRange.css - desirable if you have not yet connected one
-
-
-Create base html element:
 ```html
-	<div class="example">
-		<div class="asRange-single"></div>
-	</div>
+<link rel="stylesheet" href="/path/to/asRange.css">
+<script src="/path/to/jquery.js"></script>
+<script src="/path/to/jquery-asRange.js"></script>
 ```
 
-Initialize asRange:
-```javascript
-$(".asRange-single").asRange({skin: 'skin-1'});
-```
+#### Required HTML structure
 
-Or you can also use <code>input</code>
 ```html
-	<div class="example">
-		<form method="post">
-			<input class="range-input" type="range" min="0" max="10" name="points" step="0.01" />
-			<button class="submit">submit</button>
-		</form>
-	</div>
+<input class="example" type="range" min="0" max="10" name="points" step="0.01" />
 ```
 
-Initialize range:
-```javascript
-$(".range-input").range({skin: 'skin-1'});
-```
+#### Initialization
+All you need to do is call the plugin on the element:
 
-Or initialize tabs with custom settings:
 ```javascript
-
-$(".range-single").range({
- 		namespace: 'range',
-        skin: null,
-        max: 100,
-        min: 0,
-        value: [0, 20],
-        step: 10,
-        pointer: 2,
-        limit: true,
-        orientation: 'v',
-        tip: true,
-        scale: {
-            values: [0,50,100],
-            gap: 1,
-            grid: 5
-        },
-        format: function(value) {
-            return value;
-        },
-        onChange: function(instance) {},
-        callback: function() {}
+jQuery(function($) {
+  $('.example').asRange(); 
 });
 ```
 
-the most important thing is you should set skin value to let plugin load specified skin file
+## Examples
+There are some example usages that you can look at to get started. They can be found in the
+[examples folder](https://github.com/amazingSurge/jquery-asRange/tree/master/examples).
 
-## Settings
+## Options
+`jquery-asRange` can accept an options object to alter the way it behaves. You can see the default options by call `$.asRange.setDefaults()`. The structure of an options object is as follows:
+
+```
+{
+  namespace: 'asRange',
+  skin: null,
+  max: 100,
+  min: 0,
+  value: null,
+  step: 10,
+  limit: true,
+  range: false,
+  direction: 'h', // 'v' or 'h'
+  keyboard: true,
+  replaceFirst: false, // false, 'inherit', {'inherit': 'default'}
+  tip: true,
+  scale: true,
+  format(value) {
+    return value;
+  }
+}
+```
+
 
 <table>
     <thead>
@@ -135,27 +169,27 @@ the most important thing is you should set skin value to let plugin load specifi
             <td>'v'</td>
             <td>Optional property, set the direction for the progress bar ,'v' for vertical and 'h' for horizontal</td>
         </tr>
-		<tr>
+    <tr>
             <td>tip</td>
             <td>true</td>
             <td>Optional property, if true, the component of tip will  display and follow the pointer</td>
         </tr>
-		<tr>
+    <tr>
             <td>scale</td>
             <td>Object</td>
             <td>Optional property, values means the value you want to add to scale; gap means how many parts you want to division between value; grid means how many small parts in the part</td>
         </tr>
-		<tr>
+    <tr>
             <td>format</td>
             <td><code>function(value) {return value;}</code></td>
             <td>Optional property, a function of formatting output </td>
         </tr>
-		<tr>
+    <tr>
             <td>onChange</td>
             <td><code>function(instance) {}</code></td>
             <td>Optional property, according to your need, it can be as a function of the extended interface</td>
         </tr>  
-		<tr>
+    <tr>
             <td>callback</td>
             <td><code>function() {}</code></td>
             <td>Optional property, if it's a funciton, will be called when mouseup</td>
@@ -163,56 +197,142 @@ the most important thing is you should set skin value to let plugin load specifi
     </tbody>
 </table>
 
-## Public methods
+## Methods
+Methods are called on asRange instances through the asRange method itself.
+You can also save the instances to variable for further use.
 
-jquery range has different methods , we can use it as below :
 ```javascript
+// call directly
+$().asRange('destory');
 
-// get the value of pointer
-$(".range-single").range("getValue");
+// or
+var api = $().data('asRange');
+api.destory();
+```
 
-// set value
-$(".range-single").range("setValue");
+#### val(value)
+Set the range if value is defined or get the value.
+```javascript
+// set the val
+$().asRange('val', '5');
 
-// set the range of the progree bar
-$(".range-single").range("setInterval");
+// get the val
+var value = $().asRange('val');
+```
 
-// add a enable class to range element
-$(".range-single").range("enable");
+#### set(value)
+Set the range value
+```javascript
+$().asRange('set', '5');
+```
 
-// remove enable class
-$(".range-single").range("disable");
+#### get()
+Get the range value.
+```javascript
+var value = $().asRange('get');
+```
 
-// remove range Dom emement and unbound all events 
-$(".range-single").range("destroy");
+#### enable()
+Enable the range functions.
+```javascript
+$().asRange('enable');
+```
+
+#### disable()
+Disable the range functions.
+```javascript
+$().asRange('disable');
+```
+
+#### destroy()
+Destroy the range instance.
+```javascript
+$().asRange('destroy');
+```
+
+## Events
+`jquery-asRange` provides custom events for the plugin’s unique actions. 
+
+```javascript
+$('.the-element').on('asRange::ready', function (e) {
+  // on instance ready
+});
 
 ```
 
-## Event / Callback
+Event   | Description
+------- | -----------
+init    | Fires when the instance is setup for the first time.
+ready   | Fires when the instance is ready for API use.
+enable  | Fires immediately when the `enable` instance method has been called.
+disable | Fires immediately when the `disable` instance method has been called.
+change  | Fires when the position of pointer is changed
+end     | Fires when mouse up
+destroy | Fires when an instance is destroyed. 
 
-* <code>change</code>: trigger when the position of pointer is changed
-* <code>end</code>: trigger when mouse up
+## No conflict
+If you have to use other plugin with the same namespace, just call the `$.asRange.noConflict` method to revert to it.
 
-how to use event:
-```javascript
-p.$element.on('change', function(e, pointer) {
-    // pointer means current pointer 
-    // some stuff
-});
-p.$element.on('end', function(e, pointer) {
-	//pointer means current pointer
-	//some stuff
-});
+```html
+<script src="other-plugin.js"></script>
+<script src="jquery-asRange.js"></script>
+<script>
+  $.asRange.noConflict();
+  // Code that uses other plugin's "$().asRange" can follow here.
+</script>
 ```
 
 ## Browser support
-jquery-range is verified to work in Internet Explorer 7+, Firefox 2+, Opera 9+, Google Chrome and Safari browsers. Should also work in many others.
 
-Mobile browsers (like Opera mini, Chrome mobile, Safari mobile, Android browser and others) is coming soon.
+Tested on all major browsers.
 
+| <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/safari/safari_32x32.png" alt="Safari"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/chrome/chrome_32x32.png" alt="Chrome"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/firefox/firefox_32x32.png" alt="Firefox"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/edge/edge_32x32.png" alt="Edge"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/internet-explorer/internet-explorer_32x32.png" alt="IE"> | <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/opera/opera_32x32.png" alt="Opera"> |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| Latest ✓ | Latest ✓ | Latest ✓ | Latest ✓ | 9-11 ✓ | Latest ✓ |
 
-## Author
-[amazingSurge](http://amazingSurge.com)
+As a jQuery plugin, you also need to see the [jQuery Browser Support](http://jquery.com/browser-support/).
 
-## License
-jQuery-range plugin is released under the <a href="https://github.com/amazingSurge/jquery-range/blob/master/LICENCE.GPL" target="_blank">GPL licence</a>.s
+## Contributing
+Anyone and everyone is welcome to contribute. Please take a moment to
+review the [guidelines for contributing](CONTRIBUTING.md). Make sure you're using the latest version of `jquery-asRange` before submitting an issue. There are several ways to help out:
+
+* [Bug reports](CONTRIBUTING.md#bug-reports)
+* [Feature requests](CONTRIBUTING.md#feature-requests)
+* [Pull requests](CONTRIBUTING.md#pull-requests)
+* Write test cases for open bug issues
+* Contribute to the documentation
+
+## Development
+`jquery-asRange` is built modularly and uses Gulp as a build system to build its distributable files. To install the necessary dependencies for the build system, please run:
+
+```sh
+npm install -g gulp
+npm install -g babel-cli
+npm install
+```
+
+Then you can generate new distributable files from the sources, using:
+```
+gulp build
+```
+
+More gulp tasks can be found [here](CONTRIBUTING.md#available-tasks).
+
+## Changelog
+To see the list of recent changes, see [Releases section](https://github.com/amazingSurge/jquery-asRange/releases).
+
+## Copyright and license
+Copyright (C) 2016 amazingSurge.
+
+Licensed under [the LGPL license](LICENSE).
+
+[⬆ back to top](#table-of-contents)
+
+[bower-image]: https://img.shields.io/bower/v/jquery-asRange.svg?style=flat
+[bower-link]: https://david-dm.org/amazingSurge/jquery-asRange/dev-status.svg
+[npm-image]: https://badge.fury.io/js/jquery-asRange.svg?style=flat
+[npm-url]: https://npmjs.org/package/jquery-asRange
+[license]: https://img.shields.io/npm/l/jquery-asRange.svg?style=flat
+[prs-welcome]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
+[daviddm-image]: https://david-dm.org/amazingSurge/jquery-asRange.svg?style=flat
+[daviddm-url]: https://david-dm.org/amazingSurge/jquery-asRange
