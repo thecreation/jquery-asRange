@@ -1,5 +1,5 @@
 /**
-* asRange v0.3.0
+* asRange v0.3.1
 * https://github.com/amazingSurge/jquery-asRange
 *
 * Copyright (c) amazingSurge
@@ -1052,7 +1052,7 @@
     keyboard();
 
     var info = {
-      version: '0.3.0'
+      version: '0.3.1'
     };
 
     var NAMESPACE = 'asRange';
@@ -1074,7 +1074,7 @@
             return {
               v: false
             };
-          } else if (/^(get)/.test(method)) {
+          } else if (/^(get)$/.test(method) || method === 'val' && method_arguments.length === 0) {
             var instance = _this5.first().data(NAMESPACE);
 
             if (instance && typeof instance[method] === 'function') {
