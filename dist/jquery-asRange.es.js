@@ -1,5 +1,5 @@
 /**
-* asRange v0.3.1
+* asRange v0.3.2
 * https://github.com/amazingSurge/jquery-asRange
 *
 * Copyright (c) amazingSurge
@@ -558,7 +558,7 @@ class asRange {
   }
 
   _trigger(eventType, ...params) {
-    let data = [this].concat(...params);
+    let data = [this].concat(params);
 
     // event
     this.$element.trigger(`${NAMESPACE$1}::${eventType}`, data);
@@ -570,7 +570,7 @@ class asRange {
     let onFunction = `on${eventType}`;
 
     if (typeof this.options[onFunction] === 'function') {
-      this.options[onFunction].apply(this, ...params);
+      this.options[onFunction].apply(this, params);
     }
   }
 
@@ -628,7 +628,7 @@ class asRange {
         if (!that.initialized || that.updating) {
           return false;
         }
-        that._trigger('change', [that.value]);
+        that._trigger('change', that.value);
         return false;
       });
     });
@@ -797,7 +797,7 @@ asRange.registerComponent('tip', tip);
 keyboard();
 
 var info = {
-  version:'0.3.1'
+  version:'0.3.2'
 };
 
 const NAMESPACE = 'asRange';
@@ -809,7 +809,7 @@ const jQueryAsRange = function(options, ...args) {
 
     if (/^_/.test(method)) {
       return false;
-    } else if ((/^(get)$/.test(method)) || (method === 'val' && method_arguments.length === 0)) {
+    } else if ((/^(get)$/.test(method)) || (method === 'val' && args.length === 0)) {
       const instance = this.first().data(NAMESPACE);
       if (instance && typeof instance[method] === 'function') {
         return instance[method](...args);

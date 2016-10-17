@@ -46,6 +46,11 @@ bower install jquery-asRange --save
 npm install jquery-asRange --save
 ```
 
+#### Install From Yarn
+```sh
+yarn add jquery-asRange
+```
+
 #### Build From Source
 If you want build from source:
 
@@ -203,11 +208,11 @@ You can also save the instances to variable for further use.
 
 ```javascript
 // call directly
-$().asRange('destory');
+$().asRange('destroy');
 
 // or
 var api = $().data('asRange');
-api.destory();
+api.destroy();
 ```
 
 #### val(value)

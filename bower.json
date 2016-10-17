@@ -1,6 +1,6 @@
 {
   "name": "jquery-asRange",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A jquery plugin for convent input into range slider.",
   "main": "dist/jquery-asRange.js",
   "copyright": "amazingSurge",

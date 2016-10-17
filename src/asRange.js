@@ -128,7 +128,7 @@ class asRange {
   }
 
   _trigger(eventType, ...params) {
-    let data = [this].concat(...params);
+    let data = [this].concat(params);
 
     // event
     this.$element.trigger(`${NAMESPACE}::${eventType}`, data);
@@ -140,7 +140,7 @@ class asRange {
     let onFunction = `on${eventType}`;
 
     if (typeof this.options[onFunction] === 'function') {
-      this.options[onFunction].apply(this, ...params);
+      this.options[onFunction].apply(this, params);
     }
   }
 
@@ -198,7 +198,7 @@ class asRange {
         if (!that.initialized || that.updating) {
           return false;
         }
-        that._trigger('change', [that.value]);
+        that._trigger('change', that.value);
         return false;
       });
     });

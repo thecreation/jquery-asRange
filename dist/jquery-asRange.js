@@ -1,5 +1,5 @@
 /**
-* asRange v0.3.1
+* asRange v0.3.2
 * https://github.com/amazingSurge/jquery-asRange
 *
 * Copyright (c) amazingSurge
@@ -719,13 +719,11 @@
       }, {
         key: '_trigger',
         value: function _trigger(eventType) {
-          var _ref;
-
           for (var _len = arguments.length, params = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
             params[_key - 1] = arguments[_key];
           }
 
-          var data = (_ref = [this]).concat.apply(_ref, params);
+          var data = [this].concat(params);
 
           // event
           this.$element.trigger(NAMESPACE$1 + '::' + eventType, data);
@@ -740,9 +738,7 @@
           var onFunction = 'on' + eventType;
 
           if (typeof this.options[onFunction] === 'function') {
-            var _options$onFunction;
-
-            (_options$onFunction = this.options[onFunction]).apply.apply(_options$onFunction, [this].concat(params));
+            this.options[onFunction].apply(this, params);
           }
         }
       }, {
@@ -823,7 +819,7 @@
 
                     return false;
                   }
-                  that._trigger('change', [that.value]);
+                  that._trigger('change', that.value);
 
                   return false;
                 }
@@ -1052,7 +1048,7 @@
     keyboard();
 
     var info = {
-      version: '0.3.1'
+      version: '0.3.2'
     };
 
     var NAMESPACE = 'asRange';
@@ -1074,7 +1070,7 @@
             return {
               v: false
             };
-          } else if (/^(get)$/.test(method) || method === 'val' && method_arguments.length === 0) {
+          } else if (/^(get)$/.test(method) || method === 'val' && args.length === 0) {
             var instance = _this5.first().data(NAMESPACE);
 
             if (instance && typeof instance[method] === 'function') {
