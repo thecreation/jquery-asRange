@@ -1,13 +1,11 @@
 /**
-* asRange v0.3.2
+* asRange v0.3.3
 * https://github.com/amazingSurge/jquery-asRange
 *
 * Copyright (c) amazingSurge
 * Released under the LGPL-3.0 license
 */
-(
-
-  function(global, factory) {
+(function(global, factory) {
   if (typeof define === "function" && define.amd) {
     define(['jquery'], factory);
   } else if (typeof exports !== "undefined") {
@@ -19,8 +17,7 @@
     factory(global.jQuery);
     global.jqueryAsRangeEs = mod.exports;
   }
-}
-)(this,
+})(this,
 
   function(_jquery) {
     'use strict';
@@ -41,7 +38,7 @@
       :
 
       function(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
       };
 
     function _classCallCheck(instance, Constructor) {
@@ -1049,7 +1046,7 @@
     keyboard();
 
     var info = {
-      version: '0.3.2'
+      version: '0.3.3'
     };
 
     var NAMESPACE = 'asRange';
