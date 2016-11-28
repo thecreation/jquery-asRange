@@ -7,8 +7,6 @@ import tip from './tip';
 import keyboard from './keyboard';
 import * as util from './util';
 
-const NAMESPACE = 'asRange';
-
 let components = {};
 
 /**
@@ -131,7 +129,7 @@ class asRange {
     let data = [this].concat(params);
 
     // event
-    this.$element.trigger(`${NAMESPACE}::${eventType}`, data);
+    this.$element.trigger(this.namespace + `::${eventType}`, data);
 
     // callback
     eventType = eventType.replace(/\b\w+\b/g, (word) => {
@@ -186,14 +184,14 @@ class asRange {
     });
 
     if (this.$element.is('input')) {
-      this.$element.on(`${NAMESPACE}::change`, () => {
+      this.$element.on(this.namespace + `::change`, () => {
         const value = this.get();
         this.$element.val(value);
       });
     }
 
     $.each(this.pointer, (i, p) => {
-      p.$element.on(`${NAMESPACE}::move`, () => {
+      p.$element.on(this.namespace + `::move`, () => {
         that.value = that.get();
         if (!that.initialized || that.updating) {
           return false;

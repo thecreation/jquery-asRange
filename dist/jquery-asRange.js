@@ -5,7 +5,9 @@
 * Copyright (c) amazingSurge
 * Released under the LGPL-3.0 license
 */
-(function(global, factory) {
+(
+
+  function(global, factory) {
   if (typeof define === "function" && define.amd) {
     define(['jquery'], factory);
   } else if (typeof exports !== "undefined") {
@@ -17,7 +19,8 @@
     factory(global.jQuery);
     global.jqueryAsRangeEs = mod.exports;
   }
-})(this,
+}
+)(this,
 
   function(_jquery) {
     'use strict';
@@ -38,7 +41,7 @@
       :
 
       function(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
       };
 
     function _classCallCheck(instance, Constructor) {
@@ -582,8 +585,6 @@
       );
     };
 
-    var NAMESPACE$1 = 'asRange';
-
     var components = {};
 
     /**
@@ -726,7 +727,7 @@
           var data = [this].concat(params);
 
           // event
-          this.$element.trigger(NAMESPACE$1 + '::' + eventType, data);
+          this.$element.trigger(this.namespace + ('::' + eventType), data);
 
           // callback
           eventType = eventType.replace(/\b\w+\b/g,
@@ -798,7 +799,7 @@
           );
 
           if (this.$element.is('input')) {
-            this.$element.on(NAMESPACE$1 + '::change',
+            this.$element.on(this.namespace + '::change',
 
               function() {
                 var value = _this3.get();
@@ -810,7 +811,7 @@
           _jquery2.default.each(this.pointer,
 
             function(i, p) {
-              p.$element.on(NAMESPACE$1 + '::move',
+              p.$element.on(_this3.namespace + '::move',
 
                 function() {
                   that.value = that.get();

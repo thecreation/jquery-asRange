@@ -435,9 +435,7 @@ var keyboard = function() {
       });
     }
   });
-}
-
-const NAMESPACE$1 = 'asRange';
+};
 
 let components = {};
 
@@ -561,7 +559,7 @@ class asRange {
     let data = [this].concat(params);
 
     // event
-    this.$element.trigger(`${NAMESPACE$1}::${eventType}`, data);
+    this.$element.trigger(this.namespace + `::${eventType}`, data);
 
     // callback
     eventType = eventType.replace(/\b\w+\b/g, (word) => {
@@ -616,14 +614,14 @@ class asRange {
     });
 
     if (this.$element.is('input')) {
-      this.$element.on(`${NAMESPACE$1}::change`, () => {
+      this.$element.on(this.namespace + `::change`, () => {
         const value = this.get();
         this.$element.val(value);
       });
     }
 
     $.each(this.pointer, (i, p) => {
-      p.$element.on(`${NAMESPACE$1}::move`, () => {
+      p.$element.on(this.namespace + `::move`, () => {
         that.value = that.get();
         if (!that.initialized || that.updating) {
           return false;
