@@ -197,7 +197,7 @@ There are some example usages that you can look at to get started. They can be f
     <tr>
             <td>callback</td>
             <td><code>function() {}</code></td>
-            <td>Optional property, if it's a funciton, will be called when mouseup</td>
+            <td>Optional property, if it's a function, will be called when mouseup</td>
         </tr>   
     </tbody>
 </table>
