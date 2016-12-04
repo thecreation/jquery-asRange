@@ -1,6 +1,6 @@
 # [jQuery asRange](https://github.com/amazingSurge/jquery-asRange) ![bower][bower-image] [![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url] [![prs-welcome]](#contributing)
 
-> A jquery plugin for convent input into range slider.
+> A jquery plugin to convert input into range slider.
 
 ## Table of contents
 - [Main files](#main-files)
@@ -226,7 +226,7 @@ var value = $().asRange('val');
 ```
 
 #### set(value)
-Set the range value
+Set the range value.
 ```javascript
 $().asRange('set', '5');
 ```
@@ -271,8 +271,8 @@ init    | Fires when the instance is setup for the first time.
 ready   | Fires when the instance is ready for API use.
 enable  | Fires immediately when the `enable` instance method has been called.
 disable | Fires immediately when the `disable` instance method has been called.
-change  | Fires when the position of pointer is changed
-end     | Fires when mouse up
+change  | Fires when the position of pointer is changed.
+end     | Fires when mouse up.
 destroy | Fires when an instance is destroyed. 
 
 ## No conflict
