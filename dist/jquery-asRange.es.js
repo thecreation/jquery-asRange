@@ -1,5 +1,5 @@
 /**
-* asRange v0.3.3
+* asRange v0.3.4
 * https://github.com/amazingSurge/jquery-asRange
 *
 * Copyright (c) amazingSurge
@@ -435,7 +435,7 @@ var keyboard = function() {
       });
     }
   });
-}
+};
 
 let components = {};
 
@@ -795,7 +795,7 @@ asRange.registerComponent('tip', tip);
 keyboard();
 
 var info = {
-  version:'0.3.3'
+  version:'0.3.4'
 };
 
 const NAMESPACE = 'asRange';
