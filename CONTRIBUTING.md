@@ -152,7 +152,7 @@ license your work under the same license as that used by the project.
 To help create consistent looking code throughout the project, we use a few tools to help us. 
 
 #### ESlint
-We use [ESlint](http://eslint.org) on each build to find easy-to-catch errors and potential problems in our js.  You can find our ESlint settings in the `.eslintrc.yml` file in the root of the project.
+We use [ESlint](http://eslint.org) on each build to find easy-to-catch errors and potential problems in our js.  You can find our ESlint settings in the `.eslintrc.json` file in the root of the project.
 
 #### EditorConfig
 
