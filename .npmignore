@@ -1,4 +1,4 @@
-.travis.xml
+.travis.yml
 yarn.lock
 package-lock.json
 .editorconfig
