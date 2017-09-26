@@ -2,7 +2,7 @@ import $ from 'jquery';
 import * as util from './util';
 
 class Pointer {
-  constructor ($element, id, parent) {
+  constructor($element, id, parent) {
     this.$element = $element;
     this.uid = id;
     this.parent = parent;
@@ -34,7 +34,7 @@ class Pointer {
 
     this.active();
 
-    this.mousemove = function(event) {
+    this.mousemove = function (event) {
       const eventObj = util.getEventObject(event);
       const value = this.parent.getValueFromPosition(this.data.position + (eventObj[axis] || this.data.start) - this.data.start);
       this.set(value);
@@ -42,7 +42,7 @@ class Pointer {
       event.preventDefault();
       return false;
     };
-    this.mouseup = function() {
+    this.mouseup = function () {
       $(document).off('.asRange mousemove.asRange touchend.asRange mouseup.asRange touchcancel.asRange');
       this.$element.trigger(`${this.parent.namespace}::moveEnd`, this);
       return false;
@@ -95,7 +95,7 @@ class Pointer {
   }
 
   getPercent() {
-    return ((this.value - this.parent.min) / this.parent.interval) * 100;
+    return (this.value - this.parent.min) / this.parent.interval * 100;
   }
 
   get() {

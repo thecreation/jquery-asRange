@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-export default function() {
+export default function () {
   const $doc = $(document);
 
   $doc.on('asRange::ready', (event, instance) => {
@@ -8,19 +8,19 @@ export default function() {
 
     const keyboard = {
       keys: {
-        'UP': 38,
-        'DOWN': 40,
-        'LEFT': 37,
-        'RIGHT': 39,
-        'RETURN': 13,
-        'ESCAPE': 27,
-        'BACKSPACE': 8,
-        'SPACE': 32
+        UP: 38,
+        DOWN: 40,
+        LEFT: 37,
+        RIGHT: 39,
+        RETURN: 13,
+        ESCAPE: 27,
+        BACKSPACE: 8,
+        SPACE: 32
       },
       map: {},
       bound: false,
       press(e) {
-        /*eslint consistent-return: "off"*/
+        /* eslint consistent-return: "off"*/
         const key = e.keyCode || e.which;
         if (key in keyboard.map && typeof keyboard.map[key] === 'function') {
           keyboard.map[key](e);

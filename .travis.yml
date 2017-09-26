@@ -7,6 +7,7 @@ sudo: false
 
 script:
   - npm run test
+  - npm run eslint src
 
 cache:
   directories:

@@ -43,7 +43,7 @@ export default {
             }
             if (typeof instance.options.replaceFirst === 'object') {
               for (const key in instance.options.replaceFirst) {
-                if(Object.hasOwnProperty(instance.options.replaceFirst, key)){
+                if (Object.hasOwnProperty(instance.options.replaceFirst, key)) {
                   value = instance.options.replaceFirst[key];
                 }
               }

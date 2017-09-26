@@ -510,7 +510,7 @@
         map: {},
         bound: false,
         press: function press(e) {
-          /*eslint consistent-return: "off"*/
+          /* eslint consistent-return: "off"*/
           var key = e.keyCode || e.which;
           if (key in keyboard.map && typeof keyboard.map[key] === 'function') {
             keyboard.map[key](e);
@@ -725,7 +725,7 @@
             var data = [this].concat(params);
 
             // event
-            this.$element.trigger(this.namespace + ('::' + eventType), data);
+            this.$element.trigger(this.namespace + '::' + eventType, data);
 
             // callback
             eventType = eventType.replace(/\b\w+\b/g, function(word) {
@@ -777,7 +777,7 @@
             this.$wrap.on('touchstart.asRange mousedown.asRange', function(
               event
             ) {
-              /*eslint consistent-return: "off"*/
+              /* eslint consistent-return: "off"*/
               if (that.disabled === true) {
                 return;
               }
@@ -1027,7 +1027,7 @@
   var NAMESPACE = 'asRange';
   var OtherAsRange = _jquery2.default.fn.asRange;
 
-  var jQueryAsRange = function jQueryAsRange(options) {
+  function jQueryAsRange(options) {
     for (
       var _len2 = arguments.length,
         args = Array(_len2 > 1 ? _len2 - 1 : 0),
@@ -1066,7 +1066,7 @@
         (0, _jquery2.default)(this).data(NAMESPACE, new asRange(this, options));
       }
     });
-  };
+  }
 
   _jquery2.default.fn.asRange = jQueryAsRange;
 
