@@ -6,7 +6,7 @@ package-lock.json
 .beautifyrc
 .sass-cache
 .bowerrc
-.eslintrc.yml
+.eslintrc.json
 .github
 .gitattributes
 .release.json
