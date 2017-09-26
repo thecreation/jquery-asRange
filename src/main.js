@@ -5,7 +5,7 @@ import info from './info';
 const NAMESPACE = 'asRange';
 const OtherAsRange = $.fn.asRange;
 
-const jQueryAsRange = function (options, ...args) {
+function jQueryAsRange(options, ...args) {
   if (typeof options === 'string') {
     const method = options;
 
@@ -31,7 +31,7 @@ const jQueryAsRange = function (options, ...args) {
       $(this).data(NAMESPACE, new asRange(this, options));
     }
   });
-};
+}
 
 $.fn.asRange = jQueryAsRange;
 
