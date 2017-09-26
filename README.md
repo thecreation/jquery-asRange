@@ -131,8 +131,8 @@ There are some example usages that you can look at to get started. They can be f
     <tbody>
         <tr>
             <td>namespace</td>
-            <td>"range"</td>
-            <td>Optional property, set a namspace for css class, for example, we have <code>.range_active</code> class for active effect, if namespace set to 'as-range', then it will be <code>.as-range_active</code></td>
+            <td>"asRange"</td>
+            <td>Optional property, set a namspace for css class, for example, we have <code>.asRange_active</code> class for active effect, if namespace set to 'as-range', then it will be <code>.as-range_active</code></td>
         </tr>
         <tr>
             <td>skin</td>
@@ -151,7 +151,7 @@ There are some example usages that you can look at to get started. They can be f
         </tr>
         <tr>
             <td>value</td>
-            <td><code>[0,20]</code></td>
+            <td><code>null</code></td>
             <td>Optional property, set the pointer to the initial position</td>
         </tr>
         <tr>
@@ -160,45 +160,50 @@ There are some example usages that you can look at to get started. They can be f
             <td>Optional property, set up the moving step at a time</td>
         </tr>
         <tr>
-            <td>pointer</td>
-            <td>2</td>
-            <td>Optional property, set the number of pointer</td>
-        </tr>
-        <tr>
             <td>limit</td>
             <td>true</td>
             <td>Optional property, if true, limit the range of the pointer moving</td>
         </tr>
         <tr>
-            <td>orientation</td>
+            <td>range</td>
+            <td>false</td>
+            <td>Optional property, if true, allow to set min and max</td>
+        </tr>
+        <tr>
+            <td>direction</td>
             <td>'v'</td>
             <td>Optional property, set the direction for the progress bar ,'v' for vertical and 'h' for horizontal</td>
         </tr>
-    <tr>
+        <tr>
+            <td>keyboard</td>
+            <td>true</td>
+            <td>Optional property, if true, allow to change value using keyboard</td>
+        </tr>
+        <tr>
+            <td>replaceFirst</td>
+            <td>false</td>
+            <td>Optional property, set the default value when value is set as min.</td>
+        </tr>
+        <tr>
             <td>tip</td>
             <td>true</td>
             <td>Optional property, if true, the component of tip will  display and follow the pointer</td>
         </tr>
-    <tr>
+        <tr>
             <td>scale</td>
             <td>Object</td>
             <td>Optional property, values means the value you want to add to scale; gap means how many parts you want to division between value; grid means how many small parts in the part</td>
         </tr>
-    <tr>
+        <tr>
             <td>format</td>
             <td><code>function(value) {return value;}</code></td>
             <td>Optional property, a function of formatting output </td>
         </tr>
-    <tr>
+        <tr>
             <td>onChange</td>
             <td><code>function(instance) {}</code></td>
             <td>Optional property, according to your need, it can be as a function of the extended interface</td>
-        </tr>  
-    <tr>
-            <td>callback</td>
-            <td><code>function() {}</code></td>
-            <td>Optional property, if it's a function, will be called when mouseup</td>
-        </tr>   
+        </tr>
     </tbody>
 </table>
 
