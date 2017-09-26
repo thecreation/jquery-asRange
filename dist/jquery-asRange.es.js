@@ -26,7 +26,7 @@ var DEFAULTS = {
   }
 };
 
-function getEventObject (event) {
+function getEventObject(event) {
   let e = event.originalEvent;
   if (e.touches && e.touches.length && e.touches[0]) {
     e = e.touches[0];
@@ -36,7 +36,7 @@ function getEventObject (event) {
 }
 
 class Pointer {
-  constructor ($element, id, parent) {
+  constructor($element, id, parent) {
     this.$element = $element;
     this.uid = id;
     this.parent = parent;
@@ -68,7 +68,7 @@ class Pointer {
 
     this.active();
 
-    this.mousemove = function(event) {
+    this.mousemove = function (event) {
       const eventObj = getEventObject(event);
       const value = this.parent.getValueFromPosition(this.data.position + (eventObj[axis] || this.data.start) - this.data.start);
       this.set(value);
@@ -76,7 +76,7 @@ class Pointer {
       event.preventDefault();
       return false;
     };
-    this.mouseup = function() {
+    this.mouseup = function () {
       $(document).off('.asRange mousemove.asRange touchend.asRange mouseup.asRange touchcancel.asRange');
       this.$element.trigger(`${this.parent.namespace}::moveEnd`, this);
       return false;
@@ -129,7 +129,7 @@ class Pointer {
   }
 
   getPercent() {
-    return ((this.value - this.parent.min) / this.parent.interval) * 100;
+    return (this.value - this.parent.min) / this.parent.interval * 100;
   }
 
   get() {
@@ -195,7 +195,7 @@ var scale = {
     scale.values = [];
     scale.values.push(instance.min);
     const part = (instance.max - instance.min) / (scale.valuesNumber - 1);
-    for (let j = 1; j <= (scale.valuesNumber - 2); j++) {
+    for (let j = 1; j <= scale.valuesNumber - 2; j++) {
       scale.values.push(part * j);
     }
     scale.values.push(instance.max);
@@ -327,7 +327,7 @@ var tip = {
             }
             if (typeof instance.options.replaceFirst === 'object') {
               for (const key in instance.options.replaceFirst) {
-                if(Object.hasOwnProperty(instance.options.replaceFirst, key)){
+                if (Object.hasOwnProperty(instance.options.replaceFirst, key)) {
                   value = instance.options.replaceFirst[key];
                 }
               }
@@ -355,7 +355,7 @@ var tip = {
   }
 };
 
-var keyboard = function() {
+var keyboard = function () {
   const $doc = $(document);
 
   $doc.on('asRange::ready', (event, instance) => {
@@ -363,19 +363,19 @@ var keyboard = function() {
 
     const keyboard = {
       keys: {
-        'UP': 38,
-        'DOWN': 40,
-        'LEFT': 37,
-        'RIGHT': 39,
-        'RETURN': 13,
-        'ESCAPE': 27,
-        'BACKSPACE': 8,
-        'SPACE': 32
+        UP: 38,
+        DOWN: 40,
+        LEFT: 37,
+        RIGHT: 39,
+        RETURN: 13,
+        ESCAPE: 27,
+        BACKSPACE: 8,
+        SPACE: 32
       },
       map: {},
       bound: false,
       press(e) {
-        /*eslint consistent-return: "off"*/
+        /* eslint consistent-return: "off"*/
         const key = e.keyCode || e.which;
         if (key in keyboard.map && typeof keyboard.map[key] === 'function') {
           keyboard.map[key](e);
@@ -437,7 +437,7 @@ var keyboard = function() {
   });
 };
 
-let components = {};
+const components = {};
 
 /**
  * Plugin constructor
@@ -465,7 +465,7 @@ class asRange {
       this.$element.css({
         display: 'none'
       });
-      this.$wrap = $("<div></div>");
+      this.$wrap = $('<div></div>');
       this.$element.after(this.$wrap);
     } else {
       this.$wrap = this.$element;
@@ -556,16 +556,16 @@ class asRange {
   }
 
   _trigger(eventType, ...params) {
-    let data = [this].concat(params);
+    const data = [this].concat(params);
 
     // event
-    this.$element.trigger(this.namespace + `::${eventType}`, data);
+    this.$element.trigger(`${this.namespace}::${eventType}`, data);
 
     // callback
     eventType = eventType.replace(/\b\w+\b/g, (word) => {
       return word.substring(0, 1).toUpperCase() + word.substring(1);
     });
-    let onFunction = `on${eventType}`;
+    const onFunction = `on${eventType}`;
 
     if (typeof this.options[onFunction] === 'function') {
       this.options[onFunction].apply(this, params);
@@ -594,13 +594,13 @@ class asRange {
 
   bindEvents() {
     const that = this;
-    this.$wrap.on('touchstart.asRange mousedown.asRange', event => {
-      /*eslint consistent-return: "off"*/
+    this.$wrap.on('touchstart.asRange mousedown.asRange', (event) => {
+      /* eslint consistent-return: "off"*/
       if (that.disabled === true) {
         return;
       }
       event = getEventObject(event);
-      const rightclick = (event.which) ? (event.which === 3) : (event.button === 2);
+      const rightclick = event.which ? event.which === 3 : event.button === 2;
       if (rightclick) {
         return false;
       }
@@ -614,14 +614,14 @@ class asRange {
     });
 
     if (this.$element.is('input')) {
-      this.$element.on(this.namespace + `::change`, () => {
+      this.$element.on(`${this.namespace}::change`, () => {
         const value = this.get();
         this.$element.val(value);
       });
     }
 
     $.each(this.pointer, (i, p) => {
-      p.$element.on(this.namespace + `::move`, () => {
+      p.$element.on(`${this.namespace}::move`, () => {
         that.value = that.get();
         if (!that.initialized || that.updating) {
           return false;
@@ -634,7 +634,7 @@ class asRange {
 
   getValueFromPosition(px) {
     if (px > 0) {
-      return this.min + (px / this.getLength()) * this.interval;
+      return this.min + px / this.getLength() * this.interval;
     }
     return 0;
   }
@@ -684,7 +684,7 @@ class asRange {
     }
 
     $.each(this.components, (key, value) => {
-      if (typeof value.update === "function") {
+      if (typeof value.update === 'function') {
         value.update(this);
       }
     });
@@ -713,7 +713,7 @@ class asRange {
       }
       if (typeof this.options.replaceFirst === 'object') {
         for (const key in this.options.replaceFirst) {
-          if(Object.hasOwnProperty(this.options.replaceFirst, key)){
+          if (Object.hasOwnProperty(this.options.replaceFirst, key)) {
             value[0] = key;
           }
         }
@@ -801,19 +801,19 @@ var info = {
 const NAMESPACE = 'asRange';
 const OtherAsRange = $.fn.asRange;
 
-const jQueryAsRange = function(options, ...args) {
+function jQueryAsRange(options, ...args) {
   if (typeof options === 'string') {
     const method = options;
 
     if (/^_/.test(method)) {
       return false;
-    } else if ((/^(get)$/.test(method)) || (method === 'val' && args.length === 0)) {
+    } else if (/^(get)$/.test(method) || method === 'val' && args.length === 0) {
       const instance = this.first().data(NAMESPACE);
       if (instance && typeof instance[method] === 'function') {
         return instance[method](...args);
       }
     } else {
-      return this.each(function() {
+      return this.each(function () {
         const instance = $.data(this, NAMESPACE);
         if (instance && typeof instance[method] === 'function') {
           instance[method](...args);
@@ -822,18 +822,18 @@ const jQueryAsRange = function(options, ...args) {
     }
   }
 
-  return this.each(function() {
+  return this.each(function () {
     if (!$(this).data(NAMESPACE)) {
       $(this).data(NAMESPACE, new asRange(this, options));
     }
   });
-};
+}
 
 $.fn.asRange = jQueryAsRange;
 
 $.asRange = $.extend({
   setDefaults: asRange.setDefaults,
-  noConflict: function() {
+  noConflict() {
     $.fn.asRange = OtherAsRange;
     return jQueryAsRange;
   }
